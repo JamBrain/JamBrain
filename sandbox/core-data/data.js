@@ -84,7 +84,7 @@ class CCoreData {
 					"Usernames are **very** important on this new site. Since it would be terrible if previous participants had their name stolen, **we've reserved usernames** belonging to anyone that has previously participated in a Ludum Dare event. Simply use the original e-mail address you signed with on ludumdare.com, and it will let you activate that name.\n\n"+
 					"Don't have access to your old e-mail account? That's okay! Create a temporary account with an e-mail you _do_ have access to. Next year, when we start migrating the data over, we'll have a process for recovering old names and accounts.\n\n"+
 					"You may notice that account names are _more strict_ than they were before. Names must be alphanumeric, and may separate words with a dot, dash, or underscore, but can't start or end with one. Internally, names are lower case with dashes. Your new **\"Jammer Account\"** is shared across **Ludum Dare** and other services we'll be launching next year. It's all about jamming, so it made sense to call these new shared accounts **Jammer** accounts.\n\n"+
-					"If you're having problems activating, be sure to whitelist `hello@jammer.vg` in your spam filter.\n\n"+
+					"If you're having problems activating, be sure to whitelist `hello@jam.vg` in your spam filter.\n\n"+
 					"Once you've created your account, you can **go here** to begin making suggestions:\n\n"+
 					"* https://ldjam.com/blah\n\n"+
 					"And that's it!\n\n"+

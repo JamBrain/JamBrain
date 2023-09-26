@@ -1,19 +1,21 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import {Component} from 'preact';
+import './common-footer-button.less';
+
+import {Icon} from 'com/ui';
 
 export default class ContentCommonFooterButtonMinMax extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
-	render( {onclick} ) {
-		if ( !onclick )
-			onclick = function(){};
+	render( {onClick} ) {
+		if ( !onClick )
+			onClick = function(){};
 
 		return (
-			<div class="content-common-footer-button -minmax" onclick={onclick}>
-				<SVGIcon class="-inline-if-not-minimized">arrow-up</SVGIcon>
-				<SVGIcon class="-inline-if-minimized">arrow-down</SVGIcon>
+			<div class="content-common-footer-button -minmax" onClick={onClick}>
+				<Icon class="_inline-if-not-minimized" src="arrow-up" />
+				<Icon class="_inline-if-minimized" src="arrow-down" />
 			</div>
 		);
 	}

@@ -1,7 +1,7 @@
-import {h, Component}					from 'preact/preact';
+import {Component}			from 'preact';
 
 import ContentEvent						from "com/content-event/event";
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
 import ContentHeadlinerFeed				from 'com/content-headliner/headliner-feed';
@@ -38,12 +38,12 @@ export default class PageRootHome extends Component {
 		let ShowPosts = <ContentTimeline class="content-timeline-posts" types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra} featured={featured} />;
 
 		return (
-			<ContentList class="page-home-home">
+			<>
 				{ShowEvent}
 				{ShowNews}
 				{ShowHomework}
 				{ShowPosts}
-			</ContentList>
+			</>
 		);
 	}
 //                <ContentTimeline class="content-timeline-news" types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />

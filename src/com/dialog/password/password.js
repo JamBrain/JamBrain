@@ -1,11 +1,11 @@
-import {h, Component} 					from 'preact/preact';
-import Sanitize							from 'internal/sanitize/sanitize';
+import { Component } from 'preact';
+import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import {UISpinner} from 'com/ui';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 export default class DialogPassword extends Component {
 	constructor( props ) {
@@ -42,12 +42,12 @@ export default class DialogPassword extends Component {
 				});
 			}
 			else {
-				console.log(r);
+				//console.log(r);
 				this.setState({ 'error': r.response, 'loading': false });
 			}
 		})
 		.catch( err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({ 'error': err, 'loading': false });
 		});
 	}
@@ -93,7 +93,7 @@ export default class DialogPassword extends Component {
 			$User.Password( this.ActID, this.ActHash.trim(), this.state.password.trim() )
 			.then( r => {
 				if ( r.status === 200 ) {
-					console.log('success',r);
+					//console.log('success',r);
 					//location.href = "#";//user-loggedin";
 					this.setState({ 'success': true, 'error': null });
 				}
@@ -129,7 +129,7 @@ export default class DialogPassword extends Component {
 		if ( loading ) {
 			return (
 				<DialogCommon empty explicit {...new_props}>
-					<NavSpinner />
+					<UISpinner />
 				</DialogCommon>
 			);
 		}
@@ -142,23 +142,23 @@ export default class DialogPassword extends Component {
 		}
 		else if ( success ) {
 			return (
-				<DialogCommon ok onok={this.doFinishReset} explicit {...new_props}>
+				<DialogCommon ok={this.doFinishReset} explicit {...new_props}>
 					Password Reset. You can now <strong>Log In</strong>.
 				</DialogCommon>
 			);
 		}
 		else {
 			return (
-				<DialogCommon ok oktext="Save" onok={this.doResetPassword} cancel explicit {...new_props}>
+				<DialogCommon oktext="Save" ok={this.doResetPassword} cancel explicit {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-password-password2" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" placeholder="Password" value={password} />
+							<input autofocus id="dialog-password-password2" autocomplete="new-password" onInput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxLength={128} placeholder="Password" value={password} />
 							<LabelYesNo value={this.isValidPassword()} />
 						</div>
 					</div>
 					<div>
 						<div class="-input-container">
-							<input id="dialog-password-password2" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Password again" value={password2} />
+							<input id="dialog-password-password2" autocomplete="new-password" onInput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxLength={128} placeholder="Password again" value={password2} />
 							<LabelYesNo value={this.isValidPassword2()} />
 						</div>
 					</div>

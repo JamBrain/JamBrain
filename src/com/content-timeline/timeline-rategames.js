@@ -1,11 +1,12 @@
-import {h, Component} 					from 'preact/preact';
-import UIIcon							from 'com/ui/icon/icon';
-import UIButton							from 'com/ui/button/button';
+import { Component } from 'preact';
+import './timeline-rategames.less';
+
+import {Icon, Button} from 'com/ui';
 import FooterButtonMinMax 				from 'com/content-common/common-footer-button-minmax';
 import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export const randomPick = (maxExclusive, n) => {
 	const ret = [];
@@ -32,19 +33,23 @@ export default class TimelineRateGames extends Component {
 	}
 
 	handleMinMax() {
-		this.setState({"expanded": !this.state.expanded});
+		this.setState(prevState => ({"expanded": !prevState.expanded}));
 	}
 
 	handleRefresh() {
-		const {loading, reshuffles, feed} = this.state;
-		if (loading) return;
-		if (reshuffles < N_RESHUFFLE_BEFORE_RELOAD && feed) {
-			const l = feed.length;
-			this.setState({'reshuffles': reshuffles + 1, 'pick': randomPick(l, Math.min(l, N_SHOW_MAX))});
-		}
-		else {
+		if (this.state.loading) return;
+
+		this.setState(prevState => {
+			const {reshuffles, feed} = prevState;
+
+			if (reshuffles < N_RESHUFFLE_BEFORE_RELOAD && feed) {
+				const l = feed.length;
+				return {'reshuffles': reshuffles + 1, 'pick': randomPick(l, Math.min(l, N_SHOW_MAX))};
+			}
+
 			this.getGames(this.props);
-		}
+			return null;
+		});
 	}
 
 	componentDidMount() {
@@ -53,13 +58,15 @@ export default class TimelineRateGames extends Component {
 
 	componentWillReceiveProps(nextprops) {
 		const {props} = this;
-		if (props.featured && props.featured != nextprops.featured)
+		if (props.featured && props.featured != nextprops.featured) {
 			this.getGames(nextprops);
+		}
 	}
 
 	getGames(props) {
-		if ( !props.featured || !props.featured.id )
+		if ( !props.featured || !props.featured.id ) {
 			return;
+		}
 
 		const {id} = props.featured;
 		const methods = ['smart', 'parent'];
@@ -105,12 +112,12 @@ export default class TimelineRateGames extends Component {
 
 	render(props, {expanded, feed, pick, error, loading}) {
 		//    if (!this.event_canRate(props.featured)) return null;
-		const HeaderClass = cN('content-common-header');
-		const MainClass = cN('content-base', 'content-common', 'rate-games', !expanded && 'minimized');
+		const HeaderClass = `content-common-header`;
+		const MainClass = `content -common rate-games ${!expanded && 'minimized'}`;
 
 		let Games;
 		if (error) {
-			Games = <div class="-warning"><UIIcon src="bug" /><span>An error occurred while loading the games.</span></div>;
+			Games = <div class="-warning"><Icon src="bug" /><span>An error occurred while loading the games.</span></div>;
 		}
 		else if (loading) {
 			Games = <ContentLoading />;
@@ -124,30 +131,30 @@ export default class TimelineRateGames extends Component {
 
 		const FooterLeft = [];
 		const FooterRight = [];
-		FooterLeft.push(<FooterButtonMinMax onclick={this.handleMinMax} />);
+		FooterLeft.push(<FooterButtonMinMax onClick={this.handleMinMax} />);
 		FooterRight.push((
-			<UIButton class={cN("content-common-footer-button", '-refresh')} title='Refresh' onclick={this.handleRefresh}>
-				<UIIcon src="refresh" /><div class="-count">Refresh</div>
-			</UIButton>
+			<Button class={`content-common-footer-button -refresh`} tooltip="Refresh" onClick={this.handleRefresh}>
+				<Icon src="refresh" /><div class="-count">Refresh</div>
+			</Button>
 		));
 		FooterRight.push((
-			<UIButton class={cN("content-common-footer-button", '-all-games')} href={props.featured && `/events/ludum-dare/${props.featured.slug}/games/`}>
-				<UIIcon src="gamepad" /><div class="-count">All Games</div>
-			</UIButton>
+			<Button class={`content-common-footer-button -all-games`} href={props.featured && `/events/ludum-dare/${props.featured.slug}/games/`}>
+				<Icon src="gamepad" /><div class="-count">All Games</div>
+			</Button>
 		));
 
 		return (
 		<div class={MainClass}>
-			<div class={HeaderClass}><UIIcon src="gamepad" /> <span>Play, Rate, and give Feedback</span></div>
+			<div class={HeaderClass}><Icon src="gamepad" /> <span>Play, Rate, and give Feedback</span></div>
 				<div class="-bodies">
-					<div class="-inline-if-not-minimized">
+					<div class="_inline-if-not-minimized">
 					{Games}
 					</div>
-					<div class="-inline-if-not-minimized">
-					<strong>TIP</strong>: For more ratings and feedback, leave feedback on the games you play, and give <UIIcon src="heart" />'s to feedback you like.
+					<div class="_inline-if-not-minimized">
+					<strong>TIP</strong>: For more ratings and feedback, leave feedback on the games you play, and give <Icon src="heart" />'s to feedback you like.
 					</div>
 				</div>
-				<div class={cN('content-common-footer', (FooterLeft.length + FooterRight.length) ? '-has-items' : '')}>
+				<div class={`content-common-footer ${(FooterLeft.length + FooterRight.length) ? '-has-items' : ''}`}>
 				<div class="-left">
 					{FooterLeft}
 				</div>

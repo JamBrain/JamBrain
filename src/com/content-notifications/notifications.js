@@ -1,16 +1,13 @@
-import {h, Component} 				from 'preact/preact';
+import './notifications.less';
 
-import ButtonBase						from '../button-base/base';
-
-import NavSpinner						from 'com/nav-spinner/spinner';
-import NavLink 							from 'com/nav-link/link';
+import {Button, UISpinner} from 'com/ui';
 import ContentMore						from 'com/content-more/more';
 
 import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
 import NotificationsFilter				from 'com/content-notifications/filter';
 
-import $Notification					from 'shrub/js/notification/notification';
+import $Notification					from 'backend/js/notification/notification';
 
 import ContentSimple					from 'com/content-simple/simple';
 
@@ -74,7 +71,7 @@ export default class NotificationsFeed extends NotificationsBase {
 				ShowNotifications.push((
 					<Notification
 						notification={notification}
-						class={cN("-item -notification", (notification.notification[0].id>maxReadId)?'-new-comment':'')}
+						class={`-item -notification ${(notification.notification[0].id>maxReadId)?'-new-comment':''}`}
 						id={'notification-' + identifier}
 					/>
 				));
@@ -87,21 +84,21 @@ export default class NotificationsFeed extends NotificationsBase {
 			));
 		}
 
-		const ShowGetMore = hasMore ? (<ContentMore onclick={this.fetchMore} />) : null;
+		const ShowGetMore = hasMore ? (<ContentMore onClick={this.fetchMore} />) : null;
 
 		const ShowSetAllRead = hasUnread ? (
-			<ButtonBase
+			<Button
 				class="-button -light focusable"
 				id="button-mark-read"
-				onclick={
+				onClick={
 					(e) => {
 						this.markReadHighest();
 					}
 				}>
 				Mark all notifications as read
-			</ButtonBase>) : null;
+			</Button>) : null;
 
-		const ShowSpinner = processing ? <NavSpinner /> : null;
+		const ShowSpinner = processing ? <UISpinner /> : null;
 
 		const ShowError = state.errorStatus ? ( <div class="-error">Error code {state.errorStatus} while fetching notifications</div> ) : null;
 

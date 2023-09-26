@@ -1,16 +1,13 @@
-import {h, Component}					from 'preact/preact';
-import UIButton							from '../button/button';
-import UIDropdown						from './dropdown';
+import { Component } from 'preact';
 
-export default class UIDropdownList extends Component {
-	constructor( props ) {
-		super(props);
-	}
+import {Button} from '../button';
+import {Dropdown} from './dropdown';
 
+export class UIDropdownList extends Component {
 	// Does not need to be bound in constructor
 	onModify( value, index ) {
-		if ( this.props.onmodify ) {
-			this.props.onmodify(value, index);
+		if ( this.props.onModify ) {
+			this.props.onModify(value, index);
 		}
 	}
 
@@ -19,7 +16,7 @@ export default class UIDropdownList extends Component {
 			return null;
 
 		let NewProps = {
-			'class': cN('ui-dropdown-list', props.class),
+			'class': `ui-dropdown-list ${props.class ?? ''}`,
 
 			// Passthrough here
 			'show': props.show,
@@ -44,9 +41,9 @@ export default class UIDropdownList extends Component {
 						Value = <div>{itemName}</div>;
 
 					Items.push(
-						<UIButton class="-item" onclick={this.onModify.bind(this, itemValue, idx)}>
+						<Button class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
 							{itemName}
-						</UIButton>
+						</Button>
 					);
 				}
 				else {
@@ -68,18 +65,18 @@ export default class UIDropdownList extends Component {
 					Value = <div>{itemName}</div>;
 
 				Items.push(
-					<UIButton class="-item" onclick={this.onModify.bind(this, itemValue, idx)}>
+					<Button class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
 						{itemName}
-					</UIButton>
+					</Button>
 				);
 			}
 		}
 
 		return (
-			<UIDropdown {...NewProps}>
+			<Dropdown {...NewProps}>
 				{Value}
 				{Items}
-			</UIDropdown>
+			</Dropdown>
 		);
 	}
 }

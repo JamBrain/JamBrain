@@ -1,0 +1,258 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../../";
+const BACKEND_PATH = "../../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".BACKEND_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".BACKEND_PATH."core/db.php";
+require_once __DIR__."/".BACKEND_PATH."core/core.php";
+require_once __DIR__."/".BACKEND_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".BACKEND_PATH."global/global.php";
+
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."grade/grade.php";
+
+if ( count($argv) < 2 ) {
+	print "Usage: ".$argv[0]." [command]\n";
+	print "\n";
+	print "  score event_name # (#)    - Score items from event_name (compo) with threshold # (17). An optional 2nd threshold (15) can check if a lower value is safe\n";
+	print "\n";
+	exit;
+}
+
+const EVENT_NAMES = [
+	"compo",
+	"jam",
+	"extra",
+	"unfinished"
+];
+
+global_Load();
+
+$ARG_COMMAND = array_shift($argv);
+
+$root = nodeComplete_GetById(1);
+$EVENT_ID = intval($root["meta"]["featured"]);
+
+if ( !$EVENT_ID ) {
+	print "featured event is zero or not set ($EVENT_ID)\n";
+	exit;
+}
+
+$automatic = false;
+$COMMAND = array_shift($argv);
+
+if($COMMAND == "itsautomatic") {
+	$COMMAND = array_shift($argv);
+	$automatic = true;
+}
+
+function AreYouSure() {
+	global $automatic;
+	if(!$automatic) {
+		print "\nAre you sure [type 'YES']? ";
+		flush();
+		$input = trim(fgets(STDIN));
+		if ( $input != "YES" ) {
+			print "Aborting...\n";
+			exit(1);
+		}
+	}
+}
+
+
+
+if ( $COMMAND === "score" ) {
+	$SUBSUBTYPE = array_shift($argv);
+
+	if ( !in_array($SUBSUBTYPE, EVENT_NAMES) ) {
+		print "Invalid event: " . $SUBSUBTYPE . "\n";
+		exit(1);
+	}
+
+	$THRESHOLD = array_shift($argv);
+	$THRESHOLD2 = array_shift($argv);
+
+	if ( !is_numeric($THRESHOLD) ) {
+		print "No Threshold\n";
+		exit(1);
+	}
+
+	print "\n*** WARNING ***\n\n";
+	print "You are about to generate scores for \"$SUBSUBTYPE\".\n";
+	AreYouSure();
+
+	print "Fetching Event... ";
+
+	$EVENT = nodeComplete_GetById($EVENT_ID);
+
+	if ( !$EVENT ) {
+		print "Problem loading event: $EVENT\n";
+		exit(1);
+	}
+	print $EVENT['name']."\n";
+
+	$GRADES = [];
+	foreach ( $EVENT['meta'] as $key => &$value ) {
+		$part = explode('-', $key);
+		if ( count($part) == 2 && $part[0] == 'grade' ) {
+			$GRADES[] = $key;
+		}
+	}
+
+	$RESULT = [];
+
+	print "Found Grades: \n";
+	foreach ( $GRADES as &$grade ) {
+		$RESULT[$grade] = [];
+		print $grade."\n";
+	}
+
+	print "Fetching List of Nodes...";
+	$NODES = nodeFeed_GetByMethod(['parent'], $EVENT_ID, 'item', 'game', [$SUBSUBTYPE], null, null, null );
+//	$NODES = nodeFeed_GetByMethod(['parent'], $EVENT_ID, 'item', 'game', ['jam','compo'/*,'craft'*/], null, null, null );
+
+	print count($NODES)." total\n";
+
+	// TODO: Count grades
+
+	$LIST = [];
+
+	foreach ( $NODES as &$node ) {
+		$LIST[] = $node['id'];
+		$grades = grade_GetByNode($node['id']);
+
+		// insert grades to different lists
+		$ordered = [];
+		foreach ( $grades as &$grade ) {
+			if ( !isset($ordered[$grade['name']]) )
+				$ordered[$grade['name']] = [];
+			$ordered[$grade['name']][] = floatval($grade['value']);
+		}
+
+		// Sort, remove first/last, and calculate total and average
+		$sum = [];
+		$average = [];
+		foreach ( $ordered as $key => &$grade ) {
+			sort($grade, SORT_NUMERIC);
+			if ( $THRESHOLD >= 5 ) {
+				array_shift($grade);		// Remove Top
+				array_pop($grade);			// Remove Bottom
+			}
+
+			if ( !count($grade) )
+				continue;
+
+			$sum[$key] = array_sum($grade);
+			$average[$key] = $sum[$key] / (float)count($grade);
+
+			if ( !isset($RESULT[$key][$node['id']]) )
+				$RESULT[$key][$node['id']] = [];
+
+			$RESULT[$key][$node['id']]['id'] = $node['id'];
+			//$RESULT[$key][$node['id']]['grade'] = $grade;
+			$RESULT[$key][$node['id']]['count'] = count($grade);
+			$RESULT[$key][$node['id']]['true-average'] = $average[$key];
+			$RESULT[$key][$node['id']]['average'] = round($average[$key], 3);	// Old website was 2 digits
+		}
+	}
+
+	$NODE_DATA = node_IdToIndex(nodeComplete_GetById($LIST, 0));
+
+//	print_r($RESULT);
+
+	// TODO: Figure out biggest/smallest, then provide an average that fits itself to the range
+
+	foreach ( $RESULT as $key => &$result ) {
+		// Sort by the True average, but score them by the place reduced average
+		usort($result, function($a, $b) {
+			if ( $a['true-average'] === $b['true-average'] )
+				return 0;
+			return $a['true-average'] > $b['true-average'] ? -1 : 1;
+		});
+
+		// Determine places
+		$place = 1;
+		$next_place = $place;
+		$prev_average = -1;
+		foreach ( $result as &$item ) {
+			if ( !$THRESHOLD || $item['count'] >= $THRESHOLD ) {
+				// If not a tie, update the recorded placement and average
+				if ( $item['average'] !== $prev_average ) {
+					$next_place = $place;
+					$prev_average = $item['average'];
+				}
+
+				// Record the placement (if tied, the placement doesn't change from the previous)
+				$item['place'] = $next_place;
+				$place++;
+			}
+			else {
+				if ( $place < 50 && $THRESHOLD2 && $item['count'] >= $THRESHOLD2 ) {
+					print $item['id']." with ".$item['count']." ratings would have placed $place in $key\n";
+				}
+			}
+		}
+	}
+
+	// Reduce threshold values here, so the check above doesn't include lesser values by mistake
+	if ( $THRESHOLD >= 5 ) {
+		$THRESHOLD -= 2;
+		if ($THRESHOLD2) {
+			$THRESHOLD2 -= 2;
+		}
+	}
+
+	if(!$automatic) {
+		print "\n*** WARNING ***\n\n";
+		print "Last chance to back out! Do you wish to commit these changes? [type 'YES']? ";
+		flush();
+		$input = trim(fgets(STDIN));
+		if ( $input != "YES" ) {
+			// Print the data
+			foreach ( $RESULT as $key => &$nodes ) {
+				foreach ( $nodes as $id => &$node ) {
+					echo $key.'-score: '.implode(' ', $node)."\n";
+				}
+			}
+
+			print "Aborting...\n";
+			exit(1);
+		}
+	}
+
+	$db->begin_transaction();
+	foreach ( $RESULT as $key => &$nodes ) {
+		foreach ( $nodes as $id => &$node ) {
+			nodeMagic_Add(
+				$NODE_DATA[$node['id']]['id'],
+				$NODE_DATA[$node['id']]['parent'],
+				$NODE_DATA[$node['id']]['_superparent'],
+				$NODE_DATA[$node['id']]['author'],
+				$key.'-average',
+				$node['average']
+			);
+			if ( isset($node['place']) ) {
+				nodeMagic_Add(
+					$NODE_DATA[$node['id']]['id'],
+					$NODE_DATA[$node['id']]['parent'],
+					$NODE_DATA[$node['id']]['_superparent'],
+					$NODE_DATA[$node['id']]['author'],
+					$key.'-result',
+					$node['place']
+				);
+			}
+			else {
+				// TODO: Delete node
+			}
+
+//			echo $key.'-score: '.implode(' ', $node)."\n";
+		}
+	}
+	$db->commit();
+}
+else {
+	print "Error: Unknown command \"$COMMAND\"\n";
+	exit(1);
+}

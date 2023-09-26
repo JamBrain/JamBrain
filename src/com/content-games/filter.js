@@ -1,11 +1,12 @@
-import {h, Component}					from 'preact/preact';
-import Common							from 'com/content-common/common';
+import {Component} from 'preact';
+import './filter.less';
+
+import {CommonSection}					from 'com/content/common';
 import CommonBody						from 'com/content-common/common-body';
-import SVGIcon							from 'com/svg-icon/icon';
+import {Link, Icon} from 'com/ui';
 import InputText						from 'com/input-text/text';
 import FilterSpecial					from 'com/content-games/filter-special';
 import InputDropdown					from 'com/input-dropdown/dropdown';
-import NavLink							from 'com/nav-link/link';
 
 const FilterDesc = {
 	'smart': <div><strong>Smart</strong>: This is the modern balancing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
@@ -25,7 +26,10 @@ export default class GamesFilter extends Component {
 	constructor ( props ) {
 		super(props);
 
-		this.state = {"allowShowFilters": true, "simpleFilter": true};
+		this.state = {
+			"allowShowFilters": true,
+			"simpleFilter": true
+		};
 
 		this.onModifyTextFilter = this.onModifyTextFilter.bind(this);
 		this.onTextFilerFocus = this.onTextFilerFocus.bind(this);
@@ -71,7 +75,7 @@ export default class GamesFilter extends Component {
 			<div class="feed-filter">
 				<label><div class="-label">Filter:</div>
 				<InputText
-					onmodify={this.onModifyTextFilter}
+					onModify={this.onModifyTextFilter}
 					onBlur={this.onTextFilerBlur}
 					onFocus={this.onTextFilerFocus}
 				/>
@@ -85,13 +89,13 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><SVGIcon>tag</SVGIcon><div>Featured Event</div></div>,
-					<NavLink href={Path+Filter+WithSubFilter+''} class="-click-catcher" />,
+					<div><Icon src="tag" /><div>Featured Event</div></div>,
+					<Link href={Path+Filter+WithSubFilter+''} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><SVGIcon>tag</SVGIcon><div>All Events</div></div>,
-					<NavLink href={Path+Filter+WithSubFilter+'/everything'} class="-click-catcher" />,
+					<div><Icon src="tag" /><div>All Events</div></div>,
+					<Link href={Path+Filter+WithSubFilter+'/everything'} class="-click-catcher" />,
 				],
 			];
 			const value = SubSubFilter == 'featured' ? 1 : 2;
@@ -111,28 +115,28 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><SVGIcon>gamepad</SVGIcon><div>All</div></div>,
-					<NavLink href={Path+Filter+'/all'+WithSubSubFilter} class="-click-catcher" />,
+					<div><Icon src="gamepad" /><div>All</div></div>,
+					<Link href={Path+Filter+'/all'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><SVGIcon>trophy</SVGIcon><div>Jam</div></div>,
-					<NavLink href={Path+Filter+'/jam'+WithSubSubFilter} class="-click-catcher" />,
+					<div><Icon src="trophy" /><div>Jam</div></div>,
+					<Link href={Path+Filter+'/jam'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><SVGIcon>trophy</SVGIcon><div>Compo</div></div>,
-					<NavLink href={Path+Filter+'/compo'+WithSubSubFilter} class="-click-catcher" />,
+					<div><Icon src="trophy" /><div>Compo</div></div>,
+					<Link href={Path+Filter+'/compo'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><SVGIcon>trophy</SVGIcon><div>Extra</div></div>,
-					<NavLink href={Path+Filter+'/extra'+WithSubSubFilter} class="-click-catcher" />,
+					<div><Icon src="trophy" /><div>Extra</div></div>,
+					<Link href={Path+Filter+'/extra'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><SVGIcon>trash</SVGIcon><div>Unfinished</div></div>,
-					<NavLink href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
+					<div><Icon src="trash" /><div>Unfinished</div></div>,
+					<Link href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
 				],
 			];
 			let value = 1;
@@ -165,42 +169,42 @@ export default class GamesFilter extends Component {
 				[
 					1,
 					<div>Overall</div>,
-					<NavLink href={Path+'overall'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'overall'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
 					<div>Fun</div>,
-					<NavLink href={Path+'fun'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'fun'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
 					<div>Innovation</div>,
-					<NavLink href={Path+'innovation'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'innovation'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
 					<div>Theme</div>,
-					<NavLink href={Path+'theme'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'theme'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
 					<div>Graphics</div>,
-					<NavLink href={Path+'graphics'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'graphics'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					6,
 					<div>Audio</div>,
-					<NavLink href={Path+'audio'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'audio'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					7,
 					<div>Humor</div>,
-					<NavLink href={Path+'humor'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'humor'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					8,
 					<div>Mood</div>,
-					<NavLink href={Path+'mood'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+					<Link href={Path+'mood'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
 				],
 			];
 
@@ -243,33 +247,33 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><SVGIcon>ticket</SVGIcon><div>Smart</div></div>,
-					<NavLink href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
+					<div><Icon src="ticket" /><div>Smart</div></div>,
+					<Link href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><SVGIcon>ticket</SVGIcon><div>Classic</div></div>,
-					<NavLink href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
+					<div><Icon src="ticket" /><div>Classic</div></div>,
+					<Link href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><SVGIcon>help</SVGIcon><div>Danger</div></div>,
-					<NavLink href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
+					<div><Icon src="help" /><div>Danger</div></div>,
+					<Link href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><SVGIcon>gift</SVGIcon><div>Zero</div></div>,
-					<NavLink href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
+					<div><Icon src="gift" /><div>Zero</div></div>,
+					<Link href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><SVGIcon>bubbles</SVGIcon><div>Feedback</div></div>,
-					<NavLink href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
+					<div><Icon src="bubbles" /><div>Feedback</div></div>,
+					<Link href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					6,
-					<div><SVGIcon>todo</SVGIcon><div>Grade</div></div>,
-					<NavLink href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
+					<div><Icon src="todo" /><div>Grade</div></div>,
+					<Link href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
 				],
 			];
 			let value = 1;
@@ -290,7 +294,7 @@ export default class GamesFilter extends Component {
 			}
 
 			ShowRatingSortDesc = (
-				<CommonBody>{FilterDesc[Filter]}</CommonBody>
+				<p>{FilterDesc[Filter]}</p>
 			);
 
 			ShowRatingSort = (
@@ -306,13 +310,15 @@ export default class GamesFilter extends Component {
 
 		//				{ShowTextFilter}
 		return (
-			<Common node={node} class="filter-item filter-game">
-				{ShowFeatured}
-				{ShowEvent}
-				{ShowVotingCategory}
-				{ShowRatingSort}
+			<CommonSection class="filter-item filter-game">
+				<p>
+					{ShowFeatured}
+					{ShowEvent}
+					{ShowVotingCategory}
+					{ShowRatingSort}
+				</p>
 				{ShowRatingSortDesc}
-			</Common>
+			</CommonSection>
 		);
 	}
 }

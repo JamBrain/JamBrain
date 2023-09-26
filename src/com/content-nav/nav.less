@@ -5,108 +5,93 @@
 @NAV_BUTTON_LIT: @COL_L;
 @NAV_BUTTON_LIT_BG: @COL_A;
 
-/* TODO:: Nasty hack */
-#content .content-common-nav-button.-no-icon {
-	padding: 0.5em 1em;
+#content .content.-nav {
+	margin: 0.5em 0;
+	white-space: nowrap;
 
-	& > div {
-		padding-left: 0;
-	}
+	& > .ui_button {
+		position: relative;
+		line-height: 2.0em;
+		height: 2.0em;
 
-	&:last-child {
-		margin-right: 0;
-	}
-}
+		vertical-align: top;
 
-#content {
-	& .content-nav {
-		margin: 0.5em 0;
-		white-space: nowrap;
+		display: inline-block;
 
-		& > .ui-button {
+		padding: 0.125em 1em;
+
+		&.-has-icon {
+			padding: 0.125em 1em 0.125em 2.0em;
+		}
+
+		margin-right: 0.5em;
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+		text-decoration: none;
+		font-weight: bold;
+
+		border: 1px solid transparent;
+
+		& > span {
 			position: relative;
-			line-height: 2.0em;
-			height: 2.0em;
+			padding-left: 0.5em;
 
-			vertical-align: top;
-
-			display: inline-block;
-
-			padding: 0.125em 1em;
-
-			&.-has-icon {
-				padding: 0.125em 1em 0.125em 2.0em;
-			}
-
-			margin-right: 0.5em;
-
-			&:last-child {
-				margin-right: 0;
-			}
-
-			text-decoration: none;
-			font-weight: bold;
-
-			border: 1px solid transparent;
-
-			& > span {
-				position: relative;
-				padding-left: 0.5em;
-
-				@media (max-width: (@BASE_WIDTH - 20em)) {
-					display: none;
-				}
-
-				&:empty {
-					padding-left: 0;
-				}
-			}
-
-			& > svg {
-				position: absolute;
-
-				top: 0;
-				bottom: 0;
-				left: 1em;
-
-				margin: auto;
-				display: block;
-			}
-
-			&,
-			&:visited {
-				color: @NAV_BUTTON_COL;
-				background: @NAV_BUTTON_BG;
-
-				&.-selected,
-				&.-selected.-light {
-					background: @COL_L;/*@NAV_BUTTON_COL;*/
-					color: @COL_NDDDD;/*@NAV_BUTTON_BG;*/
-					border: 1px solid transparent;
-				}
-
-				&.-light {
-					border: 1px solid;
-					color: @COL_L;
-					background: transparent;
-				}
-			}
-
-			&:hover,
-			&:focus {
-				&,
-				&.-selected {
-					background: @NAV_BUTTON_LIT_BG;
-					color: @NAV_BUTTON_LIT;
-					border: 1px solid transparent;
-					z-index: 10;
-				}
-			}
-
-			/* Make buttons overlap by 1 pixel */
 			@media (max-width: (@BASE_WIDTH - 20em)) {
-				margin-right: -1px;
+				display: none;
 			}
+
+			&:empty {
+				padding-left: 0;
+			}
+		}
+
+		& > svg {
+			position: absolute;
+
+			top: 0;
+			bottom: 0;
+			left: 1em;
+
+			margin: auto;
+			display: block;
+		}
+
+		&,
+		&:visited {
+			color: @NAV_BUTTON_COL;
+			background: @NAV_BUTTON_BG;
+
+			&.-selected,
+			&.-selected.-light {
+				background: @COL_L;/*@NAV_BUTTON_COL;*/
+				color: @COL_NDDDD;/*@NAV_BUTTON_BG;*/
+				border: 1px solid transparent;
+			}
+
+			&.-light {
+				border: 1px solid;
+				color: @COL_L;
+				background: transparent;
+			}
+		}
+
+		&:hover,
+		&:focus {
+			&,
+			&.-selected {
+				background: @NAV_BUTTON_LIT_BG;
+				color: @NAV_BUTTON_LIT;
+				border: 1px solid transparent;
+				z-index: 10;
+			}
+		}
+
+		/* Make buttons overlap by 1 pixel */
+		@media (max-width: (@BASE_WIDTH - 20em)) {
+			margin-right: -1px;
 		}
 	}
 }

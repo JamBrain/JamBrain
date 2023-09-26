@@ -1,5 +1,5 @@
-import { Get, Post }			from '../../shrub/js/internal/fetch';
-import Cache					from '../../shrub/js/internal/cache';
+import { Get, Post }			from '../../backend/js/internal/fetch';
+import Cache					from '../../backend/js/internal/cache';
 
 export default {
 	GetLive

@@ -1,28 +1,20 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon							from 'com/svg-icon/icon';
+import './yesno.less';
+import {Icon} from 'com/ui';
 
-export default class LabelYesNo extends Component {
-	constructor( props ) {
-		super(props);
+export default function LabelYesNo( props ) {
+	const {value} = props;
+	if ( Number(value) > 0 ) {
+		return (
+			<div class="label-yesno">
+				<Icon src="checkmark" />
+			</div>
+		);
 	}
-
-	componentDidMount() {
-	}
-
-	render( props ) {
-		if ( parseInt(props.value) > 0 ) {
-			return (
-				<div class="label-yesno">
-					<SVGIcon>checkmark</SVGIcon>
-				</div>
-			);
-		}
-		else if ( parseInt(props.value) <= 0 ) {
-			return (
-				<div class="label-yesno">
-					<SVGIcon>cross</SVGIcon>
-				</div>
-			);
-		}
+	else if ( Number(value) <= 0 ) {
+		return (
+			<div class="label-yesno">
+				<Icon src="cross" />
+			</div>
+		);
 	}
 }

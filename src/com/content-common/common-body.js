@@ -1,5 +1,9 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {Component, toChildArray} from 'preact';
+import './common-body.less';
+import './common-footer.less';
+import './common-header.less';
+
+import {Diff} from 'shallow';
 
 export default class ContentCommonBody extends Component {
 	constructor( props ) {
@@ -7,12 +11,10 @@ export default class ContentCommonBody extends Component {
 	}
 
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+		return Diff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
 	render( props ) {
-		var _class = "content-common-body" + (props.class ? " "+props.class : "");
-
-		return <div class={_class}>{props.children}</div>;
+		return <div class={`body ${props.class ?? ''}`}>{props.children}</div>;
 	}
 }

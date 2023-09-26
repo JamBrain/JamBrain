@@ -1,8 +1,7 @@
-import { h, Component } 				from 'preact/preact';
+import { Component } from 'preact';
+import './headline-edit.less';
 
-import SVGIcon 							from 'com/svg-icon/icon';
-
-import ButtonBase 						from 'com/button-base/base';
+import {Icon, Button} from 'com/ui';
 
 
 export default class ContentHeadlineEdit extends Component {
@@ -16,36 +15,38 @@ export default class ContentHeadlineEdit extends Component {
 			this.props.published !== nextProps.published;
 	}
 
-	render( {edit, modified, published, onedit, onpreview, onsave, onpublish, onpublish2, onpublish3}, state ) {
+	render( props ) {
+		const {edit, modified, published, onedit, onpreview, onsave, onpublish, onpublish2, onpublish3, ...otherProps} = props;
+
 		var ShowEdit = null;
 		var ShowPreview = null;
 		var ShowSave = null;
 		var ShowPublish = null;
 
 		if ( edit ) {
-			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
-			ShowPreview = <ButtonBase onclick={onpreview}><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
+			ShowEdit = <Button class="-selected"><Icon src="edit" /> Edit</Button>;
+			ShowPreview = <Button onClick={onpreview}><Icon src="preview" /> Preview</Button>;
 		}
 		else {
-			ShowEdit = <ButtonBase onclick={onedit}><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
-			ShowPreview = <ButtonBase class="-selected"><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
+			ShowEdit = <Button onClick={onedit}><Icon src="edit" /> Edit</Button>;
+			ShowPreview = <Button class="-selected"><Icon src="preview" /> Preview</Button>;
 		}
 
 		if ( modified ) {
-			ShowSave = <ButtonBase class="-available -blue" onclick={onsave}><SVGIcon>save</SVGIcon> Save</ButtonBase>;
+			ShowSave = <Button class="-available -blue" onClick={onsave}><Icon src="save" /> Save</Button>;
 		}
 		else {
-			ShowSave = <ButtonBase><SVGIcon>save</SVGIcon> Saved</ButtonBase>;
+			ShowSave = <Button><Icon src="save" /> Saved</Button>;
 		}
 
 		if ( published ) {
-			ShowPublish = <ButtonBase><SVGIcon>publish</SVGIcon> Published</ButtonBase>;
+			ShowPublish = <Button><Icon src="publish" /> Published</Button>;
 		}
 		else {
 			ShowPublish = [
-				<ButtonBase class="-available -green" onclick={onpublish}><SVGIcon>publish</SVGIcon> Publish Compo</ButtonBase>,
-				<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon> Publish Jam</ButtonBase>,
-				<ButtonBase class="-available -green" onclick={onpublish3}><SVGIcon>publish</SVGIcon> Publish Extra</ButtonBase>
+				<Button class="-available -green" onClick={onpublish}><Icon src="publish" /> Publish Compo</Button>,
+				<Button class="-available -green" onClick={onpublish2}><Icon src="publish" /> Publish Jam</Button>,
+				<Button class="-available -green" onClick={onpublish3}><Icon src="publish" /> Publish Extra</Button>
 			];
 		}
 

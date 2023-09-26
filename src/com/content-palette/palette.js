@@ -1,4 +1,5 @@
-import { h, Component } 				from 'preact/preact';
+import { Component } from 'preact';
+import './palette.less';
 
 export default class ContentPalette extends Component {
 	constructor( props ) {
@@ -163,7 +164,7 @@ export default class ContentPalette extends Component {
 
 	render( props, state ) {
 		return (
-			<div class="content-base content-palette">
+			<div class="content content-palette">
 				<h1>Standard Colors</h1>
 				<div class="palette">
 					{this.genBGRow('a')}

@@ -9,15 +9,15 @@
 
 <?php # Provide quick access to create & modify events in the database for testing purposes
 
-const CONFIG_PATH = "../src/shrub/";
-const SHRUB_PATH = "../src/shrub/src/";
+const CONFIG_PATH = "../src/backend/";
+const BACKEND_PATH = "../src/backend/src/";
 
-# Use shrub wrapper for db access
+# Use backend wrapper for db access
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."constants.php";
-require_once __DIR__."/".SHRUB_PATH."core/db.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
-require_once __DIR__."/".SHRUB_PATH."user/user.php";
+require_once __DIR__."/".BACKEND_PATH."constants.php";
+require_once __DIR__."/".BACKEND_PATH."core/db.php";
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."user/user.php";
 
 
 # Identify existing events
@@ -25,10 +25,10 @@ require_once __DIR__."/".SHRUB_PATH."user/user.php";
 function loadEvents()
 {
 	global $events, $eventcount, $suggestname;
-	
+
 	$events = db_QueryFetch(
 			"SELECT
-				n.id, n.name, n.slug, 
+				n.id, n.name, n.slug,
 				".DB_FIELD_DATE('n.modified', 'modified')."
 			FROM
 				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
@@ -37,10 +37,10 @@ function loadEvents()
 			LIMIT 100
 			;"
 		);
-	
+
 	//$events = nodeFeed_GetByMethod( ["all"], null, ["event"], null, null, null, 100, 0);
 	$eventcount = count($events);
-	$suggestname = "Testumdare " . ($eventcount+1);  
+	$suggestname = "Testumdare " . ($eventcount+1);
 }
 loadEvents();
 //print_r($events);
@@ -84,7 +84,7 @@ if($_POST)
 	switch($cmd) {
 	case "Add Event":
 		print("<br />Adding Event<br />");
-		
+
 		$cmdname = $_POST["eventName"];
 		$cmdparent = intval($_POST["eventRoot"]);
 		$cmdauthor = intval($_POST["eventAuthor"]);
@@ -98,8 +98,8 @@ if($_POST)
 			// Create event node.
 			# function node_Add( $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body ) {
 			$newevent = node_Add( $cmdparent, $cmdauthor, "event", "", "", null, $cmdname, "");
-			print_r($newevent);	    
-			
+			print_r($newevent);
+
 			// Add metadata
 			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'can-create', 'item/game');
 
@@ -108,10 +108,10 @@ if($_POST)
 
 			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'can-theme', $cmdcantheme);
 			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'event-mode', $cmdthememode);
-			
+
 			// Make featured
 			nodeMeta_Add(1, 0, SH_SCOPE_PUBLIC, 'featured', "$newevent");
-			
+
 			// Reload event list
 			loadEvents();
 		}
@@ -125,9 +125,9 @@ if($_GET)
 	if(key_exists("cmd",$_GET))
 	{
 		$cmd = $_GET["cmd"];
-		
+
 		if($cmd == "setstate" && key_exists("state",$_GET))
-		{	
+		{
 			$event_nodeid = intval($featured);
 			$state = $_GET["state"];
 			switch($state)
@@ -152,14 +152,14 @@ if($_GET)
 					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-mode', 8);
 					break;
 			}
-			
+
 			if($state<3)
 			{
 				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 0);
 				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 0);
 				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 0);
 				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 0);
-			} 
+			}
 			else if($state == 3)
 			{
 				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 1);
@@ -181,7 +181,7 @@ if($_GET)
 				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
 				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 2);
 			}
-			
+
 			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-theme', 1);
 			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-publish', $state < 6 ? 1 : 0);
 			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-grade', $state == 6 ? 1 : 0);
@@ -190,9 +190,9 @@ if($_GET)
 
 			// Since this is a website, invalidating the node cache should work for the API's cache.
 			nodeCache_InvalidateById($event_nodeid);
-			
+
 		}
-	
+
 	}
 
 }
@@ -228,13 +228,13 @@ foreach($events as &$event)
 ?>
 
 <h1 id="eventMode">Set Current Event Mode</h1>
-Featured node <?=$featured?> - 
-<a href="?cmd=setstate&state=1#eventMode">Theme Suggestion</a> - 
-<a href="?cmd=setstate&state=2#eventMode">Theme Slaughter</a> - 
-<a href="?cmd=setstate&state=3#eventMode">Theme Voting</a> - 
-<a href="?cmd=setstate&state=4#eventMode">Theme Final Voting</a> - 
-<a href="?cmd=setstate&state=5#eventMode">Compo Running</a> - 
-<a href="?cmd=setstate&state=6#eventMode">Voting</a> - 
+Featured node <?=$featured?> -
+<a href="?cmd=setstate&state=1#eventMode">Theme Suggestion</a> -
+<a href="?cmd=setstate&state=2#eventMode">Theme Slaughter</a> -
+<a href="?cmd=setstate&state=3#eventMode">Theme Voting</a> -
+<a href="?cmd=setstate&state=4#eventMode">Theme Final Voting</a> -
+<a href="?cmd=setstate&state=5#eventMode">Compo Running</a> -
+<a href="?cmd=setstate&state=6#eventMode">Voting</a> -
 <a href="?cmd=setstate&state=7#eventMode">Compo Closed</a>
 
 

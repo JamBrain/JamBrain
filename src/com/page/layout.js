@@ -1,32 +1,26 @@
-import {h, Component}					from 'preact/preact';
+import PageNavBar						from './bar/bar';
+import PageAlert						from './alert/alert';
+import PageSidebar						from './sidebar/sidebar';
+import PageContent						from './content/content';
+import PageFooter						from './footer/footer';
 
-import ViewBar							from 'com/view/bar/bar';
-import ViewHeader						from 'com/view/header/header';
-import ViewSidebar						from 'com/view/sidebar/sidebar';
-import ViewContent						from 'com/view/content/content';
-import ViewFooter						from 'com/view/footer/footer';
+export default function Layout( props ) {
+	const {user, featured, node, root, ...otherProps} = props;
+	const isLoading = !node || (node.id == 0);
 
-export default class Layout extends Component {
-	render( props ) {
-		let {user, featured, node, root} = props;
-
-		let ShowSidebar = (!props.noSidebar ? <ViewSidebar user={user} featured={featured} /> : null);
-		let loading = !node || (node.id == 0);
-
-		return (
-			<div id="layout">
-				<ViewBar user={user} featured={featured} loading={loading}/>
-				<div id="body">
-					<ViewHeader user={user} featured={featured} root={root}/>
-					<div id="content-sidebar">
-						<ViewContent>
-							{props.children}
-						</ViewContent>
-						{ShowSidebar}
-					</div>
-				</div>
-				<ViewFooter/>
-			</div>
-		);
-	}
+	return <>
+		<header aria-label="Ludum Dare">
+			<PageNavBar user={user} featured={featured} loading={isLoading}/>
+		</header>
+		<main>
+			<PageAlert user={user} featured={featured} root={root}/>
+			<section id="body">
+				<PageContent>
+					{props.children}
+				</PageContent>
+				{!props.noSidebar ? <PageSidebar user={user} featured={featured} /> : null}
+			</section>
+		</main>
+		<PageFooter/>
+	</>;
 }

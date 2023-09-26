@@ -1,11 +1,9 @@
-import {h, Component} 				from 'preact/preact';
-
-import NavLink							from 'com/nav-link/link';
+import { Component } from 'preact';
+import './stats.less';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content-error/error';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyBy				from 'com/content-common/common-body-by';
@@ -16,7 +14,7 @@ import PieChart							from 'com/visualization/piechart/piechart';
 import BarChart							from 'com/visualization/barchart/barchart';
 
 
-import $Stats							from '../../shrub/js/stats/stats';
+import $Stats							from '../../backend/js/stats/stats';
 
 
 export default class ContentStatsEvent extends Component {
@@ -71,7 +69,7 @@ export default class ContentStatsEvent extends Component {
 
 			var EventMode = 0;
 			if ( node && node.meta && node.meta['event-mode'] ) {
-				EventMode = parseInt(node.meta['event-mode']);
+				EventMode = Number(node.meta['event-mode']);
 			}
 
 			var Data = [];
@@ -155,12 +153,12 @@ export default class ContentStatsEvent extends Component {
 				Data.push(<div class="-gap">Last Updated: {getLocaleTimeStamp(new Date(stats.timestamp))}</div>);
 
 				return (
-					<ContentCommon {...props} class={cN(Class)}>
+					<ContentArticle {...props} class={Class.join(' ')}>
 						<ContentCommonBodyTitle title="Statistics" />
 						<ContentCommonBody>
 							{Data}
 						</ContentCommonBody>
-					</ContentCommon>
+					</ContentArticle>
 				);
 			}
 			return <div />;

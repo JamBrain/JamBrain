@@ -1,31 +1,27 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
+import './common-footer-button.less';
 
-export default class ContentCommonFooterButtonComments extends Component {
-	constructor( props ) {
-		super(props);
-	}
+import {Link, Icon, Tooltip} from 'com/ui';
 
-	render( props ) {
-		let {node} = props;
+export default function ContentCommonFooterButtonComments( props ) {
+	const {node, ...otherProps} = props;
 
-		let CountClass = '';
+	if (node) {
+		let countStyle = '';
 		if ( node.comments >= 10 )
-			CountClass = '-count-10';
+			countStyle = '-count-10';
 		else if ( node.comments >= 4 )
-			CountClass = '-count-4';
+			countStyle = '-count-4';
 		else if ( node.comments >= 1 )
-			CountClass = '-count-1';
+			countStyle = '-count-1';
 
-		if ( node && Number.isInteger(node.comments) ) {
-			return (
-				<NavLink href={node.path} class={cN("content-common-footer-button -comments", CountClass)} title="Comments">
-					<SVGIcon>bubbles</SVGIcon>
+		if ( Number.isInteger(node.comments) ) {
+			return <Tooltip text="Comments">
+				<Link href={node.path} class={`content-common-footer-button -comments ${countStyle}`}>
+					<Icon src="bubbles" />
 					<div class="-count">{node.comments}</div>
-				</NavLink>
-			);
+				</Link>
+			</Tooltip>;
 		}
-		return null;
 	}
+	return null;
 }

@@ -1,32 +1,16 @@
-import {h, Component} 					from 'preact/preact';
-import UIIcon 							from 'com/ui/icon/icon';
-import UIButton							from 'com/ui/button/button';
+import './nav.less';
+import { Icon, Button } from 'com/ui';
 
+export default function ContentNavButton( props ) {
+	const {icon, light, 'class': classProp, children, ...otherProps} = props;
 
-export default class ContentNavButton extends Component {
-	render( props ) {
-		let Body = [];
-		let Classes = [
-			props.class
-		];
+	const isSelected = ((props.path === props.href) || (props.path === props.match)) ? '-selected' : '';
+	// MK TODO: Rename -light to -lit
+	const isLit = light ? '-light' : '';
+	const hasIcon = icon ? '-has-icon' : '';
 
-		if ( (props.path === props.href) || (props.path === props.match) ) {
-			Classes.push('-selected');
-		}
-
-		if ( props.light ) {
-			Classes.push('-light');
-		}
-
-		if ( props.icon ) {
-			Body.push(<UIIcon src={props.icon} />);
-			Classes.push('-has-icon');
-		}
-
-		Body.push(<span>{props.children}</span>);
-
-		return (
-			<UIButton {...props} class={cN(Classes)}>{Body}</UIButton>
-		);
-	}
+	return <Button {...otherProps} class={`${classProp ?? ''} ${isSelected} ${isLit} ${hasIcon}`}>
+		{icon ? <Icon src={icon} /> : null}
+		{children}
+	</Button>;
 }

@@ -1,0 +1,15 @@
+{
+	"extends": ["stylelint-config-recommended-less", "stylelint-config-css-modules"],
+	"rules": {
+		"block-no-empty": null,
+		"rule-empty-line-before": [
+			"always", {
+				"except": ["first-nested"],
+				"ignore": ["after-comment"],
+				"severity": "warning"
+			}
+		],
+		"no-descending-specificity": null,
+		"no-duplicate-selectors": null
+	}
+}

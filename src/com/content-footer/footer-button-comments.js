@@ -1,30 +1,18 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
+import './footer-button.less';
 
-import $Node							from '../../shrub/js/node/node';
+import {Link, Icon, Tooltip} from 'com/ui';
+import $Node from 'backend/js/node/node';
 
-export default class ContentFooterButtonComments extends Component {
-	constructor( props ) {
-		super(props);
+
+export default function ContentFooterButtonComments( props ) {
+	const {node, href, ...otherProps} = props;
+	if ( node && Number.isInteger(node.comments) ) {
+		return <Tooltip text="Comments">
+			<Link href={href} class="footer-button footer-button-comments">
+				<Icon src="bubbles" />
+				<div class="-count">{node.comments}</div>
+			</Link>
+		</Tooltip>;
 	}
-
-	componentDidMount() {
-	}
-
-	render( {node, href}, {} ) {
-		if ( node && Number.isInteger(node.comments) ) {
-			return (
-				<NavLink href={href} class="footer-button footer-button-comments" title="Comments">
-					<SVGIcon>bubbles</SVGIcon>
-					<div class="-count">{node.comments}</div>
-				</NavLink>
-			);
-		}
-		return null;
-	}
+	return null;
 }
-
-//					<SVGIcon class="-hover-hide">bubbles</SVGIcon>
-//					<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-//					<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>

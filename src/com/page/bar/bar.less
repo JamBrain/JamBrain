@@ -1,0 +1,282 @@
+@import "defs.less";
+
+@NAVBAR_HEIGHT: 4rem;
+@NAVBAR_BG: fade(@COL_D, 100%); /* was 80% */
+
+@BUTTON_COL_TEXT: var(--COL-A);
+@BUTTON_COL_SVG: @COL_NLLL;
+@BUTTON_LIT_TEXT: var(--COL-W);
+@BUTTON_LIT_SVG: var(--COL-W);
+@BUTTON_LIT_BG: var(--COL-A);
+
+
+body > header {
+	position: fixed;
+
+	--LOGO-COL-A: var(--COL-A);
+	--LOGO-COL-B: var(--COL-AB);
+	--LOGO-COL-C: var(--COL-B);
+	--LOGO-LIT-A: var(--COL-W);
+	--LOGO-LIT-B: var(--COL-B);
+	--LOGO-LIT-C: var(--COL-W);
+	--LOGO-LIT-BG: var(--COL-A);
+
+	/* Force on a new layer in an attempt to avoid jitter */
+	transform: translateZ(0);
+	/*will-change: transform;*/
+
+	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
+	user-select: none;
+
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+
+	height: @NAVBAR_HEIGHT;
+	background: @NAVBAR_BG;
+
+	& > nav {
+		position: relative;
+
+		margin: auto;
+		max-width: @BASE_WIDTH + 2rem;	/* 2rem, so when we lose our full width, it's padded */
+		height: @NAVBAR_HEIGHT;
+
+		& > .left {
+			position: absolute;
+
+			left: 1rem; 				/* 1rem, so when we lose our full width, it's padded */
+			bottom: 0;
+			top: 0;
+			height: @NAVBAR_HEIGHT; 	/* Required, otherwise top+bottom fills the whole parent div */
+
+			& > .logo {
+				font-size: 2.5rem;
+				display: flex;
+
+				padding: 0.75rem;
+
+				transition: background 0.1s, color 0.2s;
+
+				& > svg {
+					display: block;
+					transition: color 0.2s;
+				}
+
+				& > .icon-ludum,
+				& > .icon-l-udum {
+					color: var(--LOGO-COL-A);
+				}
+
+				& > .icon-dare,
+				& > .icon-d-are {
+					color: var(--LOGO-COL-B);
+				}
+
+				& > .icon-ldnum {
+					color:var(--LOGO-COL-C);
+				}
+
+				&:hover,
+				&:focus {
+					background: var(--LOGO-LIT-BG);
+
+					& > .icon-ludum,
+					& > .icon-l-udum {
+						color: var(--LOGO-LIT-A);
+					}
+
+					& > .icon-dare,
+					& > .icon-d-are {
+						color: var(--LOGO-LIT-B);
+					}
+
+					& > .icon-ldnum {
+						color: var(--LOGO-LIT-C);
+					}
+				}
+			}
+		}
+
+		& > .fake-right,
+		& > .right {
+			position: absolute;
+
+			right: 1rem;	/* 1rem, so when we lose our full width, it's padded */
+			bottom: 0;
+			top: 0;
+			margin: auto;
+			height: 3rem; 	/* Required, otherwise top+bottom fills the whole parent div */
+			/*min-width: 3rem;*/
+		}
+
+		& > .right {
+			/* Everything */
+			& > * {
+				margin-left: 0.5rem;
+				float: left;
+				text-decoration: none;
+			}
+
+			& > .ui_button,
+			& > * > .ui_button {
+				transition: background 0.1s;
+
+				& > * {
+					color: @BUTTON_COL_TEXT;
+					transition: color 0.2s;
+				}
+
+				& > svg {
+					color: @BUTTON_COL_SVG;
+				}
+
+				&:hover,
+				&:focus,
+				&:active,
+				&:hover:active {
+					background: @BUTTON_LIT_BG;
+
+					& > * {
+						background: transparent;	/* Background color cascades from parent, so this fixes that */
+						color: @BUTTON_LIT_TEXT;
+					}
+
+					& > svg {
+						color: @BUTTON_LIT_SVG;
+					}
+				}
+			}
+
+			/* Buttons (Text with SVG) */
+			& > .bar-button {
+				position: relative;
+
+				line-height: 2rem;
+				padding: 0.5rem 1rem;
+				padding-left: 3rem;
+
+				@media (max-width: (@BASE_WIDTH - 20rem)) {
+					height: 3rem;
+					width: 3rem;
+					padding: 0;
+				}
+
+				& > svg {
+					position: absolute;
+
+					font-size: 1.5rem;
+
+					top: 0;
+					bottom: 0;
+					left: 1rem;
+					margin: auto;
+
+					display:block;
+
+					@media (max-width: (@BASE_WIDTH - 20rem)) {
+						font-size: 2rem;
+						left:0;
+						right:0;
+					}
+				}
+
+				& > :not(svg) {
+					font-size: 1.3rem;
+					font-weight: 400;
+				}
+			}
+
+			/* Avatar */
+			/*			& > .-user {
+				position: relative;
+
+				height: 3rem;
+				width: 3rem;
+
+				& img {
+					position: absolute;
+
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+					display: block;
+
+					width: 2.5rem;
+					height: 2.5rem;
+				}
+			}*/
+
+			/* Icon-only Button (with overlays) */
+			& > .bar-icon {
+				position: relative;
+
+				height: 3rem;
+				width: 3rem;
+
+				& > svg {
+					position: absolute;
+
+					font-size: 2rem;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+					display: block;
+				}
+
+				& > .-count {
+					position: absolute;
+
+					font-size: 0.75rem;
+					z-index: 4;
+
+					text-align: center;
+					height: 1rem;
+
+					top:0;
+					bottom:0.3rem;
+					left:0;
+					right:0;
+					margin:auto;
+
+					color: @COL_A; /*@COL_D; /*@MAJOR_DARK;*/
+					font-weight: bold;
+				}
+
+				& > .-new {
+					position: absolute;
+
+					font-weight: bold;
+					background: @COL_A; /*@MAJOR_COLOR1; #F00;*/
+
+					font-size:0.75rem;
+
+					width: 1.75rem;
+					line-height: 1.75rem;
+					height: 1.75rem;
+					text-align:center;
+					border-radius:50%;
+
+					top:0.25rem;
+					right:0.25rem;
+					margin:auto;
+
+					z-index: 5;
+
+					color: @COL_L; /*@MAJOR_LIGHT;*/
+				}
+			}
+		}
+	}
+}
+
+/* Offset the body to fit around the nav bar */
+body > main {
+	position: relative;
+	top: @NAVBAR_HEIGHT;
+}

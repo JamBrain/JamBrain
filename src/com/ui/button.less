@@ -1,0 +1,37 @@
+/* Buttons are assumed to "div-like" in appearance, able to contain several elements inlcuding images and text */
+.ui_button {
+	display: block;				/* div-like */
+	//position: relative;
+
+	cursor: pointer;			/* default to the pointer cursor (like: a) */
+	user-select: none;			/* stop users from selecting the text (like: button) */
+
+	> * {
+		pointer-events: none;	/* stopping children from being clickable means the event.target will be the button, not the child */
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+	}
+}
+
+
+/* Cancel out the default styles */
+button.ui_button {
+	border: 0;
+	padding: 0;
+	background: transparent;
+}
+
+a.ui_button {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+
+// TODO: Move these into the specific specializations above
+.ui_button {
+	text-align: inherit;		/* rather than left align, inherit */
+	box-sizing: border-box;		/* uses other weird metrics */
+	overflow: auto;				/* otherwise images wont work */
+}

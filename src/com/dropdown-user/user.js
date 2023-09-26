@@ -1,6 +1,5 @@
-import { h, Component } 				from 'preact/preact';
-
-import DropdownCommon					from 'com/dropdown-common/common';
+import { Component } from 'preact';
+import DropdownCommon from 'com/dropdown-common/common';
 
 export default class DropdownUser extends Component {
 	constructor( props ) {

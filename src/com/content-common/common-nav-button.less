@@ -1,6 +1,22 @@
 @import 'defs.less';
 
-#content .content-common-body {
+
+/* TODO:: Nasty hack */
+#content .content-common-nav-button.-no-icon {
+	padding: 0.5em 1em;
+
+	& > div {
+		padding-left: 0;
+	}
+
+	&:last-child {
+		margin-right: 0;
+	}
+}
+
+
+/*
+#content .content.-common .body.-nav {
 	a,
 	a:visited {
 		&.content-common-nav-button {
@@ -8,7 +24,7 @@
 			display: inline-block;
 			color: inherit;
 
-			margin-right: 0.5em;	/* hack, as common-nav style wasn't working */
+			margin-right: 0.5em;
 
 			&.-selected {
 				color: @COL_L;
@@ -42,8 +58,9 @@
 		}
 	}
 }
+*/
 
-#content .content-common-nav-button {
+#content .content.-common .body.-nav .ui_button {
 	position: relative;
 
 	display: inline-block;

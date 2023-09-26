@@ -1,11 +1,12 @@
-import {h, Component} 								from 'preact/preact';
+import { Component } from 'preact';
 
-import NavLink										from 'com/nav-link/link';
+import { node_IsAuthor } from 'internal/lib';
+import {Link, ButtonClipboard} from 'com/ui';
 
 import ContentLoading								from 'com/content-loading/loading';
-import ContentError									from 'com/content-error/error';
+import {ContentError} from 'com/content';
 
-import ContentCommon								from 'com/content-common/common';
+import ContentArticle								from 'com/content-common/common';
 
 import ContentCommonBody							from 'com/content-common/common-body';
 import ContentCommonBodyBy							from 'com/content-common/common-body-by';
@@ -19,7 +20,7 @@ import ContentCommonDraft							from 'com/content-common/common-draft';
 import ContentCommonEdit							from 'com/content-common/common-edit';
 import ItemTeambuilding								from 'com/content-item/item-teambuilding';
 
-import $Node										from 'shrub/js/node/node';
+import $Node										from 'backend/js/node/node';
 import {AutocompleteAtNames, AutocompleteEmojis}	from 'com/content-common/common-autocomplete';
 
 
@@ -60,6 +61,7 @@ export default class ContentSimple extends Component {
 		this.autocompleters = {};
 	}
 
+
 	componentDidMount() {
 		var props = this.props;
 
@@ -68,6 +70,7 @@ export default class ContentSimple extends Component {
 		if ( props.authors )
 			this.getAuthors(props.node);
 	}
+
 
 	componentWillUpdate( newProps, newState ) {
 		//Editing is done in constructor and since this isn't reloaded in most instances it requires a hack
@@ -87,12 +90,14 @@ export default class ContentSimple extends Component {
 		}
 	}
 
+
 	isIdenticalAuthorLists(a, b) {
 		if (!a !== !b) return false;
 		if (!a) return true;
 		if (a.length !== b.length) return false;
 		return a.filter((a, idx) => b.indexOf(a) === idx).length === a.length;
 	}
+
 
 	onAutocompleteSelect(replaceText, cursorPosAfterUpdate) {
 		this.setState({
@@ -104,7 +109,6 @@ export default class ContentSimple extends Component {
 			'replaceTextEvent': this.state.replaceTextEvent ? this.state.replaceTextEvent + 1 : 1,
 		});
 	}
-
 	onAutoselectCaptureKeyDown(autocompleter, callback) {
 		const {autocompleters} = this;
 		if ( !autocompleters[autocompleter] ) {
@@ -112,7 +116,6 @@ export default class ContentSimple extends Component {
 		}
 		autocompleters[autocompleter].captureKeyDown = callback;
 	}
-
 	onAutoselectCaptureKeyUp(autocompleter, callback) {
 		const {autocompleters} = this;
 		if ( !autocompleters[autocompleter] ) {
@@ -120,6 +123,7 @@ export default class ContentSimple extends Component {
 		}
 		autocompleters[autocompleter].captureKeyUp = callback;
 	}
+
 
 	onKeyDown( e ) {
 		const {autocompleters} = this;
@@ -131,7 +135,6 @@ export default class ContentSimple extends Component {
 		}
 		return true;
 	}
-
 	onKeyUp( e ) {
 		const {autocompleters} = this;
 		for ( let autocompleter in autocompleters ) {
@@ -143,22 +146,24 @@ export default class ContentSimple extends Component {
 		return true;
 	}
 
+
 	onTextAreaFocus( e ) {
 		this.setState({'textareaFocus': true});
 		//console.log("TextAreaFocus");
 		return true;
 	}
-
 	onTextAreaBlur( e ) {
 		setTimeout(() => this.setState({'textareaFocus': false}), 300);
 		return true;
 	}
+
 
 	onTextAreaCaret( e ) {
 		this.setState({'editCursorPos': e.target.selectionStart});
 		//console.log("TextAreaCursor");
 		return true;
 	}
+
 
 	getAuthors( node ) {
 		// Clear the Authors
@@ -201,12 +206,15 @@ export default class ContentSimple extends Component {
 		});
 	}
 
+
 	onEdit( e ) {
 		this.setState({'editing': true});
 	}
 	onPreview( e ) {
 		this.setState({'editing': false});
 	}
+
+
 	onSave( e ) {
 		var Title = this.state.name ? this.state.name : this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
@@ -232,22 +240,24 @@ export default class ContentSimple extends Component {
 			return false;
 		})
 		.catch(err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({'error': err});
 		});
 	}
+
+
 	onPublish( e ) {
 		// TODO: Confirm
-		console.log('do save first');
+		DEBUG && console.log('do save first');
 
 		return this.onSave( e )
 		.then( rr => {
 			if ( rr ) {
-				console.log('do publish');
+				DEBUG && console.log('do publish');
 
 				$Node.Publish(this.props.node.id)
 				.then(r => {
-					console.log(r);
+					//console.log(r);
 					if ( (r.status == 200) && r.path ) {
 						window.location.href = r.path;
 						//this.setState({ 'modified': false });
@@ -257,41 +267,45 @@ export default class ContentSimple extends Component {
 					}
 				})
 				.catch(err => {
-					console.log(err);
+					//console.log(err);
 					this.setState({'error': err});
 					window.location.hash = "#error-publish/"+encodeURI(err.message);
 				});
 			}
 		})
 		.catch(err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({'error': err});
 			window.location.hash = "#error-publish/"+encodeURI(err.message);
 		});
 	}
 
+
 	onDone( e ) {
 		if ( this.state.modified ) {
-			console.log('do save first');
+			DEBUG && console.log('do save first');
 
 			return this.onSave( e )
 			.then( rr => {
 				if ( rr ) {
-					console.log('done');
+					DEBUG && console.log('done');
+
 					window.location.href = this.props.node.path;
 				}
 			})
 			.catch(err => {
-				console.log(err);
+				//console.log(err);
 				this.setState({'error': err});
 				window.location.hash = "#error-publish/"+encodeURI(err.message);
 			});
 		}
 		else {
-			console.log('done');
+			DEBUG && console.log('done');
+
 			window.location.href = this.props.node.path;
 		}
 	}
+
 
 	onModifyTitle( e ) {
 		this.setState({'modified': true, 'name': e.target.value});
@@ -310,16 +324,18 @@ export default class ContentSimple extends Component {
 		this.setState({/*'modified': true,*/'avatar': avatar});
 	}
 
+
 	isEditMode() {
 		let {extra} = this.props;
 		return extra && extra.length && (extra[extra.length-1] == 'edit');
 	}
 
+
 	render( props, state ) {
-		props = Object.assign({}, props);	// Shallow copy we can change props
 		let {node, user, path, extra, featured} = props;
 		let {author, authors} = state;
 
+		props = {...props};	// Shallow copy so we can change props
 
 		// Hide if filter-out is enabled
 		if ( props.filterout && author && author.meta && author.meta['dont-show-me'] == "1" ) {
@@ -331,7 +347,12 @@ export default class ContentSimple extends Component {
 			return <div>💩</div>;
 		}
 		else if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
-			var ShowEditBar = null;
+			let PreHeader = [];
+			let Header = [];
+			let Body = [];
+			let Footer = [];
+
+
 			var ShowOnly = null;
 			let ShowAutocompleteEmoji;
 			let ShowAutocompleteAt;
@@ -339,9 +360,9 @@ export default class ContentSimple extends Component {
 
 			if ( this.isEditMode() ) {
 				if ( !node_IsAuthor(node, user) ) {
-					return <ContentError code="403">Forbidden: You do not have permission to edit this</ContentError>;
+					return <ContentError code={403}>Forbidden: You do not have permission to edit this</ContentError>;
 				}
-
+/*
 				let EditProps = {
 					'editing': state.editing,
 					'modified': state.modified,
@@ -351,11 +372,20 @@ export default class ContentSimple extends Component {
 					'onsave': this.onSave,
 					'onpublish': this.onPublish,
 					'ondone': this.onDone,
-				};
+					'nopublish': props.nopublish,
+				};*/
 
-				EditProps.nopublish = props.nopublish;
-
-				ShowEditBar = <ContentCommonEdit {...EditProps} />;
+				PreHeader.push(<ContentCommonEdit
+					editing={state.editing}
+					modified={state.modified}
+					published={!!node.published}
+					onedit={this.onEdit}
+					onpreview={this.onPreview}
+					onsave={this.onSave}
+					onpublish={this.onPublish}
+					ondone={this.onDone}
+					nopublish={props.nopublish}
+				/>);
 
 				ShowAutocompleteAt = <AutocompleteAtNames
 					text={state.editText}
@@ -399,9 +429,9 @@ export default class ContentSimple extends Component {
 				}
 				else {
 					ShowByLine = (
-						<div class="content-common-body">
-							<div class="-label">Authors</div>
-							Visit <NavLink blank href={user.path+'/following'}>your userpage</NavLink> to add authors. <br />
+						<div class="body">
+							<div class="body -label">Authors</div>
+							Visit <Link blank href={user.path+'/following'}>your userpage</Link> to add authors. <br />
 							<strong>NOTE:</strong> You can only add friends (users that follow each other).
 						</div>
 					);
@@ -432,33 +462,36 @@ export default class ContentSimple extends Component {
 
 			let ShowFlag = null;
 			if ( !props.noflag && !props.noheader && (props.flag || props.flagIcon) ) {
-				let FlagTitle = null;
-				if ( props.flag ) {
-					FlagTitle = <span>{props.flag}</span>;
-				}
+				let FlagTitle = props.flag ? <span>{props.flag}</span> : null;
 
-				ShowFlag = (
-					<ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon}>
-						{FlagTitle}
-					</ContentCommonBodyFlag>
-				);
+				Header.push(<ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon} children={FlagTitle} />);
 			}
 
 			let ShowTitle = null;
 			if ( !props.notitle && !props.noheader ) {
-				ShowTitle = <ContentCommonBodyTitle
+				// MK: I've disabled copyshortlink for the moment. Need to figure out the style ripple issue
+				let CopyShortlinkButton = false && !props.title ? (<ButtonClipboard
+					title="Copy shortlink to clipboard"
+					icon={"link"}
+					class="shortlink"
+					value={window.location.protocol + "//" + SHORTENER_DOMAIN + "/$" + node.id}
+				/>) : null;
+
+				let Subtitle = props.subtitle ? <span>{props.subtitle}</span> : null;
+
+				Header.push(<ContentCommonBodyTitle
 					href={!props.title ? node.path : null}
-					id={node.id}
 					minmax={props.minmax}
 					title={props.title ? props.title : state.name}
-					shortlink={!props.title}
-					hover={node.slug+' [$'+node.id+']'}
-					subtitle={props.subtitle}
+					tooltip={node.slug + ' [$'+node.id+']'}
 					titleIcon={props.titleIcon}
 					editing={props.notitleedit ? false : state.editing}
-					onmodify={this.onModifyTitle}
+					onModify={this.onModifyTitle}
 					limit="80"
-				/>;
+				>
+					{CopyShortlinkButton}
+					{Subtitle}
+				</ContentCommonBodyTitle>);
 			}
 
 			let ShowMarkup = null;
@@ -470,14 +503,14 @@ export default class ContentSimple extends Component {
 						label={props.label ? props.label : "Description"}
 						editing={state.editing}
 						placeholder="Say something"
-						class="-block-if-not-minimized"
-						onmodify={this.onModifyText}
+						class="_block-if-not-minimized"
+						onModify={this.onModifyText}
 						minimized={props.minimized}
 						limit={props.limit}
-						onkeydown={this.onKeyDown}
-						onkeyup={this.onKeyUp}
-						onfocus={this.onTextAreaFocus}
-						onblur={this.onTextAreaBlur}
+						onKeyDown={this.onKeyDown}
+						onKeyUp={this.onKeyUp}
+						onFocus={this.onTextAreaFocus}
+						onBlur={this.onTextAreaBlur}
 						oncaret={this.onTextAreaCaret}
 						replaceText={state.replaceText}
 						cursorPos={state.replaceCursorPos}
@@ -499,7 +532,7 @@ export default class ContentSimple extends Component {
 				ShowDraft = <ContentCommonDraft draft={props.draft} />;
 			}
 
-			props.class = cN('content-simple', props.class);
+			props.class = `-simple ${props.class ?? ''}`;
 			if ( this.isEditMode() ) {
 				props.minmax = null;
 				props.minimized = null;
@@ -511,13 +544,12 @@ export default class ContentSimple extends Component {
 			}
 
 			return (
-				<ContentCommon {...props}>
-					{ShowEditBar}
+				<ContentArticle {...props}>
+					{PreHeader}
 					{ShowDraft}
 					{ShowPrefix}
 					{ShowAvatar}
-					{ShowFlag}
-					{ShowTitle}
+					{Header}
 					{ShowAbove}
 					{ShowByLine}
 					{ShowMarkup}
@@ -525,11 +557,10 @@ export default class ContentSimple extends Component {
 					{ShowAutocompleteEmoji}
 					{ShowOnly}
 					{props.children}
-				</ContentCommon>
+				</ContentArticle>
 			);
 		}
-		else {
-			return <ContentLoading />;
-		}
+
+		return <ContentLoading />;
 	}
 }

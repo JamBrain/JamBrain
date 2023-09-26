@@ -1,12 +1,7 @@
 @import "defs.less";
 
-#content .content-base.content-noob {
-	/*font-size: 1.1em;*/
-	line-height: 1.5em;
-
-	padding: 1rem;
-
-	margin: auto;
+#content .content.noob,
+#content .content-item.noob {
 	max-width: 1024px;
 
 	@media (max-width: (@BASE_WIDTH - 20em)) {
@@ -14,31 +9,58 @@
 		padding: 0.5em;
 	}
 
-	color: @COL_NLLL;
-	background: @COL_NDDD;
+	--CONTENT-TEXT: @COL_NLLL;
+	--CONTENT-BG: @COL_NDDD;
+	--CONTENT-LINK-TEXT: @COL_AB;
 
-	& a,
-	& a:visited {
-		color: #F80;
+	--HEADER-TEXT: @COL_B;
+
+	header {
+		color: var(--HEADER-TEXT);
+
+		& > h1 {
+			margin-bottom: 1.5rem;
+		}
 	}
 
-	& > .-gap {
-		margin-bottom: 1rem;
-	}
-
-	& > .-title {
-		font-size: 1.8em;
+	a.ld {
 		font-weight: bold;
-		color: #FC0;
-		margin-bottom: 1rem;
 	}
 
-	& .-close {
+	.carosel {
 		float: right;
+		margin: 1rem;
 
-		&:hover {
+		div {
+			text-align: center;
+		}
+	}
+
+	.ui_button {
+		display: inline-block;
+		font-size: 1.5rem;
+
+		color: var(--CONTENT-LINK-TEXT);
+		&:hover,
+		&:focus {
+			color: var(--CONTENT-LINK-LIT-TEXT);
+			background: var(--CONTENT-LINK-LIT-BG);
+		}
+
+		.ui-icon {
+			margin: 0.25rem;
+		}
+	}
+
+	.close {
+		position: absolute;
+		right: 0.5rem;
+		top: 0.5rem;
+		padding: 0.5rem;
+
+		&:hover,
+		&:focus {
 			color: @COL_A;
-			cursor: pointer;
 		}
 	}
 }

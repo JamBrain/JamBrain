@@ -1,11 +1,10 @@
-import {h, Component} 					from 'preact/preact';
-import Shallow			 				from 'shallow/shallow';
+import { Component } from 'preact';
+import './input-textarea.less';
 
-import NavLink							from 'com/nav-link/link';
-import ButtonLink						from 'com/button-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import Shallow from 'shallow';
+import {Link, Icon} from 'com/ui';
 
-import $Asset							from 'shrub/js/asset/asset';
+import $Asset from 'backend/js/asset/asset';
 
 
 export default class InputTextarea extends Component {
@@ -17,7 +16,7 @@ export default class InputTextarea extends Component {
 			// MK: Chrome dev tools discourage the use of userAgent
 			// MK: Also, since Edge is Chromium based this might not be needed
 			//'microsoftEdge': /Edge/.test(navigator.userAgent),
-			'prevHeight': -1,	// This allows us to not scroll adjust wrong on first change
+			//'prevHeight': -1,	// This allows us to not scroll adjust wrong on first change
 		};
 
 		this.onInput = this.onInput.bind(this);
@@ -30,6 +29,7 @@ export default class InputTextarea extends Component {
 
 		//Needs to not be state and not trigger renders
 		this.replaceTextEvent = -1;
+		this.prevHeight = -1;
 	}
 
 	shouldComponentUpdate( nextProps ) {
@@ -37,14 +37,14 @@ export default class InputTextarea extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		let {replaceText, cursorPos, replaceTextEvent, maxlength} = nextProps;
+		let {replaceText, cursorPos, replaceTextEvent, maxLength} = nextProps;
 		const prevReplaceTextEvent = this.replaceTextEvent;
 		this.props.value = replaceText;
 		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
 		if ( replaceText && this.textarea && (replaceTextEvent != prevReplaceTextEvent) ) {
-			const {oncaret, onmodify} = this.props;
+			const {oncaret, onModify} = this.props;
 			let updated = false;
-			if (maxlength && replaceText.length > maxlength) {
+			if (maxLength && replaceText.length > maxLength) {
 				replaceText = this.textarea.value;
 				updated = true;
 			}
@@ -52,8 +52,8 @@ export default class InputTextarea extends Component {
 			this.textarea.focus();
 			this.replaceTextEvent = replaceTextEvent;
 
-			if (updated && onmodify) {
-				onmodify({
+			if (updated && onModify) {
+				onModify({
 					'target': {
 						'value': replaceText, 'selectionStart': cursorPos, 'selectionEnd': cursorPos
 					},
@@ -80,15 +80,15 @@ export default class InputTextarea extends Component {
 			var scrollLeft = window.pageXOffset;// || document.documentElement.scrollLeft; // pageXOffset is IE 9+
 			var scrollTop = window.pageYOffset;// || document.documentElement.scrollTop;  // pageYOffset is IE 9+
 
-			//			window.onscroll = function() {}; // I don't think this has any effect
+			//window.onscroll = function() {}; // MK: I don't think this has any effect
 
-			this.textarea.style.height = 0;	// Shockingly, this is necessary. textarea wont shrink otherwise.
+			this.textarea.style.height = "0";	// Shockingly, this is necessary. textarea wont shrink otherwise.
 
 			// Unfortunately if the textarea is larger than the screen, this `= 0` line causes the focus to jump to the top of the textarea.
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
 
 			// Calculate the size change since last time here
-			var delta = (this.state.prevHeight > 0) ? (this.textarea.scrollHeight - this.state.prevHeight) : 0;
+			var delta = (this.prevHeight > 0) ? (this.textarea.scrollHeight - this.prevHeight) : 0;
 
 			// This works around the jumping by restoring the scroll positions to where they should have been
 			window.scrollTo(scrollLeft, scrollTop + delta);
@@ -96,7 +96,7 @@ export default class InputTextarea extends Component {
 //			window.onscroll = null;
 
 			//Save current height for next round
-			this.state.prevHeight = this.textarea.scrollHeight;
+			this.prevHeight = this.textarea.scrollHeight;
 		}
 	}
 
@@ -121,7 +121,7 @@ export default class InputTextarea extends Component {
 		var ta = this.textarea;
 
 		// http://stackoverflow.com/a/11077016/5678759
-		if ( ta.selectionStart || (ta.selectionStart == '0') ) {	// Is Number
+		if ( ta.selectionStart || (ta.selectionStart === 0) ) {	// Is Number
 			var startPos = ta.selectionStart;
 			var endPos = ta.selectionEnd;
 			ta.value = ta.value.substring(0, startPos) + Text + ta.value.substring(endPos, ta.value.length);
@@ -161,8 +161,8 @@ export default class InputTextarea extends Component {
 	}
 
 	onInput( e ) {
-		if ( this.props.onmodify ) {
-			this.props.onmodify(e);
+		if ( this.props.onModify ) {
+			this.props.onModify(e);
 		}
 
 		// MK: Disabled because Edge is now Chromium based
@@ -175,15 +175,15 @@ export default class InputTextarea extends Component {
 	}
 
 	onKeyDown( e ) {
-		const {onkeydown, oncaret} = this.props;
-		if ( onkeydown && !onkeydown(e) ) {
+		const {onKeyDown, oncaret} = this.props;
+		if ( onKeyDown && !onKeyDown(e) ) {
 			e.preventDefault();
 		}
 	}
 
 	onKeyUp( e ) {
-		const {onkeyup, oncaret} = this.props;
-		if ( onkeyup && !onkeyup(e) ) {
+		const {onKeyUp, oncaret} = this.props;
+		if ( onKeyUp && !onKeyUp(e) ) {
 			e.preventDefault();
 		}
 		else if (oncaret) {
@@ -205,15 +205,15 @@ export default class InputTextarea extends Component {
 	}
 
 	onBlur( e ) {
-		const {onblur} = this.props;
-		if ( onblur && !onblur(e) ) {
+		const {onBlur} = this.props;
+		if ( onBlur && !onBlur(e) ) {
 			e.preventDefault();
 		}
 	}
 
 	onFocus( e ) {
-		const {onfocus, oncaret} = this.props;
-		if ( onfocus && !onfocus(e) ) {
+		const {onFocus, oncaret} = this.props;
+		if ( onFocus && !onFocus(e) ) {
 			e.preventDefault();
 		}
 		if ( oncaret && !oncaret(e) ) {
@@ -230,17 +230,17 @@ export default class InputTextarea extends Component {
 
 	render( props ) {
 		var ShowLimit = null;
-		if ( props.maxlength )
-			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxlength}</span></div>;
+		if ( props.maxLength )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxLength}</span></div>;
 
 		return (
 			<div class="input-textarea">
 				<div class="-textarea">
 					<textarea {...props}
 						oninput={this.onInput}
-						onkeydown={this.onKeyDown}
-						onkeyup={this.onKeyUp}
-						onclick={this.onClick}
+						onKeyDown={this.onKeyDown}
+						onKeyUp={this.onKeyUp}
+						onClick={this.onClick}
 						ref={(input) => { this.textarea = input; }}
 					/>
 				</div>
@@ -248,17 +248,13 @@ export default class InputTextarea extends Component {
 					{ShowLimit}
 					<div class="-left">
 						<label>
-							<input type="file" name="asset" style="display: none;" onchange={this.onFileChange} />
-							<NavLink class="-upload"><SVGIcon baseline gap>upload</SVGIcon>Upload Image</NavLink>
+							<input type="file" name="asset" style="display: none;" onChange={this.onFileChange} />
+							<Link class="-upload"><Icon class="-baseline -gap" src="upload" />Upload Image</Link>
 						</label>
-						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> Markdown</NavLink> and <strong>:emoji_codes:</strong></span>
+						<span class="_inline_if-sidebar">. Supports <Link blank href="/markdown"><Icon src="markdown" /> Markdown</Link> and <strong>:emoji_codes:</strong></span>
 					</div>
 				</div>
 			</div>
 		);
-//						<NavLink class="-upload" onclick={e => {window.location = "#upload";}}><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
-
-//		<NavLink class="-upload" href="#upload"><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
-//		<span class="-upload" onclick={e => {window.location = "#upload";}}><SVGIcon baseline gap>upload</SVGIcon>Upload</span>
 	}
 }

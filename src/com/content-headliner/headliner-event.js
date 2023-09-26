@@ -1,8 +1,9 @@
-import {h, Component} 					from 'preact/preact';
+import { Component } from 'preact';
+import './headliner.less';
 
-import ContentHeadliner					from 'com/content-headliner/headliner';
-import $Stats							from 'shrub/js/stats/stats';
-//import $Node							from 'shrub/js/node/node';
+import ContentHeadliner from './headliner';
+import $Stats from 'backend/js/stats/stats';
+//import $Node from 'backend/js/node/node';
 
 export default class ContentHeadlinerEvent extends Component {
 	constructor( props ) {

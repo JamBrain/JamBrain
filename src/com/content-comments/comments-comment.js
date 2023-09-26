@@ -1,17 +1,14 @@
-import {h, Component}	 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {Component} from 'preact';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
-import NavLink 							from 'com/nav-link/link';
-import ButtonLink 						from 'com/button-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
-import IMG2 							from 'com/img2/img2';
-import UICheckbox from 'com/ui/checkbox/checkbox';
+import { getRoughAge, getLocaleFullTimeStamp, getLocaleDate } from 'internal/time';
 
-import ContentCommentsMarkup			from 'comments-markup';
-import {AutocompleteAtNames, AutocompleteEmojis}			from 'com/content-common/common-autocomplete';
-import $Comment							from 'shrub/js/comment/comment';
-import $CommentLove						from 'shrub/js/comment/comment_love';
+import {Link, Button, Icon, Image, Tooltip, UICheckbox} from 'com/ui';
+
+import ContentCommentsMarkup from './comments-markup';
+import {AutocompleteAtNames, AutocompleteEmojis} from 'com/content-common/common-autocomplete';
+import $Comment from 'backend/js/comment/comment';
+import $CommentLove from 'backend/js/comment/comment_love';
+
 
 export default class ContentCommentsComment extends Component {
 	constructor( props ) {
@@ -25,7 +22,7 @@ export default class ContentCommentsComment extends Component {
 			// NOTE: Set this upon save, or use it to cancel
 			'original': props.comment.body,
 
-			'loved': props.comment.loved ? true : false,
+			'loved': !!props.comment.loved,
 			'lovecount': props.comment.love,
 		};
 
@@ -65,20 +62,17 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onEditing( e ) {
-//		console.log('** Edit Comment');
 		this.setState({'preview': false});
 	}
 	onPreview( e ) {
-//		console.log('** Preview Comment');
 		this.setState({'preview': true});
 	}
 
 	canSave() {
-		return (this.props.comment.body.trim().length > 1);
+		return (this.props.comment.body.trim().length >= 1);
 	}
 
 	onModify( e ) {
-		//console.log('modified', e.target, this.state.editText, this.state.editCursorPos, this.state.textareaFocus);
 		this.props.comment.body = e.target.value;
 		this.setState({
 			'modified': this.canSave(),
@@ -93,8 +87,8 @@ export default class ContentCommentsComment extends Component {
 	onKeyDown( e ) {
 		const {autocompleters} = this;
 		for ( let autocompleter in autocompleters ) {
-			const state = autocompleters[autocompleter];
-			if ( state.captureKeyDown && !state.captureKeyDown(e) ) {
+			const ac = autocompleters[autocompleter];
+			if ( ac.captureKeyDown && !ac.captureKeyDown(e) ) {
 				return false;
 			}
 		}
@@ -104,8 +98,8 @@ export default class ContentCommentsComment extends Component {
 	onKeyUp( e ) {
 		const {autocompleters} = this;
 		for ( let autocompleter in autocompleters ) {
-			const state = autocompleters[autocompleter];
-			if ( state.captureKeyUp && !state.captureKeyUp(e) ) {
+			const ac = autocompleters[autocompleter];
+			if ( ac.captureKeyUp && !ac.captureKeyUp(e) ) {
 				return false;
 			}
 		}
@@ -130,12 +124,15 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onCancel( e ) {
-		this.props.comment.body = this.state.original;
-		this.setState({'modified': false, 'editing': false, 'preview': false});
+		this.setState(prevState => {
+			// MK: Is this allowed?
+			this.props.comment.body = prevState.original;
+			return {'modified': false, 'editing': false, 'preview': false};
+		});
 	}
 
 	onSave( e ) {
-		var comment = this.props.comment;
+		let comment = this.props.comment;
 
 		$Comment.Update( comment.id, comment.node, comment.body )
 		.then(r => {
@@ -149,10 +146,11 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onToggleAnon() {
-		this.setState({"publishAnon": !this.state.publishAnon});
+		this.setState(prevState => ({"publishAnon": !prevState.publishAnon}));
 	}
 
 	onPublish( e ) {
+		// MK: Uses state
 		if ( this.canSave() ) {
 			if ( this.state.publishAnon ) {
 				if ( this.props.onpublish ) {
@@ -174,6 +172,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onLove( e ) {
+		// MK: uses state
 		if ( (this.props.user.id != 0) && (this.props.user.id != null) ) {
 			if ( this.props.comment.id != null ) {
 				if ( this.state.loved ) {
@@ -209,13 +208,13 @@ export default class ContentCommentsComment extends Component {
 
 	onAutocompleteSelect(replaceText, cursorPosAfterUpdate) {
 		this.props.comment.body = replaceText;
-		this.setState({
+		this.setState(prevState => ({
 			'modified': this.canSave(),
 			'editText': replaceText,
 			'replaceText': replaceText,
 			'replaceCursorPos': cursorPosAfterUpdate,
-			'replaceTextEvent': this.state.replaceTextEvent ? this.state.replaceTextEvent + 1 : 1,
-		});
+			'replaceTextEvent': prevState.replaceTextEvent ? prevState.replaceTextEvent + 1 : 1,
+		}));
 	}
 
 	onAutoselectCaptureKeyDown(autocompleter, callback) {
@@ -233,6 +232,7 @@ export default class ContentCommentsComment extends Component {
 		}
 		autocompleters[autocompleter].captureKeyUp = callback;
 	}
+
 
 	render( props, state ) {
 		let {user, comment, author, error, node, isNodeAuthor, isMyComment, isMention} = props;
@@ -255,14 +255,14 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowTitle = [];
 			if ( !state.editing || state.preview ) {
-				var Created = new Date(comment.created);
-				var Modified = new Date(comment.modified);
-				var Now = new Date();
-				var DateDiff = (Now.getTime() - Created.getTime());
-				var ModDiff = (Modified.getTime() - Created.getTime());
+				let Created = new Date(comment.created);
+				let Modified = new Date(comment.modified);
+				let Now = new Date();
+				let DateDiff = (Now.getTime() - Created.getTime());
+				let ModDiff = (Modified.getTime() - Created.getTime());
 
 				// 1 minute leeway on edits
-				var HasEdited = ModDiff > (60*1000);
+				let HasEdited = ModDiff > (60*1000);
 
 				ShowTitle.push(
 					<span>by <span class="-author">{Name}</span></span>
@@ -271,13 +271,13 @@ export default class ContentCommentsComment extends Component {
 				// Again, also only if authored
 				if ( author ) {
 					ShowTitle.push(
-						<span>&nbsp;(<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>){comment.anonymous ? " (Published Anonymously)" : ""}</span>
+						<span>&nbsp;(<Link class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</Link>){comment.anonymous ? " (Published Anonymously)" : ""}</span>
 					);
 				}
 
 				if ( comment.created ) {
 					ShowTitle.push(
-						<span>, <span title={comment.id}>published</span> <span class="-date" title={getLocaleFullTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></span>
+						<span>, <Tooltip text={comment.id}>published</Tooltip> <Tooltip class="-date" text={getLocaleFullTimeStamp(Created)}>{getRoughAge(DateDiff)}</Tooltip><Tooltip text={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</Tooltip></span>
 					);
 				}
 				else {
@@ -287,19 +287,19 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowReply = null;
 			//if ( user && user.id )
-			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
+			//	ShowReply = <div class="-button -reply" onClick={this.onReply}><UIIcon>reply</UIIcon><div>Reply</div></div>;
 
 			let ShowEdit = null;
 			if ( user && comment && (comment.author > 0) && (comment.author === user.id) && !state.editing )
-				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
+				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><Icon src="edit" /></div>;
 
 			let ShowLove = null;
 			if ( !props.nolove ) {
 				ShowLove = (
-					<div class={"-button -love"+(state.loved?" -loved":"")} onclick={this.onLove}>
-						<SVGIcon class="-hover-hide">heart</SVGIcon>
-						<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-						<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+					<div class={"-button -love"+(state.loved?" -loved":"")} onClick={this.onLove}>
+						<Icon class="-hover-hide" src="heart" />
+						<Icon class="-hover-show -loved-hide" src="heart-plus" />
+						<Icon class="-hover-show -loved-show" src="heart-minus" />
 						<div>{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}</div>
 					</div>
 				);
@@ -325,30 +325,30 @@ export default class ContentCommentsComment extends Component {
 				let ShowLeft = [];
 				if ( !state.preview ) {
 					ShowLeft = [
-						<div class="-button -preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing -selected"><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview" onClick={this.onPreview}><Icon src="preview" /><div class="_block_if-sidebar">Preview</div></div>,
+						<div class="-button -editing -selected"><Icon src="edit" /><div class="_block_if-sidebar">Edit</div></div>,
 					];
 				}
 				else {
 					ShowLeft = [
-						<div class="-button -preview -selected"><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing" onclick={this.onEditing}><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview -selected"><Icon src="preview" /><div class="_block_if-sidebar">Preview</div></div>,
+						<div class="-button -editing" onClick={this.onEditing}><Icon src="edit" /><div class="_block_if-sidebar">Edit</div></div>,
 					];
 				}
 
-				var ShowRight = [];
+				let ShowRight = [];
 
-				ShowRight.push(<UICheckbox onclick={this.onSubscribe} value={props.subscribed} tooltip="You always receive notifications for mentions">Receive notifications</UICheckbox>);
+				ShowRight.push(<UICheckbox onClick={this.onSubscribe} value={props.subscribed} tooltip="You always receive notifications for mentions">Receive notifications</UICheckbox>);
 
 				if ( props.publish ) {
 					if ( props.allowAnonymous ) {
-						ShowRight.push(<UICheckbox onclick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
+						ShowRight.push(<UICheckbox onClick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
 					}
-					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
+					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><Icon src="publish" /><div>Publish</div></div>);
 				}
 				else {
-					ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
-					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
+					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><Icon src="cross" /><div class="_block_if-sidebar">Cancel</div></div>);
+					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><Icon src="save" /><div>Save</div></div>);
 				}
 
 				ShowTopNav = (
@@ -368,10 +368,10 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowAvatar = null;
 			if ( author ) {
-				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><IMG2 alt={author.slug + "'s avatar image"} src={Avatar} /></ButtonLink>;
+				ShowAvatar = <Button class="-avatar" href={author.path}><Image alt={author.slug + "'s avatar image"} src={Avatar} /></Button>;
 			}
 			else {
-				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;
+				ShowAvatar = <div class="-avatar"><Image src={Avatar} /></div>;
 			}
 
 			const ShowAutocompleteAt = <AutocompleteAtNames
@@ -395,12 +395,7 @@ export default class ContentCommentsComment extends Component {
 			return (
 				<div
 					id={"comment-"+comment.id}
-					class={cN(
-						"-item", "-comment", "-indent-" + props.indent,
-						isNodeAuthor && "comment-node-author",
-						isMyComment && "comment-self-authored",
-						isMention && "comment-mention"
-					)}
+					class={`-item -comment -indent-${props.indent} ${isNodeAuthor ? "comment-node-author" : ''} ${isMyComment ? "comment-self-authored" : ''} ${isMention ? "comment-mention" : ''}`}
 				>
 					{ShowAvatar}
 					{ShowAutocompleteAt}
@@ -414,11 +409,11 @@ export default class ContentCommentsComment extends Component {
 								user={user}
 								node={node}
 								editing={state.editing && !state.preview}
-								onmodify={this.onModify}
-								onkeydown={this.onKeyDown}
-								onkeyup={this.onKeyUp}
-								onfocus={this.onTextAreaFocus}
-								onblur={this.onTextAreaBlur}
+								onModify={this.onModify}
+								onKeyDown={this.onKeyDown}
+								onKeyUp={this.onKeyUp}
+								onFocus={this.onTextAreaFocus}
+								onBlur={this.onTextAreaBlur}
 								oncaret={this.onTextAreaCaret}
 								placeholder="type a comment here"
 								limit={props.limit}

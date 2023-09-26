@@ -20,12 +20,12 @@ require_once __DIR__."/common.php";
 
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_USE_CORE = true;
-const HTML_CSS_INCLUDE = [ 
+const HTML_CSS_INCLUDE = [
 	"/style/theme-hub.css.php",
 ];
 const HTML_OTHER_CSS_INCLUDE = [];
 const HTML_JS_INCLUDE = [];
-const HTML_OTHER_JS_INCLUDE = [ 
+const HTML_OTHER_JS_INCLUDE = [
 	"api-legacy.js",
 	"api-theme.js",
 ];
@@ -34,7 +34,7 @@ const HTML_USE_GOOGLE = true;
 
 // Extract Id from Cookie (and not Announcement) //
 if ( ($EVENT_MODE !== 5) && isset($_COOKIE['lusha']) ) {
-	$cookie_id = legacy_GetUserFromCookie();	
+	$cookie_id = legacy_GetUserFromCookie();
 }
 else {
 	$cookie_id = 0;
@@ -96,31 +96,31 @@ require_once __DIR__."/theme-submitidea.php";
 require_once __DIR__."/theme-stats.php";
 
 
-function ShowMyIdeas() { 
+function ShowMyIdeas() {
 ?>
 	<div class="sg hidden" id="extra-sg">
 		<div class="title big caps space">My Suggestions</div>
 		<div id="sg"></div>
 	</div>
-<?php 
-} 
-function ShowMyOldIdeas() { 
+<?php
+}
+function ShowMyOldIdeas() {
 ?>
 	<div class="sg-old hidden" id="extra-sg-old">
 		<br />
 		<div class="title big caps space">Previous Suggestions</div>
 		<div id="sg-old"></div>
 	</div>
-<?php 
+<?php
 }
-function ShowMyLikes() { 
+function ShowMyLikes() {
 ?>
 	<div class="sg-like hidden" id="extra-sg-like">
 		<br />
 		<div class="title big caps space">Suggestions I Like</div>
 		<div id="sg-like"></div>
 	</div>
-<?php 
+<?php
 }
 
 require_once __DIR__."/theme-slaughter.php";
@@ -153,47 +153,47 @@ dialog_InsertScript();
 <?php
 	}
 ?>
-	
+
 	function sg_AddIdea(Id,Idea,accent) {
 		Id = Number(Id);
 		Idea = escapeString(Idea);
 		IdeaAttr = escapeAttribute(Idea);
-		
+
 		var sg_root = document.getElementById('sg');
-		
+
 		var node = document.createElement('div');
 		node.setAttribute("class",'sg-item item'+((accent===true)?" effect-accent":""));
 		node.setAttribute("id","sg-item-"+Id);
 <?php 	if ( $EVENT_MODE === 1 && ($GLOBALS['EVENT_MODE_DIFF'] > 0) ) {	?>
-			node.innerHTML = 
-				"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
+			node.innerHTML =
+				"<div class='sg-item-x' onClick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
 				"<div class='sg-item-text item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
 <?php	} else { ?>
-			node.innerHTML = 
+			node.innerHTML =
 				"<div class='sg-item-text item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
 <?php	} ?>
 		sg_root.insertBefore( node, sg_root.childNodes[0] );
 		//sg_root.appendChild( node );
-		
+
 		document.getElementById('extra').classList.remove("hidden");
 		document.getElementById('extra-sg').classList.remove("hidden");
 	}
-	
+
 	function sg_AddOldIdea(Id,Idea,accent) {
 		Id = Number(Id);
 		Idea = escapeString(Idea);
 		IdeaAttr = escapeAttribute(Idea);
-		
+
 		var sg_root = document.getElementById('sg-old');
-		
+
 		var node = document.createElement('div');
 		node.setAttribute("class",'sg-item item'+((accent===true)?" effect-accent":""));
 		node.setAttribute("id","sg-item-"+Id);
-		node.innerHTML = 
+		node.innerHTML =
 			"<div class='sg-item-text item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
 		sg_root.insertBefore( node, sg_root.childNodes[0] );
 		//sg_root.appendChild( node );
-		
+
 		document.getElementById('extra').classList.remove("hidden");
 		document.getElementById('extra-sg-old').classList.remove("hidden");
 	}
@@ -204,7 +204,7 @@ dialog_InsertScript();
 			theme_RemoveIdea(Id,
 				function(response,code) {
 					console.log("REMOVE:",response);
-					
+
 					if ( response.id > 0 ) {
 						var el = document.getElementById('sg-item-'+response.id);
 						if ( el ) {
@@ -213,13 +213,13 @@ dialog_InsertScript();
 						sg_UpdateCount(response.count,true);
 					}
 					else {
-						// Invalid Response //	
+						// Invalid Response //
 					}
 				}
 			);
 		});
 	}
-	
+
 	function sg_UpdateCount(count,effect) {
 		var el = document.getElementById('sg-count');
 		var Total = 3 - count;
@@ -230,11 +230,11 @@ dialog_InsertScript();
 			}
 		}
 	}
-		
+
 	function SubmitIdeaForm() {
 		var elm = document.getElementById('input-idea');
 		var Idea = elm.value.trim();
-		
+
 		if ( Idea === "" )
 			return;
 
@@ -243,9 +243,9 @@ dialog_InsertScript();
 		theme_AddIdea(Idea,
 			function(response,code) {
 				console.log("ADD:",response);
-				
+
 				sg_UpdateCount(response.count,true);
-				
+
 				// Success //
 				if ( response.id > 0 ) {
 					sg_AddIdea(response.id,response.idea,true);
@@ -263,11 +263,11 @@ dialog_InsertScript();
 
 		elm.focus();
 	}
-	
+
 	window.onload = function() {
 		// Dialog //
 		var Focusable = document.getElementsByClassName("focusable");
-		
+
 		// NOTE: If you tab in from the title bar, the last element will be selected
 		document.getElementById("dialog-focusfirst").addEventListener("focus",function(event){
 			for ( var idx = Focusable.length-1; idx >= 0; idx-- ) {
@@ -300,7 +300,7 @@ dialog_InsertScript();
 				}
 			}
 		});
-		
+
 		window.addEventListener("keydown",function(event){
 			if ( dialog_IsActive() ) {
 				if ( event.keyCode == 27 ) {
@@ -321,7 +321,7 @@ dialog_InsertScript();
 				<?php } ?>
 			}
 		});
-		
+
 		<?php
 		if ( $CONFIG['active'] && $cookie_id && !$admin ) {
 		?>
@@ -332,7 +332,7 @@ dialog_InsertScript();
 						response.ideas.forEach(function(response) {
 							sg_AddIdea(response.id,response.theme);
 						});
-						
+
 						sg_UpdateCount(response.count);
 					}
 					else {
@@ -363,13 +363,13 @@ dialog_InsertScript();
 				if ( $admin && $cookie_id ) {
 					ShowAdmin();
 				}
-				else {					
+				else {
 					ShowHeadline();
-	
+
 					// Not logged in and not an announcement //
 					if ( $cookie_id == 0 && $EVENT_MODE !== 5 )
 						ShowLogin();
-				
+
 					switch( $EVENT_MODE ) {
 					case 0:	// Inactive //
 						ShowInactive();

@@ -1,13 +1,12 @@
-import {h, Component} 					from 'preact/preact';
-import Sanitize							from 'internal/sanitize/sanitize';
+import { Component } from 'preact';
+import Sanitize							from 'internal/sanitize';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
+import {UISpinner} from 'com/ui';
 
-import DialogBase						from 'com/dialog/base/base';
 import DialogCommon						from 'com/dialog/common/common';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 
 export default class DialogRegister extends Component {
@@ -38,8 +37,8 @@ export default class DialogRegister extends Component {
 	}
 
 	doRegister() {
-		mail = this.state.mail.trim();
-		invite = this.state.invite.trim();
+		let mail = this.state.mail.trim();
+		let invite = this.state.invite.trim();
 
 		if ( !Sanitize.validateMail(mail) ) {
 			this.setState({ 'error': "Incorrectly formatted e-mail address" });
@@ -87,13 +86,13 @@ export default class DialogRegister extends Component {
 		if ( loading ) {
 			return (
 				<DialogCommon empty explicit {...new_props}>
-					<NavSpinner />
+					<UISpinner />
 				</DialogCommon>
 			);
 		}
 		else if ( sent ) {
 			return (
-				<DialogCommon ok onok={this.doFinish} explicit {...new_props}>
+				<DialogCommon ok={this.doFinish} explicit {...new_props}>
 					<div>Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code></div>
 				</DialogCommon>
 			);
@@ -109,19 +108,19 @@ export default class DialogRegister extends Component {
 			);
 */
 			return (
-				<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
+				<DialogCommon okText="Send Activation E-mail" ok={this.doRegister} cancel explicit {...new_props}>
 					<div class="-info">
 						Enter your e-mail address to begin activating your account
 					</div>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-register-mail" onChange={this.onChangeMail} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
+							<input autofocus id="dialog-register-mail" onChange={this.onChangeMail} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxLength={254} value={mail} />
 							<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
 						</div>
 					</div>
 					<div>
 						<div class="-input-container">
-							<input id="dialog-register-invite" onChange={this.onChangeInvite} class="-text focusable" type="text" name="invite" placeholder="Invite code (required)" maxlength="64" value={invite} />
+							<input id="dialog-register-invite" onChange={this.onChangeInvite} class="-text focusable" type="text" name="invite" placeholder="Invite code (required)" maxLength={64} value={invite} />
 						</div>
 					</div>
 					<div class="-info">
@@ -131,7 +130,7 @@ export default class DialogRegister extends Component {
 			);
 //					<div class="-info">
 //						<ul>
-//							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jammer.vg</code> to your contacts</li>
+//							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jam.vg</code> to your contacts</li>
 //							<li><strong>Free.fr</strong>: Probably wont work. We've sent a whitelisting request</li>
 //							<li><strong>Laposte.net</strong>: We can't find any info on how to fix them. <strong>SORRY!</strong> :(</li>
 //						</ul>

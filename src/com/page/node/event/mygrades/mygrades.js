@@ -1,16 +1,16 @@
-import {h, Component}					from 'preact/preact';
+import {Component}			from 'preact';
 import PageNavEventMy					from '../../../nav/event-my';
 
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentLoading					from 'com/content-loading/loading';
 import InputDropdown					from 'com/input-dropdown/dropdown';
 
 import GradedItem						from './mygrades-graded-item';
 import GradeGraphs						from './mygrades-grade-graphs';
 
-import $Grade							from 'shrub/js/grade/grade';
-import $Node							from 'shrub/js/node/node';
-import $Comment							from 'shrub/js/comment/comment';
+import $Grade							from 'backend/js/grade/grade';
+import $Node							from 'backend/js/node/node';
+import $Comment							from 'backend/js/comment/comment';
 
 const SORT_ORDER = 0;
 const SORT_ALPHA = 1;
@@ -286,7 +286,7 @@ export default class MyGrades extends Component {
 					authors={this.getItemAuthorsFromState(nodeId)}
 					key={nodeId} />));
 			});
-			ShowResults = <ContentList>{Items}</ContentList>;
+			ShowResults = <div class="graded">{Items}</div>;
 			let SortDescription = null;
 			sortOptions = [
 				[SORT_ORDER, 'Grading order'],
@@ -317,7 +317,7 @@ export default class MyGrades extends Component {
 					<InputDropdown class="-tag"
 						items={sortOptions}
 						value={state.sortBy}
-						onmodify={this.onSortByChange}
+						onModify={this.onSortByChange}
 						useClickCatcher={false}
 						selfManaged={true}
 					/>
@@ -327,9 +327,9 @@ export default class MyGrades extends Component {
 		}
 
 		return (
-			<div>
+			<>
 				<PageNavEventMy {...props} />
-				<div class="content-common event-mygraded">
+				<div class="content -common event-mygraded">
 					<h2>Items you have graded</h2>
 					{ShowLoading}
 					{ShowError}
@@ -339,7 +339,7 @@ export default class MyGrades extends Component {
 					{ShowStats}
 					{ShowResults}
 				</div>
-			</div>
+			</>
 		);
 	}
 }

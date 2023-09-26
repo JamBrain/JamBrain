@@ -1,17 +1,19 @@
-import {h} 					from 'preact/preact';
+import { createElement } from 'preact';
 
-import Util					from './Util';
+import Util from './Util';
+
+import { extractFromURL } from 'internal/autoembed';
+import { shortnameToURL } from 'external/emoji/emoji';
 
 //COMPONENT IMPORTS
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
-import NavLink 				from 'com/nav-link/link';
 import SmartLink 			from 'com/autoembed/smartlink';
-import LocalLink			from 'com/autoembed/locallink';
+//import LocalLink			from 'com/autoembed/locallink';
 
 import AutoEmbed 			from 'com/autoembed/autoembed';
 import SmartDomains			from 'com/autoembed/smartdomains';
 
-import BlockSpoiler 		from 'com/block-spoiler/spoiler';
+import {Link, Spoiler} from 'com/ui';
 
 export default class Renderer {
 	constructor( options ) {
@@ -25,7 +27,7 @@ export default class Renderer {
 				escaped = true;
 				code = out;
 
-				return (<pre><code class={this.options.langPrefix + escape(lang, true)} dangerouslySetInnerHTML={{"__html": out}}></code></pre>);
+				return (<pre><code class={this.options.langPrefix + Util.escape(lang, true)} dangerouslySetInnerHTML={{"__html": out}}></code></pre>);
 			}
 		}
 
@@ -38,22 +40,18 @@ export default class Renderer {
 		}
 
 		return (
-			<pre><code class={this.options.langPrefix + escape(lang, true)}>
+			<pre><code class={this.options.langPrefix + Util.escape(lang, true)}>
 				{(escaped ? code : Util.escape(code, true))}
 			</code></pre>
 		);
 	}
 
 	spoiler( secret ) {
-		return (
-			<BlockSpoiler>{secret}</BlockSpoiler>
-		);
+		return <Spoiler>{secret}</Spoiler>;
 	}
 
 	blockquote( quote ) {
-		return (
-			<blockquote>{quote}</blockquote>
-		);
+		return <blockquote>{quote}</blockquote>;
 	}
 
 	html( html ) {
@@ -62,34 +60,27 @@ export default class Renderer {
 
 	heading( text, level, raw ) {
 		const HeaderTag = `h${level}`;
-		return (
-			<HeaderTag id={this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-').replace(/-$/, "")}>{text}</HeaderTag>
-		);
+		return createElement(HeaderTag, {
+			'id': this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-').replace(/-$/, ""),
+			'children': text
+		});
 	}
 
-	hr( ) {
-		return (<hr/>);
+	hr() {
+		return <hr/>;
 	}
 
 	list( body, ordered ) {
-		var Type = ordered
-			? 'ol'
-			: 'ul';
-		return (
-			<Type>{'\n'}{body}</Type>
-		);
+		const Type = ordered ? 'ol' : 'ul';
+		return <Type>{'\n'}{body}</Type>;
 	}
 
 	listitem( text ) {
-		return (
-			<li>{text}</li>
-		);
+		return <li>{text}</li>;
 	}
 
 	paragraph( text ) {
-		return (
-			<p>{text}</p>
-		);
+		return <p>{text}</p>;
 	}
 
 	table( header, body ) {
@@ -102,78 +93,49 @@ export default class Renderer {
 	}
 
 	tablerow( content ) {
-		return (
-			<tr>{content}</tr>
-		);
+		return <tr>{content}</tr>;
 	}
 
 	tablecell( content, flags ) {
-		var Type = flags.header
-			? 'th'
-			: 'td';
-		return (
-			<Type style={"text-align:" + flags.align
-				? flags.align
-				: ''}>{content}</Type>
-		);
+		const Type = flags.header ? 'th' : 'td';
+		return <Type style={flags?.align ? `text-align: ${flags.align}` : undefined}>{content}</Type>;
 	}
 
 	// span level renderer
 	strong( text ) {
-		return (
-			<strong>{text}</strong>
-		);
+		return <strong>{text}</strong>;
 	}
 
 	em( text ) {
-		return (
-			<em>{text}</em>
-		);
+		return <em>{text}</em>;
 	}
 
 	emoji( text ) {
 		text = Array.isArray(text) ? text.join('') : text;
-		let shortname = window.emoji.shortnameToURL(text);
+		let shortname = shortnameToURL(text);
 		if ( shortname ) {
-			return <img class="emoji" alt={text} title={':'+text+':'} src={shortname} />;
+			return <img class="emoji" alt={text} title={`:${text}:`} src={shortname} />;
 		}
-		return ':'+text+':';
+		return `:${text}:`;
 	}
 
-	//email(text) {
-	//  return 'VEOO'+text+'OOEV';
-	//};
-
 	atname( text ) {
-		return (
-			<NavLink href={"/users/" + text}>@{text}</NavLink>
-		);
+		return <Link href={`/users/${text}`}>@{text}</Link>;
 	}
 
 	codespan( text ) {
-		return (
-			<code>{Util.htmldecode(text)}</code>
-		);
-		// text.replace('\n','') // ??
+		return <code>{Util.htmldecode(text)}</code>;
 	}
 
-	br( ) {
-		//    if(this.options.xhtml) {
-		return (<br/>);
-		// } else {
-		//   return (<br>);
-		// }
-
+	br() {
+		return <br/>;
 	}
 
 	del( text ) {
-		return (
-			<del>{text}</del>
-		);
+		return <del>{text}</del>;
 	}
 
 	parseLink( href ) {
-
 		if ( href.indexOf('///') == 0 ) {
 			// static domain link, something on our static server
 			return {"type": "static"};
@@ -190,12 +152,10 @@ export default class Renderer {
 			return {"type": "local"};
 		}
 
-		url = extractFromURL(href);
+		let url = extractFromURL(href);
 
 		if ( url.domain ) {
-
 			if ( SmartDomains ) {
-
 				for ( var i=0; i < SmartDomains.length; i++ ) {
 					let smartdomain = SmartDomains[i];
 
@@ -218,7 +178,7 @@ export default class Renderer {
 			}
 
 			// "simple link", no special behaviour
-			return {"type": "simple"};
+			return { "type": "simple" };
 		}
 
 		// We tried to parse something that dosen't apear to be a link
@@ -264,7 +224,7 @@ export default class Renderer {
 
 		if ( result.type == "simple" ) {
 			hasText = hasText && !/^\s+$/.test(text); // make sure the link isn't all whitespace too
-			return <NavLink href={href} title={title} target={"_blank"}>{(hasText) ? text : href}</NavLink>;
+			return <Link href={href} title={title} target={"_blank"}>{(hasText) ? text : href}</Link>;
 		}
 		else if ( result.type == "smart" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
@@ -274,24 +234,24 @@ export default class Renderer {
 		else if ( result.type == "embed" ) {
 			return <AutoEmbed link={result} title={title} text={(hasText) ? text : href} />;
 		}
-		else if ( result.type == "relative" ) {
-			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
-		}
-		else if ( result.type == "local" ) {
-			return <LocalLink href={href} text={(hasText) ? text : href} title={title} hashLink />;
-		}
+//		else if ( result.type == "relative" ) {
+//			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
+//		}
+//		else if ( result.type == "local" ) {
+//			return <LocalLink href={href} text={(hasText) ? text : href} title={title} hashLink />;
+//		}
 		else if ( result.type == "protocol" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
-			return <NavLink href={href} text={(hasText) ? joinedText : href.substr(2)} title={title} target={"_blank"}/>;
+			return <Link href={href} text={(hasText) ? joinedText : href.slice(2)} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "static" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
-			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={(hasText) ? joinedText : (STATIC_DOMAIN + href.substr(2))} title={title} target={"_blank"}/>;
+			return <Link href={"//" + STATIC_DOMAIN + href.slice(2)} text={(hasText) ? joinedText : (STATIC_DOMAIN + href.slice(2))} title={title} target={"_blank"}/>;
 		}
 	}
 
 	mail( leftSide, rightSide, text ) {
-		href = '{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
+		let href = '{0}@{1}'.replace('{1}', rightSide).replace('{0}', leftSide);
 		if ( this.options.sanitize ) {
 			try {
 				var prot = decodeURIComponent(unescape(href)).replace(/[^\w:]/g, '').toLowerCase();
@@ -322,7 +282,7 @@ export default class Renderer {
 
 		if ( href.indexOf("///") === 0 ) {
 		// Rewrite URL to replace the first two slashes with the endpoint
-			href = STATIC_ENDPOINT + href.substr(2);
+			href = STATIC_ENDPOINT + href.slice(2);
 		}
 		// Disabled this. Only Triple slash URLs should be allow.
 		//  else if ( href.indexOf(STATIC_ENDPOINT) >= 0 && href.indexOf(STATIC_ENDPOINT) <= 5 ) {

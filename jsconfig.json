@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"checkJs": true,
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact",
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"strict": false,
+		"allowSyntheticDefaultImports": true,
+		"types": ["preact"],
+		"baseUrl": "./src/",
+		"paths": {
+			"classnames": ["external/classnames/index"],
+			"shallow": ["internal/shallow/shallow"]
+		},
+		"plugins": [{ "name": "typescript-plugin-css-modules" }]
+	},
+	"include": ["src/**/*"],
+	"excludeDirectories": ["node_modules", "**/node_modules/*", "**/.*", "config/**/*", "sandbox/**/*"]
+}

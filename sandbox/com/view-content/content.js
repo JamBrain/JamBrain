@@ -1,4 +1,5 @@
-import {h, Component}					from 'preact/preact';
+import { Component }					from 'preact';
+import titleParser						from 'internal/titleparser';
 
 import ContentPost						from 'com/content-post/post';
 
@@ -14,7 +15,7 @@ import GamesFilter from 'com/content-games/filter';
 import ContentEvent						from 'com/content-event/event';
 //import ContentEvents					from 'com/content-events/events';
 import ContentGroup						from 'com/content-group/group';
-import ContentError						from 'com/content-error/error';
+import ContentError						from 'com/content/error';
 import ContentItem						from 'com/content-item/item';
 
 import ContentComments					from 'com/content-comments/comments';
@@ -30,12 +31,9 @@ import ContentStatsEvent				from 'com/content-stats/stats-event';
 
 import ContentPalette					from 'com/content-palette/palette';
 
-import NavLink							from 'com/nav-link/link';
-//import SVGIcon							from 'com/svg-icon/icon';
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 //import CommonNav						from 'com/content-common/common-nav';
-//import CommonNavButton					from 'com/content-common/common-nav-button';
 
 //import HeadMan 							from '../../internal/headman/headman';
 //import marked 							from '../../internal/marked/marked';
@@ -92,7 +90,7 @@ export default class ViewContent extends Component {
 	getTitle( {node} ) {
 		let Title = "";
 		if ( node.name ) {
-			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			Title = titleParser(node.name, true);
 			if ( Title === "" )
 				Title = window.location.host;
 			else
@@ -433,7 +431,7 @@ export default class ViewContent extends Component {
 //				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
 //					ShowHome = (
 //						<Common node={node} user={user}>
-//							<CommonBody>You can start playing and rating games <NavLink href={featured.path+'/games'}>here</NavLink>.</CommonBody>
+//							<CommonBody>You can start playing and rating games <Link href={featured.path+'/games'}>here</Link>.</CommonBody>
 //						</Common>
 //					);
 //				}
@@ -530,7 +528,6 @@ export default class ViewContent extends Component {
 						showFeatured={true}
 						showEvent={true}
 						showRatingSort={true}
-						showRatingSort={true}
 					/>;
 				}
 
@@ -561,7 +558,7 @@ export default class ViewContent extends Component {
 			}
 		}
 		else {
-			return <div id="content"><div class="content-base">Unsupported Node Type: {""+node.type}</div></div>;
+			return <div id="content"><div class="content">Unsupported Node Type: {""+node.type}</div></div>;
 		}
 	}
 

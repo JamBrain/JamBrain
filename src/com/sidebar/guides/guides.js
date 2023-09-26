@@ -1,41 +1,34 @@
-import {h, Component}	from 'preact/preact';
-import SVGIcon			from 'com/svg-icon/icon';
-import NavLink			from 'com/nav-link/link';
+import './guides.less';
+import '../base/base.less';
 
-export default class SidebarGuides extends Component {
-	constructor(props) {
-		super(props);
-	}
+import {Link, Icon} from 'com/ui';
 
-	render(props, state) {
-		var Links = {
-			"Rules": {"href": "/events/ludum-dare/rules", "subtext": "for Ludum Dare events"},
-			"Game Hosting Guide": {"icon": "star-empty", "href": "/events/ludum-dare/hosting-guide"},
-			"E-mail Newsletter": {"icon": "news", "href": "https://newsletter.ldjam.com"},
-			"YouTube": {"icon": "youtube", "href": "https://youtube.com/ludumdare"},
-			"Twitch": {"icon": "twitch", "href": "https://twitch.tv/ludumdare"},
-			"Twitter": {"icon": "twitter", "href": "https://twitter.com/ludumdare", "subtext": "breaking news"}
-		};
+export default function SidebarGuides() {
+	const links = {
+		"Rules": {"href": "/events/ludum-dare/rules", "subtext": "for Ludum Dare events"},
+		"Game Hosting Guide": {"icon": "star-empty", "href": "/events/ludum-dare/hosting-guide"},
+		"E-mail Newsletter": {"icon": "news", "href": "https://newsletter.ldjam.com"},
+		"YouTube": {"icon": "youtube", "href": "https://youtube.com/ludumdare"},
+		"Twitch": {"icon": "twitch", "href": "https://twitch.tv/ludumdare"},
+		"Twitter": {"icon": "twitter", "href": "https://twitter.com/ludumdare", "subtext": "breaking news"}
+	};
 
-		return (
-			<div class="sidebar-base sidebar-shortlist sidebar-guides">
-				<div class="-title _font2">
-					<SVGIcon baseline>article</SVGIcon> <span class="-text">Community & Guides</span>
-				</div>
-				{Object.keys(Links).map(key => {
-					let subtext = "";
-					if (Links[key].subtext) {
-						subtext = " - " + Links[key].subtext;
-					}
-
-					return (
-						<NavLink class="-item" href={Links[key].href}>
-							<SVGIcon baseline gap>{Links[key].icon != null ? Links[key].icon : 'star-full'}</SVGIcon>
-							<span class="-title">{key}</span>{subtext}
-						</NavLink>
-					);
-				})}
+	return <>
+		<div class="side-item sidebar-shortlist sidebar-guides">
+			<div class="-title _font2">
+				<Icon class="-baseline" src="article" />
+				<span class="-text">Community & Guides</span>
 			</div>
-		);
-	}
+			{Object.keys(links).map(key => {
+				const subtext = ` - ${links[key].subtext ?? ''}`;
+
+				return <>
+					<Link class="-item" href={links[key].href}>
+						<Icon class="-baseline -gap" src={links[key].icon != null ? links[key].icon : 'star-full'} />
+						<span class="-title">{key}</span>{subtext}
+					</Link>
+				</>;
+			})}
+		</div>
+	</>;
 }

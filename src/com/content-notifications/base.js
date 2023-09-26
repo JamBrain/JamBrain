@@ -1,4 +1,5 @@
-import {h, Component} 					from 'preact/preact';
+import {Component}	from 'preact';
+import './notifications.less';
 
 import Notification, {
 	isNotificationComment,
@@ -9,9 +10,9 @@ import Notification, {
 	isNotificationOther
 }										from 'com/content-notifications/notification';
 
-import $Node							from 'shrub/js/node/node';
-import $Comment							from 'shrub/js/comment/comment';
-import $Notification					from 'shrub/js/notification/notification';
+import $Node							from 'backend/js/node/node';
+import $Comment							from 'backend/js/comment/comment';
+import $Notification					from 'backend/js/notification/notification';
 
 export default class NotificationsBase extends Component {
 	constructor( props ) {
@@ -103,14 +104,13 @@ export default class NotificationsBase extends Component {
 		this.setState({'loading': true});
 		const callerID = r.caller_id;
 		this.collectAllNodesAndNodes(r.feed, callerID);
-		let highestRead = (r.max_read !== undefined) ? r.max_read : this.state.highestRead;
-		this.setState({
+		this.setState(prevState => ({
 			'feed': r.feed,
 			'filtered': r.filtered,
 			'status': r.status,
 			'count': r.count,
-			'highestRead': highestRead,
-		});
+			'highestRead': (r.max_read !== undefined) ? r.max_read : prevState.highestRead,
+		}));
 	}
 
 	collectAllNodesAndNodes( feed, callerID ) {
@@ -365,7 +365,7 @@ export default class NotificationsBase extends Component {
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
 				if ( (maxCount > 0) && this.shouldShowNotification(notification) ) {
-					Notifications.push([id, <Notification notification={notification} onclick={clickCallback} />]);
+					Notifications.push([id, <Notification notification={notification} onClick={clickCallback} />]);
 					maxCount -= 1;
 				}
 			});
@@ -401,5 +401,9 @@ export default class NotificationsBase extends Component {
 		$Notification.SetFilters(myFilter);
 		this.setState({'filters': isFinite(this.state.filters) ? (this.state.filters + 1) : 1});
 		//this.setState({'filters': myFilter});
+	}
+
+	render() {
+		return null;
 	}
 }

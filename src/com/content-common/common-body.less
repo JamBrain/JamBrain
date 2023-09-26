@@ -1,6 +1,6 @@
 @import 'defs.less';
 
-#content .content-common > .-body {
+#content .content.-common > .body {
 	margin: 1rem;
 	font-size: 1.1em;
 
@@ -11,7 +11,8 @@
 }
 
 /* Legacy */
-#content .content-common-body {
+/*
+#content .content.-common .body {
 	margin: 1rem;
 	font-size: 1.1em;
 
@@ -22,8 +23,6 @@
 	& img {
 		max-width: 100%;
 		max-height: 100%;
-
-		/*object-fit: contain;*/
 
 		&.img {
 			display: block;
@@ -45,7 +44,7 @@
 
 /* When Sidebar is disabled */
 @media (max-width: (@BASE_WIDTH - 20em)) {
-	#content .content-common-body {
+	#content .content.-common body {
 		margin-left: 0.5rem !important;
 		margin-right: 0.5rem !important;
 	}

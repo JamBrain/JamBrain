@@ -1,11 +1,10 @@
-import {h, Component} 					from 'preact/preact';
+import { Component } 					from 'preact';
+import './user-bar.less';
 
-import SVGIcon							from 'com/svg-icon/icon';
 import ContentCommonNav					from 'com/content-common/common-nav';
-import CommonButton						from 'com/content-common/common-nav-button';
 import CommonButtonFollow				from 'com/content-common/common-nav-button-follow';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 

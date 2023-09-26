@@ -1,3 +1,3 @@
 <?php
-const CONFIG_PATH = "../../src/shrub/";
-const SHRUB_PATH = "../../src/shrub/src/";
+const CONFIG_PATH = "../../src/backend/";
+const BACKEND_PATH = "../../src/backend/src/";

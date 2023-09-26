@@ -1,24 +1,23 @@
 @import 'defs.less' ;
 
 #content .content-item-box-old {
-
 	margin: 0.25em;
 
 	width: 32%;
 	height: inherit;
-	max-height: @BASE_WIDTH /8;
+	max-height: (@BASE_WIDTH / 8);
 	overflow: hidden;
 
 	box-sizing: border-box;
 
 	@media only screen and (max-width: 970px) {
 		width: 48%;
-		max-height: @BASE_WIDTH /6;
+		max-height: (@BASE_WIDTH / 6);
 	}
 
 	@media only screen and (max-width: 500px) {
 		width: 96%;
-		max-height: @BASE_WIDTH /4;
+		max-height: (@BASE_WIDTH / 4);
 	}
 
 	& > .content-common-footer {

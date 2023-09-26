@@ -3,7 +3,7 @@
 .dialog-common {
 	color: @COL_D;
 	background: @COL_NLLL;
-	box-shadow: 0 0 4px fade(@COL_D, 50%);
+	box-shadow: 0 0 4px (fade(@COL_D, 50%));
 
 	max-width: 40em;
 	@media (max-width: 40em) {
@@ -12,25 +12,23 @@
 
 	font-size: 1.2em;
 
-	& > .-header {
+	& > header {
 		background: @COL_ND;
 		color: @COL_L;
 
-		& > .-title {
-			font-size: 1.2em;
-			padding: 0.5rem 1rem;
+		font-size: 1.2em;
+		padding: 0.5rem 1rem;
 
-			font-weight:700;
-		}
+		font-weight:700;
 	}
 
-	& > .-error {
+	& > .error {
 		background: @COL_A;
 		color: @COL_L;
 		padding: 0.5rem 1rem;
 	}
 
-	& > .-body {
+	& > .body {
 		margin: 1rem 2rem;
 
 		& > div {
@@ -98,19 +96,19 @@
 		}
 	}
 
-	& > .-footer {
+	& > footer {
 		background: @COL_N;
 		color: @COL_L;
 
 		display: flex;
 		justify-content: center;
 
-		& > .-button {
+		& > .ui_button {
 			padding: 0.5rem 1rem;
 			border: 1px solid @COL_N;
 			margin: 0.5rem 0.25rem;
 
-			font-weight:700;
+			font-weight: 700;
 
 			&:hover, &:focus {
 				background: @COL_A;
@@ -119,7 +117,7 @@
 			}
 		}
 
-		& > .-light {
+		& > .lit {
 			border: 1px solid;
 		}
 	}

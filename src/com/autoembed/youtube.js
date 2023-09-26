@@ -1,60 +1,58 @@
-import {h, Component} from 'preact/preact';
-import SVGIcon from 'com/svg-icon/icon';
+import {Component} from 'preact';
+import {Icon, Button} from 'com/ui';
+import './youtube.less';
+
+// MK TODO: Can this be stateless? i.e. "on click", replace the element entirely
 
 export default class YoutubeEmbed extends Component {
-  constructor( props ) {
-    super(props);
+	constructor( props ) {
+		super(props);
 
-    this.state = {
-      'iframe': false
-    };
+		this.state = {
+			'show': false
+		};
 
-    this.onClick = this.onClick.bind(this);
-  }
+		this.onClick = this.onClick.bind(this);
+	}
 
-  onClick( e ) {
-    this.setState({'iframe': true});
-  }
+	onClick( e ) {
+		this.setState({'show': true});
+	}
 
-  render( props, state ) {
-    var yt_thumbnail_prefix = "https://i.ytimg.com/vi/";
-    var yt_thumbnail_suffix = "/mqdefault.jpg";
+	render( props, state ) {
+		const {'id': video_id, time, ...otherProps} = props;
+		let args = new URLSearchParams('autoplay=1');
 
-    var video_id = props.id;
+		if ( time ) {
+			args.append('start', time);
+		}
 
-    var args = ['autoplay=1'];
-    if ( url.args.t ) {
-      args.push('start=' + parseInt(url.args.t));
-    }
+		if ( state.show ) {
+			return (
+				<div class="embed-video youtube">
+					<div class="-video">
+						<iframe src={`https://www.youtube.com/embed/${video_id}?${args}`} frameBorder="0" allowFullScreen allow="autoplay; fullscreen" />
+					</div>
+				</div>
+			);
+		}
 
-    if ( state.iframe ) {
-      return (
-        <div class="embed-video -youtube">
-          <div class="-video">
-            <iframe src={'https://www.youtube.com/embed/' + video_id + '?' + args.join('&')} frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div class="embed-video -youtube">
-        <div class="-thumbnail">
-          <div class="-overlay" onclick={this.onClick} >
-            <div class="-play">
-              <SVGIcon middle>play</SVGIcon>
-            </div>
-            <div class="-external">
-              <a title="Open in new tab" href={"//www.youtube.com/watch?v="+video_id} target="_blank" rel="noopener" onclick={(e) => {
-                e.stopPropagation();
-              }}>
-                <SVGIcon middle block>youtube</SVGIcon>
-              </a>
-            </div>
-          </div>
-          <img alt="Youtube video thumbnail" src={yt_thumbnail_prefix + video_id + yt_thumbnail_suffix}/>
-        </div>
-      </div>
-    );
-  }
+		return (
+			<div class="embed-video youtube">
+				<div class="-thumbnail">
+					<div class="-overlay" onClick={this.onClick} >
+						<div class="-play">
+							<Icon class="-middle" src="play" />
+						</div>
+						<div class="-external">
+							<Button href={`https://www.youtube.com/watch?v=${video_id}`} tooltip="Open in new tab">
+								<Icon class="-middle -block" src="youtube" />
+							</Button>
+						</div>
+					</div>
+					<img alt="Youtube video thumbnail" src={`https://i.ytimg.com/vi/${video_id}/mqdefault.jpg`}/>
+				</div>
+			</div>
+		);
+	}
 }

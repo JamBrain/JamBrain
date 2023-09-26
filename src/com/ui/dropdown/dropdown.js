@@ -1,13 +1,39 @@
-import {h, Component, cloneElement}		from 'preact/preact';
-import UIButton							from 'com/ui/button/button';
-import UIIcon							from 'com/ui/icon/icon';
+import { toChildArray } from 'preact';
+import './dropdown.less';
+const ui_dropdown = 'ui_dropdown';
 
-export default class UIDropdown extends Component {
+import {Button} from '../button';
+import {Icon} from '../icon';
+
+// MK: I tried to add a click again to defocus the dropdown, but it didn't work
+function defocus( e ) {
+	if (e.target === document.activeElement) {
+		e.target.blur();
+	}
+}
+
+// 'tick' is a little up/down arrow that appears on the right side of the button
+export function Dropdown( props ) {
+	const {children, showTick, leftAlign, rightAlign, 'class': classProp, ...otherProps} = props;
+	const firstChild = toChildArray(children).slice(0, 1);
+	const otherChildren = toChildArray(children).slice(1);
+	return <form {...otherProps} class={`${ui_dropdown} ${classProp ?? ''} ${leftAlign ? '-left' : ''} ${rightAlign ? '-right' : ''}`}>
+		<Button /*onClick={defocus}*/>
+			{firstChild}
+			{showTick ? <><Icon class="ui_tick up" src="tick-up" /><Icon class="ui_tick down" src="tick-down" /></> : null}
+		</Button>
+		{otherChildren}
+	</form>;
+}
+
+/*
+export class UIDropdown2 extends Component {
+
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			'show': props.show ? true : false,
+			'show': !!props.show,
 		};
 
 		this.onButton = this.onButton.bind(this);
@@ -25,33 +51,31 @@ export default class UIDropdown extends Component {
 
 	// Clicking on the button
 	onButton( e ) {
-		if ( !this.state.show )
-			this.doShow(e);
-		else
-			this.doHide(e);
+		this.setState(prevState => ({'show': !prevState.show}));
 	}
 
 	render( props, state ) {
-		let Button = props.children.slice(0, 1);
+		let myButton = toChildArray(props.children).slice(0, 1);
 
+		// MK: I don't like how this uses children. Previously it was using '.attribute' directly. It shouldn't need it
 		let ShowContent = null;
 		if ( state.show ) {
 			let that = this;
-			let Children = props.children.slice(1);
+			let Children = toChildArray(props.children).slice(1);
 
 			let Content = [];
 			for ( let idx = 0; idx < Children.length; idx++ ) {
-				if ( Children[idx].attributes.onclick ) {
+				if ( Children[idx].props.onClick ) {
 					Content.push(cloneElement(Children[idx], {
-						'onclick': (e) => {
+						'onClick': (e) => {
 							that.doHide();
-							Children[idx].attributes.onclick(e);
+							Children[idx].props.onClick(e);
 						}
 					}));
 				}
-				else if ( Children[idx].attributes.href ) {
+				else if ( Children[idx].props.href ) {
 					Content.push(cloneElement(Children[idx], {
-						'onclick': function(e) {
+						'onClick': function(e) {
 							that.doHide();
 						}
 					}));
@@ -65,7 +89,7 @@ export default class UIDropdown extends Component {
 				<div class="-content">
 					{Content}
 				</div>,
-				<div class="-click-catcher" onclick={this.doHide} />
+				<div class="-click-catcher" onClick={this.doHide} />
 			];
 		}
 
@@ -73,24 +97,25 @@ export default class UIDropdown extends Component {
 		let ShowTick = null;
 		if ( props.tick ) {
 			if ( ShowContent )
-				ShowTick = <UIIcon src="tick-up" class="-tick" />;
+				ShowTick = <Icon src="tick-up" class="-tick" />;
 			else
-				ShowTick = <UIIcon src="tick-down" class="-tick" />;
+				ShowTick = <Icon src="tick-down" class="-tick" />;
 		}
 
-		let Classes = cN(
+		let Classes = [
 			'ui-dropdown',
 			props.class,
-			ShowContent ? '-show' : null,
-			props.left ? '-left' : null,
-			props.right ? '-right' : null
-		);
+			ShowContent ? '-show' : '',
+			props.left ? '-left' : '',
+			props.right ? '-right' : ''
+		].join(' ');
 
 		return (
-			<div class={Classes} ref={(input) => { this.dropdown = input; }}>
-				<UIButton class="-button" onclick={this.onButton}>{ShowTick}{Button}</UIButton>
+			<div class={Classes} ref={(div) => (this.dropdown = div)}>
+				<Button class="-button" onClick={this.onButton}>{ShowTick}{myButton}</Button>
 				{ShowContent}
 			</div>
 		);
 	}
 }
+*/

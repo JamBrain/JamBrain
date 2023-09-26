@@ -1,16 +1,10 @@
-import {h, Component}					from 'preact/preact';
+import { Component } from 'preact';
+import './itemfilter.less';
 
-import UIIcon							from 'com/ui/icon/icon';
-import UIButton							from 'com/ui/button/button';
-import UITagbox							from 'com/ui/tagbox/tagbox';
-import UIText							from 'com/ui/text/text';
-import UIDropdown						from 'com/ui/dropdown/dropdown';
-import UIDropdownList					from 'com/ui/dropdown/dropdown-list';
-import UITextdown						from 'com/ui/textdown/textdown';
 
-import UIHelp							from 'com/ui/help/help';
+import {Icon, Button, Tagbox, TextField, Dropdown, UIDropdownList, DropdownText, Help} from 'com/ui';
 
-import $Tag								from 'shrub/js/tag/tag';
+import $Tag								from 'backend/js/tag/tag';
 
 
 const HelpItemSearch = [
@@ -56,19 +50,19 @@ export default class ItemFilter extends Component {
 
 			'event': 'featured',
 			'events': [
-				['featured', [<UIIcon src="calendar-event" />, <span>Featured Event</span>]],
-				['all', [<UIIcon src="calendar-wide" />, <span>All Events</span>]],
+				['featured', [<Icon src="calendar-event" />, <span>Featured Event</span>]],
+				['all', [<Icon src="calendar-wide" />, <span>All Events</span>]],
 			],
 
 			'category': 'all',
 			'categories': [
-				['all', [<UIIcon src="trophys" />, <span>Jam+Compo+Extra</span>]],
-				['jam', [<UIIcon src="trophy" />, <span>Jam</span>]],
-				['compo', [<UIIcon src="trophy" />, <span>Compo</span>]],
+				['all', [<Icon src="trophys" />, <span>Jam+Compo+Extra</span>]],
+				['jam', [<Icon src="trophy" />, <span>Jam</span>]],
+				['compo', [<Icon src="trophy" />, <span>Compo</span>]],
 //				['craft', [<UIIcon src="craft" />, <span>Craft</span>]],
-				['extra', [<UIIcon src="trophy" />, <span>Extra</span>]],
-				['unfinished', [<UIIcon src="trash" />, <span>Unfinished</span>]],
-				['warmup', [<UIIcon src="science" />, <span>Warmup</span>]],
+				['extra', [<Icon src="trophy" />, <span>Extra</span>]],
+				['unfinished', [<Icon src="trash" />, <span>Unfinished</span>]],
+				['warmup', [<Icon src="science" />, <span>Warmup</span>]],
 //				['release', [<UIIcon src="publish" />, <span>Release</span>]],
 			],
 
@@ -82,12 +76,12 @@ export default class ItemFilter extends Component {
 //				['az-desc', [<UIIcon src="sort-amount-desc" />, <span>Descending Z-A</span>]],
 
 				[null, <span>Event Specific</span>],
-				['smart', [<UIIcon src="meter" />, <span>Smart</span>]],
-				['classic', [<UIIcon src="meter" />, <span>Classic</span>]],
-				['danger', [<UIIcon src="help" />, <span>Danger</span>]],
-				['zero', [<UIIcon src="no" />, <span>Zero</span>]],
-				['feedback', [<UIIcon src="bubbles" />, <span>Feedback</span>]],
-				['grade', [<UIIcon src="todo" />, <span>Grade</span>]],
+				['smart', [<Icon src="meter" />, <span>Smart</span>]],
+				['classic', [<Icon src="meter" />, <span>Classic</span>]],
+				['danger', [<Icon src="help" />, <span>Danger</span>]],
+				['zero', [<Icon src="no" />, <span>Zero</span>]],
+				['feedback', [<Icon src="bubbles" />, <span>Feedback</span>]],
+				['grade', [<Icon src="todo" />, <span>Grade</span>]],
 			],
 
 			'grid': 4,
@@ -114,13 +108,16 @@ export default class ItemFilter extends Component {
 	}
 
 	onTagClick( index ) {
-		let mytags = this.state.mytags.slice();		// copy
-		mytags.splice(index, 1);					// remove
-		this.setState({'mytags': mytags});
+		this.setState(prevState => {
+			let mytags = prevState.mytags.slice();		// copy
+			mytags.splice(index, 1);					// remove
+			return {'mytags': mytags};
+		});
 	}
 	onTagAdd( item ) {
 		// Only allow add if we have an item
 		if ( item ) {
+			// MK: Not a great solution, reading it here...
 			let mytags = this.state.mytags;
 
 			for ( let idx = 0; idx < mytags.length; idx++ ) {
@@ -130,8 +127,12 @@ export default class ItemFilter extends Component {
 				}
 			}
 
-			mytags.push(item);
-			this.setState({'mytags': mytags, 'query': ''});
+			// MK: ...then re-reading again here inside the callback
+			this.setState(prevState => {
+				let mytags = prevState.mytags;
+				mytags.push(item);
+				this.setState({'mytags': mytags, 'query': ''});
+			});
 		}
 	}
 
@@ -152,7 +153,7 @@ export default class ItemFilter extends Component {
 	}
 
 	onModifyGrid( value, index ) {
-		console.log(value);
+		//console.log(value);
 		this.setState({'grid': value});
 	}
 
@@ -162,43 +163,43 @@ export default class ItemFilter extends Component {
 
 		let ShowFilters = null;
 		if ( state.mytags && state.mytags.length )
-			ShowFilters = <UITagbox tags={state.mytags} onclick={this.onTagClick} />;
+			ShowFilters = <Tagbox tags={state.mytags} onClick={this.onTagClick} />;
 		else
 			ShowFilters = <div>None</div>;
 
 		return (
-			<div class="content-base content-common content-itemfilter">
+			<div class="content -itemfilter">
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">
-						<div class="-title"><UIHelp>{HelpItemSearch}</UIHelp>Platform/Tag filters:</div>
-						<UITextdown onmodify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
+						<div class="-title"><Help>{HelpItemSearch}</Help>Platform/Tag filters:</div>
+						<DropdownText onModify={this.onModifyQuery} onselect={this.onTagAdd} maxLength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
-						<div class="-title"><UIHelp>{HelpItemEvent}</UIHelp><span>Event:</span></div>
-						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} right />
+						<div class="-title"><Help>{HelpItemEvent}</Help><span>Event:</span></div>
+						<UIDropdownList onModify={this.onModifyEvent} value={state.event} items={state.events} right />
 					</div>
 					<div class="-category">
-						<div class="-title"><UIHelp>{HelpItemCategory}</UIHelp>Category:</div>
-						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} right />
+						<div class="-title"><Help>{HelpItemCategory}</Help>Category:</div>
+						<UIDropdownList onModify={this.onModifyCategory} value={state.category} items={state.categories} right />
 					</div>
 					<div class="-order">
-						<div class="-title"><UIHelp>{HelpItemOrder}</UIHelp>Order by:</div>
-						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} right />
+						<div class="-title"><Help>{HelpItemOrder}</Help>Order by:</div>
+						<UIDropdownList onModify={this.onModifyOrder} value={state.order} items={state.orders} right />
 					</div>
 				</div>
 				<div class="-body">
 					<div class="-title">Filtering by:</div>
 					{ShowFilters}
-					<UIDropdown class="-grid" value={state.grid} right>
-						<UIIcon src="grid" />
-						<UIButton class="-item if-no-sidebar-block" onclick={this.onModifyGrid.bind(this, 1)}>1 Wide</UIButton>
-						<UIButton class="-item if-no-sidebar-block" onclick={this.onModifyGrid.bind(this, 2)}>2 Wide</UIButton>
-						<UIButton class="-item" onclick={this.onModifyGrid.bind(this, 3)}>3 Wide</UIButton>
-						<UIButton class="-item" onclick={this.onModifyGrid.bind(this, 4)}>4 Wide</UIButton>
-						<UIButton class="-item if-sidebar-block" onclick={this.onModifyGrid.bind(this, 5)}>5 Wide</UIButton>
-						<UIButton class="-item if-sidebar-block" onclick={this.onModifyGrid.bind(this, 6)}>6 Wide</UIButton>
-					</UIDropdown>
+					<Dropdown class="-grid" value={state.grid} right>
+						<Icon src="grid" />
+						<Button class="-item _block_if-no-sidebar" onClick={this.onModifyGrid.bind(this, 1)}>1 Wide</Button>
+						<Button class="-item _block_if-no-sidebar" onClick={this.onModifyGrid.bind(this, 2)}>2 Wide</Button>
+						<Button class="-item" onClick={this.onModifyGrid.bind(this, 3)}>3 Wide</Button>
+						<Button class="-item" onClick={this.onModifyGrid.bind(this, 4)}>4 Wide</Button>
+						<Button class="-item _block_if-sidebar" onClick={this.onModifyGrid.bind(this, 5)}>5 Wide</Button>
+						<Button class="-item _block_if-sidebar" onClick={this.onModifyGrid.bind(this, 6)}>6 Wide</Button>
+					</Dropdown>
 				</div>
 				<div class="-footer">
 				</div>

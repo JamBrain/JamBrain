@@ -1,8 +1,12 @@
-import {h, Component} 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import { Component } from 'preact';
+import './footer-button.less';
+import './footer-button-star.less';
 
-import $NodeStar						from '../../shrub/js/node/node_star';
+import {Icon} from 'com/ui';
 
+import $NodeStar						from 'backend/js/node/node_star';
+
+// @deprecated
 export default class ContentFooterButtonStar extends Component {
 	constructor( props ) {
 		super(props);
@@ -43,8 +47,8 @@ export default class ContentFooterButtonStar extends Component {
 	render( {node}, {starred} ) {
 		var _class = "footer-button footer-button-star" + (starred ? " starred" : "");
 		return (
-			<div class={_class} onclick={this.onStar}>
-				<SVGIcon>star-full</SVGIcon>
+			<div class={_class} onClick={this.onStar}>
+				<Icon src="star-full" />
 			</div>
 		);
 	}

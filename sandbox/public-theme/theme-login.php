@@ -13,13 +13,13 @@ function ShowLogin() {
 		<div>You need to login to vote.</div>
 		<br />
 		<a class="no-style" href="<?=$LOGIN_URL?>"><button type="button" class="login-button green_button">Login</button></a>
-	</div>	
+	</div>
 <?php
 }
 function ShowLogout() {
 ?>
 	<div class="login" id="action-logout">
-		<button type="button" class="login-button" onclick="legacy_DoLogout(true)">Logout</button>
-	</div>	
+		<button type="button" class="login-button" onClick="legacy_DoLogout(true)">Logout</button>
+	</div>
 <?php
 }

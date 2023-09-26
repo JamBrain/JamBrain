@@ -1,7 +1,9 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import {Component} from 'preact';
+import './common-footer-button.less';
+import './common-footer-button-love.less';
 
-import $NodeLove						from '../../shrub/js/node/node_love';
+import {Icon} from 'com/ui';
+import $NodeLove						from 'backend/js/node/node_love';
 
 export default class ContentCommonFooterButtonLove extends Component {
 	constructor( props ) {
@@ -42,7 +44,7 @@ export default class ContentCommonFooterButtonLove extends Component {
 	}
 
 	render( {node}, {loved, lovecount} ) {
-		let Love = Number.isInteger(lovecount) ? lovecount : node.love;
+		const Love = Number.isInteger(lovecount) ? lovecount : node.love;
 		let LoveClass = '';
 		if ( Love >= 10 )
 			LoveClass = '-count-10';
@@ -51,13 +53,13 @@ export default class ContentCommonFooterButtonLove extends Component {
 		else if ( Love >= 1 )
 			LoveClass = '-count-1';
 
-		let Classes = cN("content-common-footer-button -love", (loved ? " loved" : ""), LoveClass );
+		const Classes = `content-common-footer-button -love ${loved ? "loved" : ''} ${LoveClass}`;
 
 		return (
-			<div class={Classes} onclick={this.onLove}>
-				<SVGIcon class="-hover-hide">heart</SVGIcon>
-				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+			<div class={Classes} onClick={this.onLove}>
+				<Icon class="-hover-hide" src="heart" />
+				<Icon class="-hover-show -loved-hide" src="heart-plus" />
+				<Icon class="-hover-show -loved-show" src="heart-minus" />
 				<div class="-count">{Love}</div>
 			</div>
 		);

@@ -1,25 +1,20 @@
 <?php
-const CONFIG_PATH = "../shrub/";
-const SHRUB_PATH = "../shrub/src/";
+const CONFIG_PATH = "../backend/";
+const BACKEND_PATH = "../backend/src/";
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api.php";
+require_once __DIR__."/".BACKEND_PATH."api.php";
 
 json_Begin();
 
 const DOMAIN_REDIRECT_TABLE = [
-	'url.ludumdare.org' => 'ludumdare.org',	// legacy
-	'url.ludumdare.dev' => 'ludumdare.dev',	// legacy
 	'url.ldjam.work' => 'ldjam.work',
-	'url.ldjam.dev' => 'ldjam.dev',
-	'url.jammer.work' => 'jammer.work',
-	//'url.jammer.dev' => 'jammer.dev',
 	'url.bio.jammer.work' => 'bio.jammer.work',
-	//'url.bio.jammer.dev' => 'bio.jammer.dev',
+	//'url.jammer.work' => 'jammer.work',
+	//'url.host.jammer.work' => 'host.jammer.work',
 
 	'ldj.am' => 'ldjam.com',
-	'jam.vg' => 'jammer.vg',
 	'jam.bio' => 'jammer.bio',
-	//'jam.mr' => 'jammer.vg', 
+	//'???' => 'jam.host',
 ];
 
 $action = json_ArgShift();
@@ -43,7 +38,7 @@ switch ( $action ) {
 		if ( !isset(DOMAIN_REDIRECT_TABLE[$_SERVER['SERVER_NAME']]) ) {
 			json_EmitFatalError_BadRequest('Unknown domain mapping: '.$_SERVER['SERVER_NAME'], $RESPONSE);
 		}
-		
+
 		$url = '//'.DOMAIN_REDIRECT_TABLE[$_SERVER['SERVER_NAME']];
 
 		// Do a raw ID decode
@@ -54,7 +49,7 @@ switch ( $action ) {
 			// TODO: munger
 			$node_id = 0;
 		}
-	
+
 		if ( !$node_id ) {
 			json_EmitFatalError_BadRequest('Unknown request', $RESPONSE);
 		}
@@ -64,14 +59,14 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest('Unable to trace node: '.$node_id, $RESPONSE);
 		}
 		$RESPONSE['paths'] = $paths;
-		
+
 		$url .= $paths['path'];
 		$RESPONSE['url'] = $url;
-		
+
 		// Redirect
 		header('Location: '.$url, true, /*301*/307);
 		die;
-	
+
 		break;
 };
 

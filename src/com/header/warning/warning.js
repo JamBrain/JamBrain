@@ -1,27 +1,19 @@
-import {h, Component}				from 'preact/preact';
-import UIIcon 						from 'com/ui/icon/icon';
-import UILink 						from 'com/ui/link/link';
+import './warning.less';
+import '../../page/alert/alert.less';
 
-export default class HeaderWarning extends Component {
-	constructor( props ) {
-		super(props);
+import {Icon} from 'com/ui';
+
+export default function HeaderWarning( props ) {
+	const {root} = props;
+
+	if ( root && root.meta && root.meta.message ) {
+		return (
+			<section class="header -warning outside">
+				<Icon class="-baseline -small" src="warning" />
+				{root.meta.message}
+			</section>
+		);
 	}
 
-	render( props ) {
-		let {root} = props;
-
-		if ( root ) {
-			if ( root.meta ) {
-				if ( root.meta.message ) {
-					return (
-						<div class="header-base header-warning outside">
-							<UIIcon baseline small src="warning" /> {root.meta.message}
-						</div>
-					);
-				}
-			}
-		}
-
-		return null;
-	}
+	return null;
 }

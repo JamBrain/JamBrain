@@ -1,7 +1,9 @@
-import {h, Component} from 'preact/preact';
+import {Component} from 'preact';
 
-import ContentGames						from 'com/content-games/games';
+import ContentHeadliner from 'com/content/headliner';
+import ContentGames from 'com/content-games/games';
 import GamesFilter from 'com/content-games/filter';
+
 
 export default class EventGames extends Component {
     render( props, state ) {
@@ -99,7 +101,7 @@ export default class EventGames extends Component {
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-		const requestAdmin = parseInt(urlParams.get('admin'));
+		const requestAdmin = Number(urlParams.get('admin'));
 		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
 
 //		if (isAdmin) {
@@ -139,10 +141,11 @@ export default class EventGames extends Component {
         //Methods.push('superparent');	// Why doesn't this work? It's unnecssary, but it should still work
 
         return (
-            <div>
+            <>
+                <ContentHeadliner title="Games" icon="gamepad" flagclass="-col-a" />
                 {ShowFilters}
-                <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} filterout />
-            </div>
+                <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} />
+            </>
         );
     }
 }

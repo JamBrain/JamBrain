@@ -1,12 +1,13 @@
-import { h, render, Component }			from 'preact/preact';
-import ContentPost						from 'com/content-post/post';
+import { render, Component } from 'preact';
+import ContentPost from 'com/content-post/post';
 
 class Main extends Component {
-	constructor() {
-		this.state = {};
-		this.state.posts = [
-			"jammer bio"
-		];
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			'posts': "jammer bio"
+		};
 	}
 
 	componentDidMount() {
@@ -15,13 +16,13 @@ class Main extends Component {
 
 	render( props, state ) {
 		return (
-			<div id="layout">
+			<main>
 				<div id="content">{
-					state.posts.map(function(e) {
+					state.posts.map((e) => {
 						return <ContentPost title={e} />;
 					})
 				}</div>
-			</div>
+			</main>
 		);
 	}
 };

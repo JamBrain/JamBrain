@@ -1,6 +1,5 @@
-import {h, Component}					from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import UIButtonLink						from 'com/ui/button/button-link';
+import { Component } from 'preact';
+import {Icon, Button}		from 'com/ui';
 
 export default class GradedItem extends Component {
 	cleanGameDescription( description ) {
@@ -13,6 +12,7 @@ export default class GradedItem extends Component {
 	}
 
 	trimDescriptionToLength( description, targetLength, maxLength ) {
+		// MK: substr is deprecated. Use slice or substring.
 		const maxDescription = description.substr(0, maxLength);
 		let lastPunctuation = Math.max(maxDescription.lastIndexOf('.'), maxDescription.lastIndexOf('?'), maxDescription.lastIndexOf('!'));
 		if ( lastPunctuation < targetLength ) {
@@ -70,21 +70,21 @@ export default class GradedItem extends Component {
 		for ( let gradeKey in gradeNames ) {
 			const grade = grades.filter(grade => (grade.name == gradeKey));
 			if ( gradeNames[gradeKey] && (grade.length === 1) ) {
-				Grades.push(<div class={cN("-grade", (grade[0].name == focusGrade) ? "-focused" : "")} key={gradeKey}><div class="-grade-label">{gradeNames[gradeKey]}:</div>{grade[0].value}</div>);
+				Grades.push(<div class={`-grade ${(grade[0].name == focusGrade) ? "-focused" : ""}`} key={gradeKey}><div class="-grade-label">{gradeNames[gradeKey]}:</div>{grade[0].value}</div>);
 			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
-		const ShowComments = comments ? (<SVGIcon>{comments > 1 ? 'bubbles' : 'bubble'}</SVGIcon>) : null;
+		const ShowComments = comments ? (<Icon src={comments > 1 ? 'bubbles' : 'bubble'} />) : null;
 
 		return (
-			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
+			<Button class={`graded-item ${props.class ?? ''}`} href={node.path}>
 				{this.getItemType(node)}
 				<strong>{node.name}</strong>
 				{ShowComments}
 				{ShowAuthors}
 				<p>{description}</p>
 				{ShowGrades}
-			</UIButtonLink>
+			</Button>
 		);
 	}
 }

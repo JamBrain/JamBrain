@@ -1,17 +1,5 @@
-import { h, Component } from 'preact/preact';
-import ButtonLink		from 'com/button-link/link';
+import '../base/base.less';
 
-export default class SidebarNode extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
-	render( {}, {} ) {
-
-		return (
-			<div class="sidebar-base sidebar-node">
-
-			</div>
-		);
-	}
+export default function SidebarNode ( props ) {
+	return <div class="side-item sidebar-node" />;
 }

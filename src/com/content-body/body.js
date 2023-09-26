@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {Component} 				from 'preact';
 
 export default class ContentBody extends Component {
 	constructor( props ) {

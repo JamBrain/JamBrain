@@ -1,7 +1,9 @@
-import {h, Component} 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
-import NavLink 							from 'com/nav-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
+import {Component} from 'preact';
+import './event.less';
+
+import {Link, Icon, Button, Tooltip} from 'com/ui';
+import { getLocaleDay, getLocaleMonthDay, getLocaleDate, getLocaleTime, getLocaleTimeZone } from 'internal/time';
+import { node_CanCreate, nodeEvent_CanTheme } from 'internal/lib';
 
 import ContentEventHome					from 'com/content-event/event-home';
 import ContentEventIdea					from 'com/content-event/event-idea';
@@ -12,15 +14,13 @@ import ContentEventList					from 'com/content-event/event-list';
 //import ContentEventJudging				from 'com/content-event/event-judging';
 //import ContentEventResults				from 'com/content-event/event-results';
 
-import ContentCommon					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
-import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentSimple					from 'com/content-simple/simple';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 
 
@@ -43,7 +43,7 @@ export default class ContentEvent extends Component {
 
 	componentDidMount() {
 		$Node.What(this.props.node.id).then(r => {
-			console.log("arr", r);
+			//console.log("arr", r);
 
 			// HACK: Gets the first game I'm an author of
 			if ( r.node && Object.keys(r.node).length ) {
@@ -89,7 +89,7 @@ export default class ContentEvent extends Component {
 				IsHome = true;
 			}
 
-			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
+			ShowHome = <Button href={path} class={Class}><Icon src="home" /><div class="_inline_if-sidebar">Home</div></Button>;
 		}
 
 		var ShowGame = null;
@@ -99,7 +99,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
+			ShowGame = <Button href={path+'/games'} class={Class}><Icon src="gamepad" /><div class="_inline_if-sidebar">Games</div></Button>;
 		}
 
 		let ShowMyGrades = null;
@@ -109,7 +109,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowMyGrades = <ContentCommonNavButton href={path+'/mygrades'} class={Class}><SVGIcon>star-half</SVGIcon><div class="if-sidebar-inline">My Grades</div></ContentCommonNavButton>;
+			ShowMyGrades = <Button href={path+'/mygrades'} class={Class}><Icon src="star-half" /><div class="_inline_if-sidebar">My Grades</div></Button>;
 		}
 
 //		if ( extra && extra.length ) {
@@ -122,23 +122,23 @@ export default class ContentEvent extends Component {
                 Class = "-selected";
             }
 
-			console.log("state", state);
+			//console.log("state", state);
 
 			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
 			//if ( featured && featured.what && featured.focus_id ) {
 			if ( state && state.what && state.what.id ) {
 //				var FeaturedGame = featured.what[featured.focus_id]; // Hack
 				ShowJoin = (
-					<ContentCommonNavButton href={path + '/' + state.what.slug} class={Class}>
-						<SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">My Game</div>
-					</ContentCommonNavButton>
+					<Button href={path + '/' + state.what.slug} class={Class}>
+						<Icon src="gamepad" /><div class="_inline_if-sidebar">My Game</div>
+					</Button>
 				);
 			}
 			else {
 				ShowJoin = (
-					<ContentCommonNavButton onclick={this.onJoin} class={Class}>
-						<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
-					</ContentCommonNavButton>
+					<Button onClick={this.onJoin} class={Class}>
+						<Icon src="publish" /><div class="_inline_if-sidebar">Join Event</div>
+					</Button>
 				);
 			}
 		}
@@ -159,7 +159,7 @@ export default class ContentEvent extends Component {
 //				}
 //			}
 //
-//			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;
+//			ShowFeed = <Button href={path} class={Class}><Icon src="feed" />Feed</Button>;
 //		}
 
 		var ShowTheme = null;
@@ -171,7 +171,7 @@ export default class ContentEvent extends Component {
 				}
 			}
 
-			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
+			ShowTheme = <Button href={path+'/theme'} class={Class}><Icon src="ticket" /><div class="_inline_if-sidebar">Theme Selection</div></Button>;
 		}
 
 //		if ( !IsHome )
@@ -189,16 +189,16 @@ export default class ContentEvent extends Component {
 				LanguagePrefix += "["+navigator.languages.join(',')+"] ";
 			}
 
-			ShowEventTheme = null;
+			let ShowEventTheme = null;
 			if ( node.meta['event-theme'] ) {
-				ShowEventTheme = <div><SVGIcon small baseline gap>lightbulb</SVGIcon> Theme: <strong>{node.meta['event-theme']}</strong></div>;
+				ShowEventTheme = <><Icon class="-small -baseline -gap" src="lightbulb" /> Theme: <strong>{node.meta['event-theme']}</strong></>;
 			}
 
 			props.above.push(
 				<ContentCommonBody>
 					{ShowEventTheme}
-					<div><SVGIcon small baseline gap>calendar</SVGIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
-					<div title={LanguagePrefix+Start.toString()}><SVGIcon small baseline gap>clock</SVGIcon> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
+					<div><Icon class="-small -baseline -gap" src="calendar" /> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="_inline_if-sidebar">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
+					<Tooltip class="-block" text={LanguagePrefix+Start.toString()}><Icon class="-small -baseline -gap" src="clock" /> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <Link href="https://github.com/ludumdare/ludumdare/issues/589"><Tooltip text="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</Tooltip></Link></Tooltip>
 				</ContentCommonBody>
 			);
 		}

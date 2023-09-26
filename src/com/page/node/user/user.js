@@ -1,9 +1,8 @@
-import {h, Component}					from 'preact/preact';
+import {Component} from 'preact';
 import PageNavUser						from 'com/page/nav/user';
 
-import ContentList						from 'com/content-list/list';
 import ContentUser						from 'com/content-user/user';
-import ContentError						from 'com/content-error/error';
+import ContentHeadliner					from 'com/content-headliner/headliner';
 
 import UserFeed							from './feed/feed';
 import UserArticles						from './articles/articles';
@@ -12,46 +11,37 @@ import UserFollowing					from './following/following';
 import UserFollowers					from './followers/followers';
 import UserStats						from './stats/stats';
 
-import Router							from 'com/router/router';
-import Route							from 'com/router/route';
+import {ContentRouter, Route} from "com/router";
+
 
 export default class PageUser extends Component {
 	render( props ) {
-		let {node, user, path, extra} = props;
+		let {node, user, extra} = props;
+		let isMe = node && user && node.id && (node.id == user.id);
+		let isEditing = extra[extra.length - 1] == "edit";
 
-//		let userDefault = 'feed';
-//		if ( node['games'] > 0 )
-//			userDefault = 'games';
-//		else if ( node['articles'] > 0 )
-//			userDefault = 'articles';
-
-		let editing = extra[extra.length - 1] == "edit";
-
-		let ShowNav = null;
-		if ( !editing ) {
-			ShowNav = <PageNavUser {...props} />;
-		}
+		let Header = <ContentHeadliner
+			node={node}
+			name="user"
+			icon="user"
+			flagclass={isMe ? "-col-bc -inv" : "-col-bc"}
+			childclass={isMe ? "-col-bc" : "-inv -inv-lit"}
+		/>;
 
 		return (
-			<ContentList class="page-user">
-				{ShowNav}
-				<ContentUser node={node} user={user} path={path} extra={extra}/>
-				<Router node={node} props={props}>
-					<Route default={true} static path="/home" />
-					<Route static path="/games" component={UserGames} />
-					<Route static path="/articles" component={UserArticles} />
-					<Route static path="/feed" component={UserFeed} />
-					<Route static path="/following" component={UserFollowing} />
-					<Route static path="/followers" component={UserFollowers} />
-					<Route static path="/stats" component={UserStats} />
-					<Route static path="/edit" />
-					<Route type="error" component={ContentError} />
-				</Router>
-			</ContentList>
+			<>
+				{!isEditing ? Header : null}
+				{!isEditing ? <PageNavUser {...props} /> : null}
+				<ContentRouter props={props} key="user">
+					<Route path="/" component={ContentUser} />
+					<Route path="/games/*" component={UserGames} />
+					<Route path="/articles/*" component={UserArticles} />
+					<Route path="/feed" component={UserFeed} />
+					<Route path="/following" component={UserFollowing} />
+					<Route path="/followers" component={UserFollowers} />
+					<Route path="/stats/*" component={UserStats} />
+				</ContentRouter>
+			</>
 		);
 	}
 }
-
-//					<Route default={userDefault == 'games'} static path="/games" component={UserGames} />
-//					<Route default={userDefault == 'articles'} static path="/articles" component={UserArticles} />
-//					<Route default={userDefault == 'feed'} static path="/feed" component={UserFeed} />

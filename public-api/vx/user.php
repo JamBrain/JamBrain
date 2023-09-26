@@ -2,17 +2,17 @@
 require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api.php";
-require_once __DIR__."/".SHRUB_PATH."plugin.php";
-require_once __DIR__."/".SHRUB_PATH."user/user.php";
+require_once __DIR__."/".BACKEND_PATH."api.php";
+require_once __DIR__."/".BACKEND_PATH."plugin.php";
+require_once __DIR__."/".BACKEND_PATH."user/user.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/Exception.php';
-require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/PHPMailer.php';
-require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/SMTP.php';
+require_once __DIR__."/".BACKEND_PATH.'external/PHPMailer/src/Exception.php';
+require_once __DIR__."/".BACKEND_PATH.'external/PHPMailer/src/PHPMailer.php';
+require_once __DIR__."/".BACKEND_PATH.'external/PHPMailer/src/SMTP.php';
 
 json_Begin();
 
@@ -56,7 +56,6 @@ json_Begin();
 
 // *** //
 
-#const SH_MAIL_DOMAIN = "jammer.vg";
 const SH_MAIL_DOMAIN = "ldjam.com";
 const SH_MAILER_RETURN = "hello@".SH_MAIL_DOMAIN;
 const SH_MAILER_SUPPORT = "support@".SH_MAIL_DOMAIN;
@@ -418,7 +417,7 @@ function validateUserWithLogin( $login ) {
 
 	// WARNING: data leak, enable only for testing
 	//$RESPONSE['found'] = isset($user);
-	
+
 	/*
 	// Bail if no user was found, or if their node is zero (not associated with an account)
 	if ( !isset($user) || !($user['node'] > 0) ) {
@@ -458,7 +457,7 @@ switch ( $action ) {
 		$RESPONSE['mail'] = $mail;
 
 		/// Confirm it's not a blacklisted email domain (i.e. disposables)
-		require_once __DIR__."/".SHRUB_PATH."email/blacklist.php";
+		require_once __DIR__."/".BACKEND_PATH."email/blacklist.php";
 
 		if ( is_disposable_email($mail) ) {
 			userLog_Add(0, "!CREATE_BLACKLIST");

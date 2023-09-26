@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/constants.php";
 require_once __DIR__ . "/../core/node.php";
@@ -41,8 +41,8 @@ foreach( $args as $arg ) {
 
 if ( $mode > 0 ) {
 	$args_merged = implode('/',$args);
-	
-	
+
+
 	$paths = [ CMW_NODE_ROOT ];
 	foreach( $args as $key => $slug ) {
 		$id = node_GetNodeIdByParentIdAndSlug($paths[$key],$slug);
@@ -51,13 +51,13 @@ if ( $mode > 0 ) {
 		}
 		else {
 			$mode = M_ERROR;
-			break;			
+			break;
 		}
 	}
 	if ( $mode > 0 ) {
 		$paths_count = count($paths);
 		$this_node_id = &$paths[$paths_count-1];
-		
+
 		$this_node = node_GetNodeById( $this_node_id );
 		$author_node = [];
 		if ( !empty($this_node['author']) && ($this_node['author'] > 0) ) {
@@ -66,7 +66,7 @@ if ( $mode > 0 ) {
 		if ( !empty($this_node['parent']) && ($this_node['parent'] > 0) ) {
 			$parent_node = node_GetNodeById( $this_node['parent'] );
 		}
-		
+
 		$nodes = node_GetNodesByParentId( $this_node_id );
 		$nodes_count = count($nodes);
 	}
@@ -79,7 +79,7 @@ if ( $mode > 0 ) {
 		function getCookie(name) {
 			var value = "; " + document.cookie;
 			var parts = value.split("; " + name + "=");
-			if (parts.length == 2) 
+			if (parts.length == 2)
 				return parts.pop().split(";").shift();
 			return parts;
 		}
@@ -90,10 +90,10 @@ if ( $mode > 0 ) {
 			document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 		}
 	</script>
-	
+
 	<style>
 		/* Top Navigation Bar */
-		#ldbar-outer {			
+		#ldbar-outer {
 			width:100%;
 			height:56px;
 
@@ -101,7 +101,7 @@ if ( $mode > 0 ) {
 			left:0;
 			top:0;
 			z-index:1000;
-			
+
 			/* shadow */
 			/*border-bottom:1px solid #000;/*rgba(96,96,96,0.2);*/
 			box-shadow:0px -1px 8px rgba(0,0,0,0.7);
@@ -132,18 +132,18 @@ if ( $mode > 0 ) {
 		    to   { top: 0; }
 		}
 
-		
+
 		#ldbar-inner {
 			color:#fff;
 			background:/*#765*/ rgba(64,64,64,1.0);
-			
+
 			line-height:56px;
-			
+
 			position:relative;
 			width:100%;
 		}
 		/* Padding in the main document */
-		#ldbar-pad {			
+		#ldbar-pad {
 			width:100%;
 			height:56px; /* plus shadow */
 		}
@@ -159,13 +159,13 @@ if ( $mode > 0 ) {
 		#ldbar img {
 			/*vertical-align:middle;*/
 		}
-		
+
 		#ldbar-toggle {
 			font-family:'Inconsolata',monospace;
 			margin-left:32px;
 			cursor:pointer;
 		}
-		
+
 		#ldbar-notifications {
 			font-size:20px;
 			margin-left:24px;
@@ -180,7 +180,7 @@ if ( $mode > 0 ) {
 			font-family:'Inconsolata',monospace;
 			position:relative;
 			text-shadow:0 2px rgba(0,0,0,0.5);
-			
+
 			background:rgba(255,32,48,0.5);
 			border:3px solid #000;
 			top:0px;
@@ -198,10 +198,10 @@ if ( $mode > 0 ) {
 		#ldbar-logo {
 			position:relative;
 			cursor:pointer;
-			
+
 			top:9px;
 			opacity:0.7;
- 
+
    			-webkit-transition:all 0.125s;
     		transition:all 0.125s;
 		}
@@ -214,26 +214,26 @@ if ( $mode > 0 ) {
 		#ldbar .leftnav {
 			display:inline;
 			padding-left:64px;
-			
+
 		}
 		#ldbar .rightnav {
 			float:right;
 			display:inline;
 			/*padding-right:64px;*/
 		}
-		
-		
+
+
 		#ldbar .cell {
 			display:inline;
 		}
-		
+
 		#ldbar .size32 {
 			position:relative;
 			width:32px;
 			height:32px;
 			top:8px;
 		}
-		
+
 		#warning {
 			font-size:26px;
 			text-align:center;
@@ -244,7 +244,7 @@ if ( $mode > 0 ) {
 		}
 
 	</style>
-	
+
 	<div id='ldbar' class='noselect'>
 		<div id='ldbar-outer' style='position:fixed;'>
 			<div id='ldbar-inner'>
@@ -256,19 +256,19 @@ if ( $mode > 0 ) {
 					<div class='is-hires'>[HiRes]</div>
 				</div>
 				<div class='rightnav'>
-					<div class='cell size32' onclick='SendLogin();'><img src="<?php STATIC_URL(); ?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
-					<div id='ldbar-notifications' class='cell' onclick='SendLogout();'>0</div>
-					<div id='ldbar-toggle' class='cell' onclick='toggleLDBar();' title='Toggle Sticky Bar'>[x]</div>
+					<div class='cell size32' onClick='SendLogin();'><img src="<?php STATIC_URL(); ?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
+					<div id='ldbar-notifications' class='cell' onClick='SendLogout();'>0</div>
+					<div id='ldbar-toggle' class='cell' onClick='toggleLDBar();' title='Toggle Sticky Bar'>[x]</div>
 				</div>
 			</div>
 		</div>
 		<div id='ldbar-pad'></div>
 	</div>
-	
+
 	<div id='warning' <?php if ( isset($_COOKIE['hide-warning']) ) { echo 'style="display:none;"'; } ?> >
-		<strong>NOTE:</strong> This WIP website is <strong>pre-alpha</strong> quality. It is buggy, glitchy, and not pretty. Feedback is welcome, but do understand that I am <strong>NOT</strong> focusing on style or look. Currently I am working on <strong>user</strong> features, function/flow, performance, and security. We'll make it pretty later. The website will be live later this year. <strong><span onclick="warning_Hide();">[close]</span></strong>
+		<strong>NOTE:</strong> This WIP website is <strong>pre-alpha</strong> quality. It is buggy, glitchy, and not pretty. Feedback is welcome, but do understand that I am <strong>NOT</strong> focusing on style or look. Currently I am working on <strong>user</strong> features, function/flow, performance, and security. We'll make it pretty later. The website will be live later this year. <strong><span onClick="warning_Hide();">[close]</span></strong>
 	</div>
-	
+
 	<script>
 		function SendLogin() {
 			xhr_PostJSON( "/a/user/login/", "l=testuser&p=test",
@@ -298,7 +298,7 @@ if ( $mode > 0 ) {
 				}
 			);
 		}
-		
+
 		function updateLDBar() {
 			if ( getCookie('ldbar') === '1' ) {
 				document.getElementById('ldbar-outer').style.position = '';
@@ -322,16 +322,16 @@ if ( $mode > 0 ) {
 			updateLDBar();
 		}
 		updateLDBar();
-		
+
 		function bar_Hide( self ) {
-			if ( self.style.height=="8px") { 
-				self.style.height=""; 
-			} 
-			else { 
-				self.style.height="8px"; 
+			if ( self.style.height=="8px") {
+				self.style.height="";
+			}
+			else {
+				self.style.height="8px";
 			}
 		}
-		
+
 		function item_ShowEdit( id ) {
 			document.getElementById('flextext-'+id).style.display = '';
 			document.getElementById('preview-'+id).style.display = 'none';
@@ -342,25 +342,25 @@ if ( $mode > 0 ) {
 			document.getElementById('preview-'+id).style.display = '';
 //			document.getElementById('item-'+id).style.maxHeight = document.getElementById('item-'+id).scrollHeight +"px";
 		}
-		
+
 		function item_UpdateEdit( o ) {
 			var rows = o.value.split("\n").length;
 			o.rows = (rows > 4) ? rows : 4;
 		}
-		
+
 		function warning_Hide() {
 			document.getElementById('warning').style.display = 'none';
 			document.cookie = "hide-warning=1";
 		}
 	</script>
-	
+
 	<!-- *************** -->
-	
+
 	<style>
 		body {
 			background: #EEE;
 		}
-				
+
 		#content {
 			margin:0 auto;
 			max-width:900px;
@@ -368,13 +368,13 @@ if ( $mode > 0 ) {
 			-webkit-transition: max-width 1s;
 			transition: max-width 1s;
 		}
-		
+
 		@media (min-width : 1600px)  {
 			#content {
 				max-width:1286px; /*1300*/
 			}
 		}
-		
+
 		#content .item {
 			margin:16px auto;
 
@@ -382,13 +382,13 @@ if ( $mode > 0 ) {
 			overflow:hidden;
 
 			box-shadow: 0 0 3px rgba(0,0,0,0.2);
-			
+
 			/*max-height:0;*/
 			-moz-transition: max-height 1s;
 			-webkit-transition: max-height 1s;
 			transition: max-height 1s;
 		}
-		
+
 		#content .item-post {
 		}
 		#content .item-game {
@@ -467,7 +467,7 @@ if ( $mode > 0 ) {
 			}
 		}
 
-		
+
 		#metas .node {
 			padding-left:24px;
 			font-family:'Inconsolata',monospace;
@@ -476,15 +476,15 @@ if ( $mode > 0 ) {
 			display:inline;
 			font-weight:bold;
 		}
-		
+
 		#content .item span code {
 			background:#EEE;/*#FDC;*/
 			padding:4px 8px;
 			margin:0 4px;
 			border-radius:8px;
 		}
-		
-		
+
+
 		/* FlexText */
 		.flextext {
 		    position: relative;
@@ -497,7 +497,7 @@ if ( $mode > 0 ) {
 		    margin: 0;
 		    border: none;
 		    padding: 0;
-		
+
 		    *padding-bottom: 0 !important;
 		}
 
@@ -508,7 +508,7 @@ if ( $mode > 0 ) {
 		    -webkit-box-sizing: border-box;
 		    -moz-box-sizing: border-box;
 		    box-sizing: border-box;
-		
+
 		    *white-space: pre;
 		    *word-wrap: break-word;
 		}
@@ -521,7 +521,7 @@ if ( $mode > 0 ) {
 		    height: 100%;
 		    width: 100%;
 		    resize: none;
-		
+
 		    /* IE7 box-sizing fudge factor */
 		    *height: 94%;
 		    *width: 94%;
@@ -571,7 +571,7 @@ if ( $mode > 0 ) {
 		#nav .type {
 			left:960px;
 		}
-		
+
 		#nav .proxy {
 			background:#CFC;
 		}
@@ -582,13 +582,13 @@ if ( $mode > 0 ) {
 			background:#FCF;
 		}
 	</style>
-	
+
 	<?php if ( $mode === M_DEFAULT ) { ?>
 
-<?php	
+<?php
 	echo "<!-- Debug\n";
-/*	
-	$query = 
+/*
+	$query =
 		'SELECT % FROM % WHERE'.
 			' % in (%)' .
 			' AND % = ?' .
@@ -597,7 +597,7 @@ if ( $mode > 0 ) {
 		'id',4,
 		'type'
 	];
-		
+
 	echo _db_BuildQueryString(
 		$query,
 		'*',CMW_TABLE_SCHEDULE_SUBSCRIPTION,
@@ -605,40 +605,40 @@ if ( $mode > 0 ) {
 		'type'
 	);
 	echo "\n";
-	
+
 	print_r( _db_BuildArgList($args) );
-	
+
 	global $NODE_SCHEMA;
 	print_r( _db_ParseArgList($args,$NODE_SCHEMA) );
-*/	
-	
-	
-	
+*/
+
+
+
 //	$active_events = schedule_GetActiveIds();
 //	$events = schedule_GetByIds( $active_events );	// cacheme
-//	
+//
 //	$active_parents = [];
 //	foreach ( $events as &$event ) {
 //		$active_parents[] = $event['parent'];
 //	}
 //	$active = array_unique(array_merge($active_parents,$active_events));
 //	print_r($active);
-//	
+//
 //	$subscriptions = schedule_GetSubscriptionsByUserIds(699);
 //	print_r($subscriptions);
 //
 //	$mine = array_intersect($active,$subscriptions);
 //	print_r($mine);
-	
-	
-	
-	
+
+
+
+
 //	$scheduled_events = schedule_GetActiveIds();
 //	print_r( $scheduled_events );
-//	
+//
 //	$schedules = schedule_GetByIds( $scheduled_events );
 //	print_r( $schedules );
-//	
+//
 //	$family = schedule_GetFamilyByIds( [55,69] );
 //	print_r( $family );
 	echo " -->";
@@ -653,7 +653,7 @@ if ( $mode > 0 ) {
 			}
 			$author_ids = array_unique($author_ids);
 			$authors = node_GetNodesByIds($author_ids);
-			
+
 			foreach($items as $item) {
 				echo '<div class="item item-'.$item['type'].'" id="item-'.$item['id'].'">';
 				if ( $item['type'] === 'post' ) {
@@ -666,12 +666,12 @@ if ( $mode > 0 ) {
 						}
 						echo '<h1>' . $item['name'] .'</h1>';
 						echo '<div class="info">';
-						if ( !empty($item['author']) ) { 
-							echo "by <span class='author'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. "; 
+						if ( !empty($item['author']) ) {
+							echo "by <span class='author'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. ";
 						}
 						echo 'Posted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
-//						if ( !empty($item['author']) ) { 
-//							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+//						if ( !empty($item['author']) ) {
+//							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>";
 //						}
 					echo "</div>\n";
 					echo '<div class="separator"></div>';
@@ -688,16 +688,16 @@ if ( $mode > 0 ) {
 							// https://github.com/alexdunphy/flexText
 							echo '<div class="flextext" id="flextext-'.$item['id'].'" style="display:none;">';
 								echo '<pre><span id="flextext-span-'.$item['id'].'"></span><br /><br /></pre>';
-								echo '<textarea class="edit" id="edit-'.$item['id'].'" oninput="flextext_Update('.$item['id'].');" onpropertychange="flextext_Update('.$item['id'].');" onkeyup="flextext_Update('.$item['id'].');" onchange="flextext_Update('.$item['id'].');">' . $item['body'] . '</textarea>';
+								echo '<textarea class="edit" id="edit-'.$item['id'].'" oninput="flextext_Update('.$item['id'].');" onpropertychange="flextext_Update('.$item['id'].');" onKeyUp="flextext_Update('.$item['id'].');" onchange="flextext_Update('.$item['id'].');">' . $item['body'] . '</textarea>';
 							echo '</div>';
 							echo '<div class="preview" id="preview-'.$item['id'].'"></div>';
 						}
 					echo '</div>';
-					echo '<div class="footer" onclick="bar_Hide(this);" style="height:8px">';
+					echo '<div class="footer" onClick="bar_Hide(this);" style="height:8px">';
 						echo '<div>';
-						echo '<span onclick="item_ShowEdit('.$item['id'].');">PATCH</span>';
+						echo '<span onClick="item_ShowEdit('.$item['id'].');">PATCH</span>';
 						echo ' | ';
-						echo '<span onclick="item_Parse('.$item['id'].');item_ShowPreview('.$item['id'].');">PREVIEW</span>';
+						echo '<span onClick="item_Parse('.$item['id'].');item_ShowPreview('.$item['id'].');">PREVIEW</span>';
 						echo '</div>';
 					echo '</div>';
 				}
@@ -705,15 +705,15 @@ if ( $mode > 0 ) {
 					echo '<div class="header emoji">';
 						echo '<h1>' . $item['name'] .'</h1>';
 						echo '<div class="info">';
-						if ( !empty($item['author']) ) { 
-							echo "by <span class='author'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. "; 
+						if ( !empty($item['author']) ) {
+							echo "by <span class='author'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. ";
 						}
 						echo 'Submitted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span>';
 						echo '</div>';
 					echo "</div>\n";
 					echo '<div class="body format">';
 						echo "This is a game submission part of the main timeline. Screenshots and other presentable elements go here.";
-					echo '</div>';					
+					echo '</div>';
 				}
 				echo '</div>';
 			}
@@ -729,7 +729,7 @@ if ( $mode > 0 ) {
 		if ( $item['type'] === 'page' ) {
 			echo '<div class="item item-'.$item['type'].'" id="item-'.$item['id'].'">';
 				echo '<div class="header emoji"><h1>'.$item['name'].'</h1></div>';
-				if ( !empty($item['body']) ) { 
+				if ( !empty($item['body']) ) {
 					echo '<textarea class="body-edit" rows="24" cols="120" style="display:none;">'.$this_node['body'].'</textarea>';
 					echo '<div class="body format"></div>';
 				}
@@ -739,10 +739,10 @@ if ( $mode > 0 ) {
 	?>
 			<div class="item">
 				<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
-				<?php 
-					if ( !empty($this_node['body']) ) { 
+				<?php
+					if ( !empty($this_node['body']) ) {
 						?><textarea class="body-edit" rows="24" cols="120" style="display:none;"><?php echo $this_node['body']; ?></textarea>
-						<div class="body format"></div><?php 
+						<div class="body format"></div><?php
 					} ?>
 				<?php
 					if ( $this_node['type'] === 'user' ) {
@@ -784,17 +784,17 @@ if ( $mode > 0 ) {
         chart.draw(data, options);
       }
     </script>
-    <div id="chart_div" style="display:inline-block;"></div><img src="<?php 
+    <div id="chart_div" style="display:inline-block;"></div><img src="<?php
     	echo ichart_GetPie(400,300,[10,12,15],['ham','hem','hom']);
     ?>" />
     <?php
     echo "<br>";
-					
-					
+
+
 					echo '<div id="games" class="emoji"><h3>Games:</h3>';
 					$games = node_GetNodesByAuthorIdAndType($this_node['id'],'game');
 					foreach( $games as $game ) {
-						echo "<a href=\"/user/" . $this_node['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>"; 
+						echo "<a href=\"/user/" . $this_node['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>";
 					}
 					echo '</div>';
 					echo "<br />";
@@ -806,14 +806,14 @@ if ( $mode > 0 ) {
 							if ( is_array($value) ) {
 								if ( is_string($key) )
 									$key = "\"".$key."\"";
-	
+
 								echo "<div class='key'>".$key . ":</div><br/>";
 								process_meta($value);
 							}
 							else {
 								if ( is_string($key) )
 									$key = "\"".$key."\"";
-								
+
 								if ( is_string($value) )
 									echo "<div class='key'>".$key . ":</div> \"" . $value . "\"<br />";
 								else
@@ -823,25 +823,25 @@ if ( $mode > 0 ) {
 						echo "</div>";
 					}
 					process_meta($metas);
-					
+
 //					print_r($metas);
 					echo "</div>";
 				}
-			?>	
+			?>
 		</div>
 	</div>
 	<?php } /* type */ ?>
 	<?php
 		}
 	?>
-	
+
 	<div id='nav' class='emoji' style="padding:16px;display:none;">
 		<?php
 			echo "/" . $args_merged . " [".$this_node_id."]<br />\n";
 			if ( $args_count >= 1 ) {
 				echo "<div class='row'>\n";
 				echo "<div class='slug'><a href='../'>../</a></div><br />\n";
-				echo "</div>\n";	
+				echo "</div>\n";
 			}
 			foreach( $nodes as $node ) {
 				echo "<div class='row ".$node['type'].($node['author']>0?" authored":"")."'>\n";
@@ -851,12 +851,12 @@ if ( $mode > 0 ) {
 				else {
 					echo "<div class='slug'><a href='".$node['slug']."/'>" . $node['slug'] . "/</a></div> <div class='id'>[".$node['id']."]</div> <div class='name'>".$node['name']."</div> <div class='type'>(".$node['type'].")</div><br />\n";
 				}
-				echo "</div>\n";	
+				echo "</div>\n";
 			}
 		?>
 	</div>
 	<div>
-		<img src="<?php STATIC_URL(); ?>/img/logo/mike/Chicken16.png?crop&w=256&h=128" onclick="document.getElementById('nav').style.display='';">
+		<img src="<?php STATIC_URL(); ?>/img/logo/mike/Chicken16.png?crop&w=256&h=128" onClick="document.getElementById('nav').style.display='';">
 	</div>
 <?php /*
 	<div id="debug">
@@ -874,23 +874,23 @@ if ( $mode > 0 ) {
 		</script>
 	</div>
 */ ?>
-	<?php } else if ( $mode === M_ERROR ) { ?>	
+	<?php } else if ( $mode === M_ERROR ) { ?>
 		<div id="content">
 			<div class="title"><h1><a href=".">Nope</a></h1></div>
 		</div>
 
-	<?php } /* $mode */ ?>	
+	<?php } /* $mode */ ?>
 
 	<script>
 		function UpdateDate( el ) {
 			var PostDate = new Date(el.getAttribute('data'));
 			var DiffDate = (Date.now() - PostDate);
-			
+
 			var DateString = '<span class="date-diff">';
 			if ( DiffDate < 0 ) {
 				DateString += "in the future";
 			}
-			else if ( DiffDate < 1000*60*2 ) { 
+			else if ( DiffDate < 1000*60*2 ) {
 				DateString += "right now";
 			}
 			else if ( DiffDate < 1000*60*60 ) {
@@ -931,7 +931,7 @@ if ( $mode > 0 ) {
 			DateString += '<span class="date-local">';
 			{
 				// http://stackoverflow.com/a/20463521
-				
+
 //				console.log("toString: " + PostDate.toString());
 //				console.log("toLocaleString: " + PostDate.toLocaleString());
 //				console.log("toLocaleTimeString: " + PostDate.toLocaleTimeString());
@@ -963,26 +963,26 @@ if ( $mode > 0 ) {
 						'nov':"November",
 						'dec':"December",
 					};
-					
+
 					// Day of the week //
-					if ( DaysOfWeek.hasOwnProperty(Parts[0].toLowerCase()) ) 
+					if ( DaysOfWeek.hasOwnProperty(Parts[0].toLowerCase()) )
 						DateString += DaysOfWeek[Parts[0].toLowerCase()] + ", ";
 					else
 						DateString += Parts[0] + ", ";
 
 					// Month of the year //
-					if ( MonthsOfYear.hasOwnProperty(Parts[1].toLowerCase()) ) 
+					if ( MonthsOfYear.hasOwnProperty(Parts[1].toLowerCase()) )
 						DateString += MonthsOfYear[Parts[1].toLowerCase()] + " ";
 					else
 						DateString += Parts[1] + " ";
-					
+
 					DateString += Parts[2] + ", ";			// Day //
 					DateString += Parts[3] + " ";			// Year //
-										
+
 					// 12 hour Timezone (if we can detect it) //
 					if ( PostDate.toLocaleTimeString().split(" ").length > 1 ) {
 						var TimeParts = Parts[4].split(':');
-						var Hour = parseInt(TimeParts[0]);
+						var Hour = Number(TimeParts[0]);
 						var AMPM = 'AM';
 						if ( Hour == 0 ) {
 							Hour = 12;
@@ -1003,7 +1003,7 @@ if ( $mode > 0 ) {
 						var TimeParts = Parts[4].split(':');
 						DateString += TimeParts[0] + ":" + TimeParts[1] + " ";
 					}
-					
+
 					DateString += '<span class="no-mobile" title="'+Parts[5]+'">';	// GMT
 					DateString += Parts[6];											// TimeZone
 					DateString += '</span>';
@@ -1014,7 +1014,7 @@ if ( $mode > 0 ) {
 				}
 			}
 			DateString += '</span>';
-			
+
 			el.innerHTML = DateString;
 		}
 		function UpdateDates( elroot ) {
@@ -1028,33 +1028,33 @@ if ( $mode > 0 ) {
 		}
 		UpdateDates();
 		var MinuteClock = setInterval(UpdateDates,1000*60);	// Update clocks every 60 seconds
-		
+
 		// Process Emoji on all the following sections //
 		var emoji_el = document.getElementsByClassName('emoji');
 		for (var idx = 0, len = emoji_el.length; idx < len; ++idx) {
 			emoji_el[idx].innerHTML = emojione.shortnameToImage(emoji_el[idx].innerHTML);
 		}
-		
+
 		var el = document.getElementById('content');
 		var original = el.getElementsByClassName('body-edit');
 		var preview = el.getElementsByClassName('body');
 		for(var idx = 0, len = original.length; idx < len; ++idx) {
 			preview[idx].innerHTML = html_Parse(original[idx].innerHTML);
 		}
-		
+
 		var el = document.getElementById('content');
 		var original = el.getElementsByClassName('edit');
 		var preview = el.getElementsByClassName('preview');
 		for(var idx = 0, len = original.length; idx < len; ++idx) {
 			preview[idx].innerHTML = html_Parse(original[idx].innerHTML);
 		}
-		
+
 		function item_Parse(id) {
 			var src = document.getElementById('edit-'+id);
 			var dest = document.getElementById('preview-'+id);
 			dest.innerHTML = html_Parse(src.value);
 		}
-		
+
 		function flextext_Update(id) {
 			//console.log(id);
 			var src = document.getElementById('edit-'+id);
@@ -1064,7 +1064,7 @@ if ( $mode > 0 ) {
 			else
 				dest.innerText = src.value;		// IE < 9
 		}
-		
+
 		var AllFlexTexts = document.getElementsByClassName("flextext");
 		for ( var idx = 0, len = AllFlexTexts.length; idx < len; ++idx ) {
 			var AllSpans = AllFlexTexts[idx].getElementsByTagName("span");
@@ -1080,6 +1080,6 @@ if ( $mode > 0 ) {
 //			//console.dir(original[idx]);
 //			original[idx].style.maxHeight = original[idx].scrollHeight + "px";
 //		}
-		
+
 	</script>
 <?php template_GetFooter(); ?>

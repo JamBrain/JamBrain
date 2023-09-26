@@ -1,8 +1,7 @@
-import {h, Component} 					from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import { Component } from 'preact';
+import './star.less';
 
-import SVGIcon							from 'com/svg-icon/icon';
-import ButtonBase						from 'com/button-base/base';
+import {Icon, Button} from 'com/ui';
 
 
 export default class InputStar extends Component {
@@ -11,8 +10,8 @@ export default class InputStar extends Component {
 	}
 
 	onClick( index, e ) {
-		if ( this.props.onclick ) {
-			this.props.onclick(index, e);
+		if ( this.props.onClick ) {
+			this.props.onClick(index, e);
 		}
 	}
 
@@ -24,7 +23,7 @@ export default class InputStar extends Component {
 
 	render( props, state ) {
 		let Value = state.value || parseFloat(props.value);
-		let Count = parseInt(props.max) || 5;
+		let Count = Number(props.max) || 5;
 		let Title = null;
 
 		let ShowNumber = null;
@@ -39,38 +38,38 @@ export default class InputStar extends Component {
 		if ( props.edit ) {
 			// First star is a full star
 			Stars.push(
-				<ButtonBase class={cN("-star -hover", (Value >= 1) ? '-lit' : '')} onclick={this.onClick.bind(this, 1)} title={1}>
-					<SVGIcon baseline>{'star-full'}</SVGIcon>
-				</ButtonBase>
+				<Button class={`-star -hover ${(Value >= 1) ? '-lit' : ''}`} onClick={this.onClick.bind(this, 1)} title={1}>
+					<Icon class="-baseline" src="star-full" />
+				</Button>
 			);
 
 			// Half Stars
 			for ( var idx = 3.0/*1.0*/; idx <= Math.floor(Value*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover -lit" onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</SVGIcon></ButtonBase>);
+				Stars.push(<Button class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon class="-baseline" src={'star-'+(idx&1?'left':'right')+'-full'} /></Button>);
 			}
 			for ( /*let idx = Math.ceil(Value*2.0)+1*/; idx <= (Count*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover" onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</SVGIcon></ButtonBase>);
-//				Stars.push(<ButtonBase class="-star -hover" onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</SVGIcon></ButtonBase>);
+				Stars.push(<Button class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon class="-baseline" src={'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/} /></Button>);
+//				Stars.push(<Button class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon class="-baseline" src={'star-'+(idx&1?'left':'right')+'-empty'} /></Button>);
 			}
 
 			// Delete button
 			if ( props.delete ) {
 				ShowDelete = (
-					<ButtonBase class="-delete -hover" onclick={this.onDelete.bind(this)}>
-						<SVGIcon small baseline>cross</SVGIcon>
-					</ButtonBase>
+					<Button class="-delete -hover" onClick={this.onDelete.bind(this)}>
+						<Icon class="-small -baseline" src="cross" />
+					</Button>
 				);
 			}
 		}
 		else {
 			for ( let idx = 0; idx < Math.floor(Value); idx++ ) {
-				Stars.push(<div class="-star"><SVGIcon small={props.small} baseline>star-full</SVGIcon></div>);
+				Stars.push(<div class="-star"><Icon class={`${props.small ? 'small' : ''} -baseline`} src="star-full" /></div>);
 			}
 			if ( Value % 1 ) {
-				Stars.push(<div class="-star"><SVGIcon small={props.small} baseline>star-half</SVGIcon></div>);
+				Stars.push(<div class="-star"><Icon class={`${props.small ? 'small' : ''} -baseline`} src="star-half" /></div>);
 			}
 			for ( let idx = Math.ceil(Value); idx < Count; idx++ ) {
-				Stars.push(<div class="-star"><SVGIcon small={props.small} baseline>star-empty</SVGIcon></div>);
+				Stars.push(<div class="-star"><Icon class={`${props.small ? 'small' : ''} -baseline`} src="star-empty" /></div>);
 			}
 
 			Title = Value+' of '+Count;

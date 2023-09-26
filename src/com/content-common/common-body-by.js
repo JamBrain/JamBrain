@@ -1,7 +1,9 @@
-import {h, Component} 					from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {Component, toChildArray} from 'preact';
+import './common-body-by.less';
 
-import NavLink							from 'com/nav-link/link';
+import {Diff} from 'shallow';
+import {getLocaleDate, getRoughAge}	from 'internal/time';
+import {Link, Tooltip} from 'com/ui';
 
 export default class ContentCommonBodyBy extends Component {
 	constructor( props ) {
@@ -9,7 +11,7 @@ export default class ContentCommonBodyBy extends Component {
 	}
 
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+		return Diff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
 	getName( node ) {
@@ -36,7 +38,7 @@ export default class ContentCommonBodyBy extends Component {
 			var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 
 			// x minutes ago
-			return <span>{label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
+			return <span>{label} <Tooltip text={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</Tooltip></span>;
 		}
 		else {
 			return <span>not {label} yet</span>;
@@ -48,7 +50,7 @@ export default class ContentCommonBodyBy extends Component {
 		let pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 
 		// x minutes ago
-		return <span>{label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
+		return <span>{label} <Tooltip text={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</Tooltip></span>;
 	}
 
 	render( props ) {
@@ -67,8 +69,8 @@ export default class ContentCommonBodyBy extends Component {
 					ret.push(" ");
 					ret.push(
 						<span>
-							(<NavLink class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</NavLink>)
-							{((props.authors.length > 1) && (props.authors[idx].id == props.node.author)) ? <span title="Team Leader">*</span> : ''}
+							(<Link class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</Link>)
+							{((props.authors.length > 1) && (props.authors[idx].id == props.node.author)) ? <Tooltip text="Team Leader">*</Tooltip> : ''}
 						</span>
 					);
 					if ( idx < props.authors.length-2 )
@@ -80,7 +82,7 @@ export default class ContentCommonBodyBy extends Component {
 			else if ( props.author ) {
 				ret.push(<span class="-name">{this.getName(props.author)}</span>);
 				ret.push(" ");
-				ret.push(<span>(<NavLink class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</NavLink>)</span>);
+				ret.push(<span>(<Link class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</Link>)</span>);
 			}
 		}
 
@@ -92,7 +94,7 @@ export default class ContentCommonBodyBy extends Component {
 		}
 
 		return (
-			<div class={cN('content-common-body', '-by', props.class)}>
+			<div class={`body -by ${props.class ?? ''}`}>
 				{ret}
 				{props.children}
 			</div>

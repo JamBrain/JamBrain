@@ -1,22 +1,23 @@
-import {h, Component} 				from 'preact/preact';
-import {shallowDiff} 					from 'shallow-compare/index';
+import {Component, toChildArray} from 'preact';
+import './common-body-markup.less';
 
-import NavLink 								from 'com/nav-link/link';
-import SVGIcon 								from 'com/svg-icon/icon';
+import {Diff} 					from 'shallow';
+
 import InputTextArea 					from 'com/input-textarea/input-textarea';
-import marked 								from '../../internal/marked/marked';
+import marked 								from 'internal/marked/marked';
 
 export default class ContentCommonBodyMarkup extends Component {
   constructor(props) {
     super(props);
   }
 
+  // MK: This normal checks children. Is this correct?
   shouldComponentUpdate(nextProps) {
-    return shallowDiff(this.props, nextProps);
+    return Diff(this.props, nextProps);
   }
 
   render(props) {
-    var Class = ["content-common-body", "-markup"];
+    var Class = ["body", "-markup"];
     if (typeof props.class == 'string') {
       Class = Class.concat(props.class.split(' '));
     }
@@ -28,7 +29,7 @@ export default class ContentCommonBodyMarkup extends Component {
       ? props.placeholder
       : "Description";
 
-    var Text = props.children.join('');
+    var Text = toChildArray(props.children).join('');
 
     if (props.editing) {
       //var Height = this.textarea ? this.textarea.scrollHeight : 0;
@@ -39,20 +40,20 @@ export default class ContentCommonBodyMarkup extends Component {
       //var Chars = props.children[0] ? props.children[0].length : 0;
 
       return (
-        <div class={Class}>
+        <div class={Class.join(' ')}>
           <div class="-label">{Label}</div>
           <InputTextArea
             user={props.user}
             value={Text}
-            onmodify={props.onmodify}
-						onkeydown={props.onkeydown}
-						onkeyup={props.onkeyup}
-						onblur={props.onblur}
-						onfocus={props.onfocus}
+            onModify={props.onModify}
+						onKeyDown={props.onKeyDown}
+						onKeyUp={props.onKeyUp}
+						onBlur={props.onBlur}
+						onFocus={props.onFocus}
 						oncaret={props.oncaret}
             placeholder={Placeholder}
-            ref={(input) => {this.textarea = input;}}
-            maxlength={Limit}
+            ref={(input) => (this.textarea = input)}
+            maxLength={Limit}
 						replaceText={props.replaceText}
 						replaceTextEvent={props.replaceTextEvent}
 						cursorPos={props.cursorPos}
@@ -64,42 +65,43 @@ export default class ContentCommonBodyMarkup extends Component {
       //						<InputTextArea
       //							name="paragraph_text"
       //							value={props.children}
-      //							onmodify={props.onmodify}
+      //							onModify={props.onModify}
       //							placeholder={props.placeholder}
       //							ref={(input) => { this.textarea = input; }}
-      //							maxlength={Limit}
+      //							maxLength={Limit}
       //						/>
       //					</div>
       //					<div class="-footer">
       //						<div class="-right"><span class="-chars">{Chars}</span>/<span class="-limit">{Limit}</span></div>
-      //						<div class="-left">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <strong>:emoji_codes:</strong></div>
+      //						<div class="-left">Supports <NavLink blank href="/markdown"><UIIcon>markdown</UIIcon> <strong>Markdown</strong></NavLink> and <strong>:emoji_codes:</strong></div>
       //					</div>
-    } else {
+    }
+    else {
       Class.push("markup");
 
       if (!Text.trim().length) {
         Text = Placeholder;
       }
 
-      var markedOptions = {
-        highlight: function(code, lang) {
+      let markedOptions = {
+        'highlight': function(code, lang) {
           var language = Prism.languages.clike;
           if (Prism.languages[lang])
             language = Prism.languages[lang];
           return Prism.highlight(code, language);
         },
-        sanitize: true, // disable HTML
-        smartypants: true, // enable automatic fancy quotes, ellipses, dashes
-        showLinks: !props.untrusted,
-        langPrefix: 'language-'
+        'sanitize': true, // disable HTML
+        'smartypants': true, // enable automatic fancy quotes, ellipses, dashes
+        'showLinks': !props.untrusted,
+        'langPrefix': 'language-'
       };
 
       // NOTE: only parses the first child
       //var Text = props.children.length ? marked.parse(props.children[0]) : "";
-			var mrkd = new marked();
-      markdown = mrkd.parse(Text, markedOptions);
+			let mrkd = new marked();
+      let markdown = mrkd.parse(Text, markedOptions);
 
-      return (<div class={Class}>{markdown}</div>);
+      return (<div class={Class.join(' ')}>{markdown}</div>);
     }
   }
 }

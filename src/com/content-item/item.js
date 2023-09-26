@@ -1,22 +1,15 @@
-import {h, Component} 					from 'preact/preact';
+import { Component } from 'preact';
+import './item.less';
 
-import NavLink 							from 'com/nav-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
-import IMG2 							from 'com/img2/img2';
+import { node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished } from 'internal/lib';
 
-import UIIcon 							from 'com/ui/icon/icon';
-import UIImage 							from 'com/ui/image/image';
-import UILink 							from 'com/ui/link/link';
-
-import ButtonBase						from 'com/button-base/base';
-import UIButton							from 'com/ui/button/button';
+import {Button, Icon, Image, Link, Tooltip, UICheckbox} from 'com/ui';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyField			from 'com/content-common/common-body-field';
 import ContentCommonBodyLink			from 'com/content-common/common-body-link';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
-import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
 import ContentItemFiles from './item-files';
@@ -25,23 +18,24 @@ import ContentItemEmbedFile from './item-embed-file';
 
 import InputStar						from 'com/input-star/star';
 
-import UICheckbox						from 'com/ui/checkbox/checkbox';
-
 import ContentSimple					from 'com/content-simple/simple';
 
-import $Node							from 'shrub/js/node/node';
-import $Grade							from 'shrub/js/grade/grade';
-import $Asset							from 'shrub/js/asset/asset';
+import $Node							from 'backend/js/node/node';
+import $Grade							from 'backend/js/grade/grade';
+import $Asset							from 'backend/js/asset/asset';
+
 
 const MAX_LINKS = 9;
+
 
 export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 
-		var node = props.node;
+		let {node} = props;
 
 		this.state = {
+			/*node: node,*/
 			'parent': null,
 			'grade': null,
 
@@ -51,13 +45,13 @@ export default class ContentItem extends Component {
 
 			'linksShown': 1,
 
-			'allowAnonymous': parseInt(node.meta['allow-anonymous-comments']),
-			'dontRateMe': parseInt(node.meta['dont-rate-me']),
+			'allowAnonymous': Number(node.meta['allow-anonymous-comments']),
+			'dontRateMe': Number(node.meta['dont-rate-me']),
 		};
 
 		for ( let i = 0; i < MAX_LINKS; i++ ) {
 			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
-			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
+			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? Number(node.meta['link-0'+(i+1)+'-tag']) : 0;
 			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
 
 			if ( this.state.linkUrls[i] && i+1 > this.state.linksShown ) {
@@ -69,14 +63,17 @@ export default class ContentItem extends Component {
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetExtra = this.onSetExtra.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
+
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
 		this.onDontRateMe = this.onDontRateMe.bind(this);
 		this.onChangeTeam = this.onChangeTeam.bind(this);
 		this.handleAllowSubmission = this.handleAllowSubmission.bind(this);
 	}
 
+
 	componentDidMount() {
-		var node = this.props.node;
+		let {node} = this.props;
+
 
 		// Cleverness: All allowed type states default to false (null) if unpublished. If published,
 		// they get explicitly set to false, all except for the actual type's state (eg. item/game/compo).
@@ -89,9 +86,13 @@ export default class ContentItem extends Component {
 			});
 		}
 
+
+		// Once mounted, I need to know my parent
+		// MK: TODO: Fetch both parent and author(s)
+		// NOTE: If user isn't set before this page renders, my "ratings" will never load
 		$Node.Get(node.parent)
 		.then(r => {
-			if ( r.node && r.node.length ) {
+			if ( r.user && r.user.id && r.node && r.node.length ) {
 				var Parent = r.node[0];
 				this.setState({'parent': Parent});
 
@@ -112,58 +113,61 @@ export default class ContentItem extends Component {
 		});
 	}
 
-	setSubSubType( type ) {
+
+	_setSubSubType( type ) {
 		return $Node.Transform(this.props.node.id, 'item', 'game', type)
 		.then( r => {
-			if ( r ) {
-				if ( r && r.changed ) {
-					this.props.node.subsubtype = type;
-					this.setState({});
-				}
+			if ( r && r.changed ) {
+				// MK: THIS IS BAD!
+				this.props.node.subsubtype = type;
+				this.setState({});
 			}
+
 			return r;
 		});
 	}
 
 	onSetJam( e ) {
-		return this.setSubSubType('jam')
+		return this._setSubSubType('jam')
 			.then( r => {
 			});
 	}
 	onSetCompo( e ) {
-		return this.setSubSubType('compo')
+		return this._setSubSubType('compo')
 			.then( r => {
 			});
 	}
 	onSetExtra( e ) {
-		return this.setSubSubType('extra')
+		return this._setSubSubType('extra')
 			.then( r => {
 			});
 	}
 	onSetUnfinished( e ) {
-		return this.setSubSubType('unfinished')
+		return this._setSubSubType('unfinished')
 			.then( r => {
 			});
 	}
 
 	onGrade( name, value ) {
-		let Node = this.props.node;
+		let {node} = this.props;
 
-		return $Grade.Add(Node.id, name, value)
+		return $Grade.Add(node.id, name, value)
 			.then(r => {
 				if ( (r && r.id) || !!r.changed ) {
-					var Grades = this.state.grade;
+					this.setState(prevState => {
+						let grade = prevState.grade;
 
-					Grades[name] = value;
+						grade[name] = value;
 
-					this.setState({'grade': Grades});
+						return {'grade': grade};
+					});
 				}
 				return r;
 			});
 	}
 
 	onOptOut( name, value ) {
-		var Node = this.props.node;
+		let {node} = this.props;
 
 		let Name = name+'-out';
 		let Data = {};
@@ -171,9 +175,10 @@ export default class ContentItem extends Component {
 		if ( value ) {
 			Data[Name] = 1;
 
-			return $Node.AddMeta(Node.id, Data)
+			return $Node.AddMeta(node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
+						// MK: THIS IS BAD
 						this.props.node.meta[Name] = Data[Name];
 						this.setState({});
 					}
@@ -183,9 +188,10 @@ export default class ContentItem extends Component {
 		else {
 			Data[Name] = 0;
 
-			return $Node.RemoveMeta(Node.id, Data)
+			return $Node.RemoveMeta(node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
+						// MK: THIS IS BAD
 						this.props.node.meta[Name] = Data[Name];
 						this.setState({});
 					}
@@ -195,15 +201,19 @@ export default class ContentItem extends Component {
 	}
 
 	onChangeTeam(userId, action) {
-		let team = (this.state.team ? this.state.team : this.props.node.meta.author).map(author => author);
-		if (action === 1) {
-			if (team.indexOf(userId) === -1)
-				team.push(userId);
-		}
-		else if (action === -1) {
-			team.splice(team.indexOf(userId), 1);
-		}
-		this.setState({'team': team});
+		this.setState(prevState => {
+			let team = (prevState.team ? prevState.team : this.props.node.meta.author).map(author => author);
+			if (action === 1) {
+				if (team.indexOf(userId) === -1) {
+					team.push(userId);
+				}
+			}
+			else if (action === -1) {
+				team.splice(team.indexOf(userId), 1);
+			}
+
+			return {'team': team};
+		});
 	}
 
 	positionSuffix(position) {
@@ -243,6 +253,7 @@ export default class ContentItem extends Component {
 				})
 				.then(r => {
 					if ( r && r.changed ) {
+						// MK: THIS IS BAD
 						this.props.node.meta[name] = FileName;
 						this.setState({});
 					}
@@ -353,17 +364,19 @@ export default class ContentItem extends Component {
 
 				if ( Old != New ) {
 					Data[Base] = this.state.linkUrls[i];
+					// MK: THIS IS BAD
 					this.props.node.meta[Base] = Data[Base];
 					Changes++;
 				}
 			}
 
 			{
-				let Old = node.meta[Base+'-tag'] ? parseInt(node.meta[Base+'-tag']) : 0;
-				let New = parseInt(this.state.linkTags[i]);
+				let Old = node.meta[Base+'-tag'] ? Number(node.meta[Base+'-tag']) : 0;
+				let New = Number(this.state.linkTags[i]);
 
 				if ( Old != New ) {
 					Data[Base+'-tag'] = this.state.linkTags[i];
+					// MK: THIS IS BAD
 					this.props.node.meta[Base+'-tag'] = Data[Base+'-tag'];
 					Changes++;
 				}
@@ -375,6 +388,7 @@ export default class ContentItem extends Component {
 
 				if ( Old != New ) {
 					Data[Base+'-name'] = this.state.linkNames[i];
+					// MK: THIS IS BAD
 					this.props.node.meta[Base+'-name'] = Data[Base+'-name'];
 					Changes++;
 				}
@@ -398,7 +412,7 @@ export default class ContentItem extends Component {
 
 		if ( editing ) {
 			LinkMeta.push(
-				<div class={cN('content-common-link', '-editing', '-header')}>
+				<div class={`content-common-link -editing -header`}>
 					<div class="-tag">Platform</div>
 					<div class="-name">Description (optional)</div>
 					<div class="-url">URL (leave blank to omit)</div>
@@ -428,7 +442,7 @@ export default class ContentItem extends Component {
 
 		if ( editing && this.state.linksShown < MAX_LINKS ) {
 			LinkMeta.push(
-				<UIButton onclick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><UIIcon src="plus" /><div>Add</div></UIButton>
+				<Button onClick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><Icon src="plus" /><div>Add</div></Button>
 			);
 		}
 
@@ -457,8 +471,9 @@ export default class ContentItem extends Component {
 		return <ContentCommonBody />;
 	}
 
+
 	render( props, state ) {
-		props = Object.assign({}, props);			// Copy it because we're going to change it
+		props = {...props};			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
 		let {parent, team, allowCompo, allowJam, allowExtra, allowUnfinished} = state;
 		let shouldCheckRules = true;
@@ -561,24 +576,25 @@ export default class ContentItem extends Component {
 						<span>Choose the event format of your game</span>
 					</p>
 					<ContentCommonNav>
-						<ContentCommonNavButton onclick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetExtra} class={node.subsubtype == 'extra' ? "-selected" : ""} disabled={!allowExtra}><UIIcon src="users" /><div>Extra</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
+						<Button onClick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><Icon src="users" /><div>Jam</div></Button>
+						<Button onClick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><Icon src="user" /><div>Compo</div></Button>
+						<Button onClick={this.onSetExtra} class={node.subsubtype == 'extra' ? "-selected" : ""} disabled={!allowExtra}><Icon src="users" /><div>Extra</div></Button>
+						<Button onClick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><Icon src="trash" /><div>Unfinished</div></Button>
 					</ContentCommonNav>
 					<div class="-info">
-						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}
+						{tooManyAuthorsForCompo && <div class="-warning"><Icon class="-baseline -small" src="warning" /> COMPO unavailable: Too many authors.</div>}
 					</div>
 					<div class="-footer">
 						<p>
-							<UIIcon baseline small src="info" />
+							<Icon class="-baseline -small" src="info" />
 							<span>If a button is disabled, you haven't checked-off enough items in the <strong>Submission Checklist</strong> above to qualify for the category.</span>
 						</p>
 						<p>
 							If your event format is correct (filled background), you <strong>don't</strong> need to change or update this.
 						</p>
 						<p>
-							<UIIcon baseline src="warning" class="-warning" />
+							{/* MK TODO: Remove the dash from -warmning */}
+							<Icon class="-warning -baseline" src="warning" />
 							<span> <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
 						</p>
 					</div>
@@ -628,18 +644,18 @@ export default class ContentItem extends Component {
 					Title = "Ratings received";
 					Warning = Score < 20.0;
 					if ( !Warning ) {
-						Icon = <UIIcon baseline small src="checkmark" />;
+						Icon = <Icon class="-baseline -small" src="checkmark" />;
 						HoverTitle = "This will be scored";
 					}
 					else {
-						Icon = <UIIcon baseline small src="warning" />;
+						Icon = <Icon class="-baseline -small" src="warning" />;
 						HoverTitle = "The minimum needed to score is about 20";
 					}
 				}
 				else if ( Metric.key == 'given' ) {
 					Title = "Ratings given";
 					if ( Score > 25 ) {
-						Icon = <UIIcon baseline small src="checkmark" />;
+						Icon = <Icon class="-baseline -small" src="checkmark" />;
 					}
 				}
 				else if ( Metric.key == 'feedback' ) {
@@ -651,9 +667,9 @@ export default class ContentItem extends Component {
 					SmallScore = Score.toString();
 
 				if ( Star )
-					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore} *{Icon}</span></div>);
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <Tooltip class="-value" text={HoverTitle}>{SmallScore} *{Icon}</Tooltip></div>);
 				else
-					SimpleLines.push(<div class={cN("-metric", Warning ? "-warning" : "")}><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore}{Icon}</span></div>);
+					SimpleLines.push(<div class={`-metric ${Warning ? "-warning" : ''}`}><span class="-title">{Title}:</span> <Tooltip class="-value" text={HoverTitle}>{SmallScore}{Icon}</Tooltip></div>);
 			}
 
 			ShowMetrics = (
@@ -670,7 +686,7 @@ export default class ContentItem extends Component {
 		}
 
         const urlParams = new URLSearchParams(window.location.search);
-		const requestAdmin = parseInt(urlParams.get('admin'));
+		const requestAdmin = Number(urlParams.get('admin'));
 		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
 
 //		if (isAdmin) {
@@ -681,7 +697,7 @@ export default class ContentItem extends Component {
 		// Ratings/Grading/Results
 		let ShowGrade = null;
 		// If grading is enabled
-		if ( !(isAdmin && requestAdmin) && parseInt(nodeEvent_CanGrade(parent)) ) {
+		if ( !(isAdmin && requestAdmin) && nodeEvent_CanGrade(parent) ) {
 			// My game
 			if ( node_IsAuthor(node, user) ) {
 				// Only show Total Ratings for competitive events
@@ -710,7 +726,7 @@ export default class ContentItem extends Component {
 							Score = node.grade[Line.key];
 						}
 
-						//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+						//  {Score >= 20 ? <UIIcon small baseline>check</UIIcon> : <UIIcon small baseline>cross</UIIcon>}
 
 						VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
 					}
@@ -758,7 +774,7 @@ export default class ContentItem extends Component {
 						VoteLines.push(
 							<div class="-grade">
 								<span class="-title">{Title}:</span>
-								<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
+								<InputStar value={Score} onClick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
 							</div>
 						);
 					}
@@ -800,7 +816,7 @@ export default class ContentItem extends Component {
 			}
 		}
 		// Final Results, grading is closed
-		else if ( (isAdmin && requestAdmin) || (!parseInt(nodeEvent_CanGrade(parent)) && nodeEvent_IsFinished(parent)) ) {
+		else if ( (isAdmin && requestAdmin) || (!nodeEvent_CanGrade(parent) && nodeEvent_IsFinished(parent)) ) {
 			if ( canRate && !dontRateMe ) {
 				let Lines = [];
 
@@ -833,7 +849,7 @@ export default class ContentItem extends Component {
 					if ( node.grade && node.grade[Line.key] )
 						Count = node.grade[Line.key];
 
-					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+					//  {Score >= 20 ? <UIIcon small baseline>check</UIIcon> : <UIIcon small baseline>cross</UIIcon>}
 
 					ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
 				}
@@ -876,7 +892,7 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong>{Line.required ? " (required, see below)" : ""}</UICheckbox>);
+				OptLines.push(<UICheckbox onClick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong>{Line.required ? " (required, see below)" : ""}</UICheckbox>);
 			}
 
 			ShowOptOut = (
@@ -886,13 +902,13 @@ export default class ContentItem extends Component {
 					<div class="-footer">
 						<p>
 							<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
-							Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same. See <UILink href="http://ludumdare.com/rules/">the rules</UILink>.</span>
+							Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same. See <Link href="http://ludumdare.com/rules/">the rules</Link>.</span>
 						</p>
 						<p>
 							<span>Since some games are not meant to be Funny or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
 						</p>
 						<p>
-							<UIIcon small baseline src="info" />
+							<Icon class="-baseline -small" src="info" />
 							<span>NOTE: If you opted out of a category by mistake, you may need more ratings to ensure you get a score in that category.</span>
 						</p>
 					</div>
@@ -904,7 +920,7 @@ export default class ContentItem extends Component {
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
-				ShowImage = <IMG2 class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
+				ShowImage = <Image class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
 			}
 
 			ShowImages = (
@@ -913,13 +929,13 @@ export default class ContentItem extends Component {
 					<div class="-upload -items">
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
-							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this, 'cover')} />
-							<ButtonBase class="-button"><SVGIcon small baseline gap>upload</SVGIcon>Upload</ButtonBase>
+							<input type="file" name="asset" style="display: none;" onChange={this.onUpload.bind(this, 'cover')} />
+							<Button class="-button"><Icon class="-small -baseline -gap" src="upload" />Upload</Button>
 						</label>
 						{ShowImage}
 					</div>
 					<div class="-footer">
-						<div><UIIcon small baseline src="info" /> Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. GIFs will not animate.</div>
+						<div><Icon class="-small -baseline" src="info" /> Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. GIFs will not animate.</div>
 					</div>
 				</ContentCommonBody>
 			);
@@ -937,10 +953,10 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-show-comments -body">
 					<div class="-label">Casual</div>
 					<div class="-items">
-						<UICheckbox onclick={this.onDontRateMe} value={state.dontRateMe}>Opt-out of ratings</UICheckbox>
+						<UICheckbox onClick={this.onDontRateMe} value={state.dontRateMe}>Opt-out of ratings</UICheckbox>
 					</div>
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
+						<Icon class="-small -baseline" src="info" />
 						<span>If you'd like to entirely opt-out of ratings, choose this, and the Extra format below.</span>
 					</div>
 				</ContentCommonBody>
@@ -953,10 +969,11 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-show-comments -body">
 					<div class="-label">Feedback</div>
 					<div class="-items">
-						<UICheckbox onclick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <UIIcon src="warning" title="Do this at your own risk" /></UICheckbox>
+						{/* MK TODO: title should not necssarily be used here */}
+						<UICheckbox onClick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <Icon src="warning" tooltip="Do this at your own risk" /></UICheckbox>
 					</div>
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
+						<Icon class="-small -baseline" src="info" />
 						<span>You should only do this if you want the most critical of feedback.</span>
 					</div>
 				</ContentCommonBody>
@@ -985,8 +1002,8 @@ export default class ContentItem extends Component {
 			ShowPostTips = (
 				<ContentCommonBody class="-body">
 					<div class="-footer">
-						<div><UIIcon small baseline src="info" /> Add screenshots to your description via the <strong>Upload Image</strong> link above. Keep GIFs less than 640 pixels wide.</div>
-						<div><UIIcon small baseline src="info" /> You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</div>
+						<div><Icon class="-small -baseline" src="info" /> Add screenshots to your description via the <strong>Upload Image</strong> link above. Keep GIFs less than 640 pixels wide.</div>
+						<div><Icon class="-small -baseline" src="info" /> You can embed <Link href="https://youtube.com">YouTube</Link> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</div>
 					</div>
 				</ContentCommonBody>
 			);
@@ -1022,13 +1039,13 @@ export default class ContentItem extends Component {
 			</div>
 		);
 
-		props.class = cN("content-item", props.class);
+		props.class = `content-item ${props.class ?? ''}`;
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
 		props.ref = c => {
 			this.contentSimple = c;
 		};
 
-		return <ContentSimple {...props} authors />;
+		return <ContentSimple {...props} authors key={props.node.id} />;
 	}
 }

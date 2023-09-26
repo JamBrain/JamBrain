@@ -1,26 +1,24 @@
-;(function(){
-	
 /**
 	Time Library - Various Time related functions.
-	
+
 	NOTE: For converting dates to nice strings, see "locale.js".
 */
 
 // Given a time difference, convert to words until a deadline
-window.getCountdownInWeeks = function( time, max_places, padded ) {
+export function getCountdownInWeeks( time, max_places, padded ) {
 	var Seconds = time % 60;
 	var Minutes = Math.floor(time / 60) % 60;
 	var Hours = Math.floor(time / (60*60)) % 24;
 	var Days = Math.floor(time / (60*60*24)) % 7;
 	var Weeks = Math.floor(time / (60*60*24*7)) % 365;
 	var Years = Math.floor(time / (60*60*24*7*365));
-	
+
 	var Places = 0;
 	if ( !max_places )
 		max_places = 10;
-	
+
 	var out = "";
-	
+
 	if ( (Places < max_places && Years > 0) || (Places && Places < max_places && padded) ) {
 		Places++;
 
@@ -29,13 +27,13 @@ window.getCountdownInWeeks = function( time, max_places, padded ) {
 		else
 			out += Years+" years";
 	}
-	
+
 	if ( (Places < max_places && Weeks > 0) || (Places && Places < max_places && padded) ) {
 		Places++;
 
 		if ( out )
 			out += ", ";
-		
+
 		if ( Weeks == 1 )
 			out += Weeks+" week";
 		else
@@ -44,10 +42,10 @@ window.getCountdownInWeeks = function( time, max_places, padded ) {
 
 	if ( (Places < max_places && Days > 0) || (Places && Places < max_places && padded) ) {
 		Places++;
-		
+
 		if ( out )
 			out += ", ";
-		
+
 		if ( Days == 1 )
 			out += Days+" day";
 		else
@@ -56,10 +54,10 @@ window.getCountdownInWeeks = function( time, max_places, padded ) {
 
 	if ( (Places < max_places && Hours > 0) || (Places && Places < max_places && padded) ) {
 		Places++;
-		
+
 		if ( out )
 			out += ", ";
-			
+
 		if ( Hours == 1 )
 			out += Hours+" hour";
 		else
@@ -68,10 +66,10 @@ window.getCountdownInWeeks = function( time, max_places, padded ) {
 
 	if ( (Places < max_places && Minutes > 0) || (Places && Places < max_places && padded) ) {
 		Places++;
-		
+
 		if ( out )
 			out += ", ";
-			
+
 		if ( Minutes == 1 )
 			out += Minutes+" minute";
 		else
@@ -80,25 +78,26 @@ window.getCountdownInWeeks = function( time, max_places, padded ) {
 
 	if ( (Places < max_places && Seconds > 0) || (Places && Places < max_places && padded) ) {
 		Places++;
-		
+
 		if ( out )
 			out += ", ";
-			
+
 		if ( Seconds == 1 )
 			out += Seconds+" second";
 		else
 			out += Seconds+" seconds";
 	}
-	
+
 	return out;
 }
 
+
 // Given a time difference (positive), get roughly how old something is //
-window.getRoughAge = function( time ) {
+export function getRoughAge( time ) {
 	if ( time < 0 ) {
 		return "in the future";
 	}
-	else if ( time < 1000*60*2 ) { 
+	else if ( time < 1000*60*2 ) {
 		return "right now";
 	}
 	else if ( time < 1000*60*60 ) {
@@ -131,8 +130,11 @@ window.getRoughAge = function( time ) {
 	else if ( time < 1000*60*60*24*365*2 ) {
 		return "a year and a half ago";
 	}
-	
+
 	return Math.floor(time/(1000*60*60*24*365)) + " years ago";
 }
 
-})();
+export default {
+	getCountdownInWeeks,
+	getRoughAge
+};

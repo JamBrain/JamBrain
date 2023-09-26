@@ -1,33 +1,36 @@
-import { h, Component }				from 'preact/preact';
-import SVGIcon 						from 'com/svg-icon/icon';
-import NavLink 						from 'com/nav-link/link';
+import {signal} from "@preact/signals";
+import './noob.less';
 
-export default class HeaderNoob extends Component {
-	constructor( props ) {
-		super(props);
+import {Image, Link, Icon, ButtonIcon} from 'com/ui';
+import {ContentAside} from "com/content";
 
-		this.state = {
-			'hidden': false
-		};
+const isNoobHidden = signal(sessionStorage.getItem('noob-hidden') === 'true');
 
-		this.onClick = this.onClick.bind(this);
-	}
+function hideNoob() {
+	isNoobHidden.value = true;
+	sessionStorage.setItem('noob-hidden', isNoobHidden.value.toString());
+}
 
-	onClick( e ) {
-		this.setState({'hidden': true});
-	}
-
-	render( props, state ) {
-		if ( state.hidden ) {
-			return null;
-		}
-
-		return (
-			<div class="content-base content-common content-simple content-noob">
-				<div class="-close" onclick={this.onClick}><SVGIcon>cross</SVGIcon></div>
-				<div class="-title -gap _font2">What is Ludum Dare?</div>
-				<div><NavLink href="/about"><strong>Ludum Dare</strong></NavLink> is an online event where games are made from scratch in a weekend. Check us out every April and October!</div>
+export default function ContentHeaderNoob() {
+	// MK TODO: add image carousel that shows featured games
+	return isNoobHidden.value ? null : (
+		<ContentAside class="noob -bg">
+			<div class="carosel _block_if-sidebar">
+				<Image src="https://static-cdn.jtvnw.net/ttv-static/404_preview-320x180.jpg" />
+				<div>1 | 2 | 3 | 4 | 5 | <Link href="/games">MORE GAMES</Link></div>
 			</div>
-		);
-	}
+			<header class="_font2"><h1>What is Ludum Dare?</h1></header>
+			<section>
+				<p>Established in 2002, <Link class="ld" href="/about">Ludum Dare</Link> is an online event that challenges you to make a game from scratch in a weekend. Join us every April and October!</p>
+				<p>Get notified about events via email, RSS, social media, or add us to your calender.</p>
+				<p>
+					<ButtonIcon icon="mail" />
+					<ButtonIcon icon="rss" />
+					<ButtonIcon icon="twitter" />
+					<ButtonIcon icon="calendar" />
+				</p>
+			</section>
+			{/*<ButtonIcon aria-label="close" class="close" onClick={hideNoob} icon="cross" />*/}
+		</ContentAside>
+	);
 }

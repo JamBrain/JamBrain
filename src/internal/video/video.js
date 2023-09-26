@@ -1,5 +1,3 @@
-import { h }		 				from 'preact/preact';
-
 export default {
 	EmbedTwitch,
 	EmbedHitbox,
@@ -30,7 +28,7 @@ const IFrame = (props) => {
 		}
 	}
 
-	return <iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen allow="autoplay; fullscreen" />;
+	return <iframe {...new_props} frameBorder="0" scrolling="no" allowFullScreen allow="autoplay; fullscreen" />;
 //	return <div class="embed-video"><iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen /></div>;
 };
 

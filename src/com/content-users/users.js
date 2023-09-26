@@ -1,6 +1,4 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
+import { Component } from 'preact';
 
 export default class ContentUsers extends Component {
 	constructor( props ) {
@@ -11,7 +9,7 @@ export default class ContentUsers extends Component {
 
 		if ( extra.length ) {
 			return (
-				<div class="content-base content-post">
+				<div class="content content-post">
 					<h2><strong>404:</strong> User "{extra[0]}" not found.</h2>
 					<div>Did you forget to create your account?</div>
 					<div>.</div>
@@ -19,7 +17,7 @@ export default class ContentUsers extends Component {
 			);
 		}
 		return (
-			<div class="content-base content-post">
+			<div class="content content-post">
 				{"Users page... I don't yet know what goes here."}
 			</div>
 		);

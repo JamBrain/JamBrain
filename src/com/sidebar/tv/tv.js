@@ -1,14 +1,9 @@
-import { h, Component } 				from 'preact/preact';
-import ShallowCompare	 				from 'shallow-compare/index';
+import { Component } from 'preact';
+import './tv.less';
+import '../base/base.less';
 
-import $JammerTV						from 'external/jammertv/jammertv';
-
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavSpinner						from 'com/nav-spinner/spinner';
-import IMG	 							from 'com/img2/img2';
-
-import ButtonBase						from 'com/button-base/base';
-import ButtonLink						from 'com/button-link/link';
+import {Button, Icon, Image, UISpinner} from 'com/ui';
+import $JammerTV from 'external/jammertv/jammertv';
 
 
 const RequiredStreams = 5;
@@ -18,8 +13,8 @@ export default class SidebarTV extends Component {
 		super(props);
 
 		this.state = {
-			active: 0,
-			streams: []
+			'active': 0,
+			'streams': []
 		};
 
 		this.services = [
@@ -29,9 +24,9 @@ export default class SidebarTV extends Component {
 		];
 
 		this.serviceIcons = [
-			(<div />),						// Null //
-			(<SVGIcon>twitch</SVGIcon>),	// Twitch //
-			(<SVGIcon>youtube</SVGIcon>),	// YouTube //
+			(<div />),					// Null //
+			(<Icon src="twitch" />),	// Twitch //
+			(<Icon src="youtube" />),	// YouTube //
 			(<div></div>),
 			(<div></div>),
 			(<div></div>),
@@ -153,14 +148,14 @@ export default class SidebarTV extends Component {
 	}
 
 	setActive( id, e ) {
-		this.setState({ active: id });
+		this.setState({'active': id});
 	}
 
 	showOthers( others, active ) {
 		return others.map((other, index) => {
 			return (
-				<div class={cN(other === active ? "selected" : "")} onclick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
-					<div><IMG src={ other ? other.thumbnail_180p : ""} failsrc={this.FailImage} /></div>
+				<div class={other === active ? "selected" : ""} onClick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
+					<div><Image src={ other ? other.thumbnail_180p : ""} srcError={this.FailImage} /></div>
 				</div>
 			);
 		});
@@ -169,7 +164,7 @@ export default class SidebarTV extends Component {
 	render( props, state ) {
 		if ( state.error ) {
 			return (
-				<div class="sidebar-base sidebar-tv">
+				<div class="side-item sidebar-tv">
 					<div class="-detail">
 						{""+state.error}
 					</div>
@@ -178,8 +173,8 @@ export default class SidebarTV extends Component {
 		}
 		else if ( state.streams.length == 0 ) {
 			return (
-				<div class="sidebar-base sidebar-tv">
-					<NavSpinner />
+				<div class="side-item sidebar-tv">
+					<UISpinner />
 				</div>
 			);
 		}
@@ -193,41 +188,42 @@ export default class SidebarTV extends Component {
 
 					// This is the above stuff (LIVE vs VOD). disabled for now
 //					<div class="-view">
-//						<ButtonBase class="-live selected"><SVGIcon baseline small>video-camera</SVGIcon> <span>LIVE</span></ButtonBase>
-//						<ButtonBase class="-vod "><SVGIcon baseline small>video</SVGIcon> <span>VIDEO</span></ButtonBase>
+//						<Button class="-live selected"><UIIcon baseline small>video-camera</UIIcon> <span>LIVE</span></Button>
+//						<Button class="-vod "><UIIcon baseline small>video</UIIcon> <span>VIDEO</span></Button>
 //					</div>
 
 			return (
-				<div class="sidebar-base sidebar-tv">
-					<div class="-active" onclick={e => {
-							console.log('tv');
+				<div class="side-item sidebar-tv">
+					<div class="-active" onClick={e => {
+							//console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
 							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.user_slug;
 						}}>
-						<div class="-img"><IMG src={active.thumbnail_180p} failsrc={this.FailImage} /></div>
-						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
+						<div class="-img"><Image src={active.thumbnail_180p} srcError={this.FailImage} /></div>
+						<div class="-live"><Icon class="-baseline -small" src="circle" /> <span class="-text">LIVE</span></div>
 						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.user_name}</span></div>
-						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
-						<div class="-external" onclick={e => {
+						<div class="-viewers"><Icon class="-baseline" src="tv" /> <span class="-text">{active.viewers}</span></div>
+						<div class="-external" onClick={e => {
 							e.stopPropagation();
 							if ( this.services[active.service_id] == "twitch" ) {
 									window.open("https://www.twitch.tv/"+active.user_slug, "_blank");
-							} else if ( this.services[active.service_id] == "youtube" ) {
+							}
+							else if ( this.services[active.service_id] == "youtube" ) {
 									//TODO: add youtube action, when youtube displays in TV
 							}
-						}}><SVGIcon>twitch</SVGIcon></div>
-						<div class="-play"><SVGIcon>play</SVGIcon></div>
+						}}><Icon src="twitch" /></div>
+						<div class="-play"><Icon src="play" /></div>
 					</div>
 					<div class="-detail" title={active.title}>
-						<SVGIcon top>quotes-left</SVGIcon>
-						<SVGIcon bottom>quotes-right</SVGIcon>
+						<Icon class="-top" src="quotes-left" />
+						<Icon class="bottom" src="quotes-right" />
 						<div>{active.title}</div>
 					</div>
 					<div class="-browse">
-						{this.showOthers(others,active)}
-						<ButtonLink class="-more" href="https://www.twitch.tv/directory/all/tags/ludumdare" title="MORE">
-							<div><SVGIcon>circle</SVGIcon> <SVGIcon>circle</SVGIcon> <SVGIcon>circle</SVGIcon></div>
-						</ButtonLink>
+						{this.showOthers(others, active)}
+						<Button class="-more" href="https://www.twitch.tv/directory/all/tags/ludumdare" title="MORE">
+							<div><Icon src="circle" /> <Icon src="circle" /> <Icon src="circle" /></div>
+						</Button>
 					</div>
 				</div>
 			);

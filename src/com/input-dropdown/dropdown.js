@@ -1,9 +1,9 @@
-import {h, Component}	 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import { Component } from 'preact';
+import './dropdown.less';
 
-import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import {Icon} from 'com/ui';
 
+/** @deprecated */
 export default class InputDropdown extends Component {
 	constructor( props ) {
 		super(props);
@@ -56,11 +56,11 @@ export default class InputDropdown extends Component {
 		// Only do click if the item has an index (i.e. not a separator)
 		e.preventDefault();
 		if ( e.target.dataset.hasOwnProperty('index') ) {
-			if ( this.props.onmodify ) {
-				this.props.onmodify(parseInt(e.target.dataset.id));
+			if ( this.props.onModify ) {
+				this.props.onModify(Number(e.target.dataset.id));
 			}
 
-			this.setState({'value': parseInt(e.target.dataset.id)});
+			this.setState({'value': Number(e.target.dataset.id)});
 			this.doHide(e);
 		}
 	}
@@ -79,6 +79,7 @@ export default class InputDropdown extends Component {
 			}
 	}
 
+
 	render( props, state ) {
 		const { show } = state;
 		let value = props.value != null ? props.value : state.value;
@@ -92,8 +93,8 @@ export default class InputDropdown extends Component {
 				props.items.forEach(([dataId, Contents, Overlay]) => {
 					if ( dataId == value ) {
 						SelectedField = (
-							<button type="button" onclick={this.onShow}>
-								<SVGIcon>hamburger</SVGIcon>
+							<button type="button" onClick={this.onShow}>
+								<Icon src="hamburger" />
 								{Contents}
 							</button>
 						);
@@ -101,8 +102,8 @@ export default class InputDropdown extends Component {
 				});
 				if (SelectedField == null) {
 					SelectedField = (
-						<button type="button" onclick={this.onShow}>
-							<SVGIcon>hamburger</SVGIcon>
+						<button type="button" onClick={this.onShow}>
+							<Icon src="hamburger" />
 							{props.items[0][1]}
 						</button>
 					);
@@ -117,7 +118,7 @@ export default class InputDropdown extends Component {
 					if ( !props.hideSelectedField && dataId == value ) {
 
 						SelectedField = (
-							<button type="button" onclick={this.onShow}>
+							<button type="button" onClick={this.onShow}>
 								{Contents}
 							</button>
 						);
@@ -127,7 +128,7 @@ export default class InputDropdown extends Component {
 						ClickCatcher = (
 							<div
 								class="-click-catcher"
-								onclick={selfManaged ? this.onClickItem : ()=>{}}
+								onClick={selfManaged ? this.onClickItem : ()=>{}}
 								data-index={idx}
 								data-id={dataId}
 							/>
@@ -139,7 +140,7 @@ export default class InputDropdown extends Component {
 
 					ShowItems.push(
 						<div class="-item"
-							onclick={selfManaged && !useClickCatcher ? this.onClickItem : ()=>{}}
+							onClick={selfManaged && !useClickCatcher ? this.onClickItem : ()=>{}}
 							data-index={idx++}
 							data-id={dataId}
 						>
@@ -160,7 +161,7 @@ export default class InputDropdown extends Component {
 
 			return (
 				<div
-					class={cN('input-dropdown', props.class)}
+					class={`input-dropdown ${props.class ?? ''}`}
 					ref={(input) => { this.dropdown = input; }}
 				>
 					{SelectedField}

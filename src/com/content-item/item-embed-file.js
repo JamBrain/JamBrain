@@ -1,10 +1,11 @@
-import {h, Component}					from 'preact/preact';
-import ContentCommonBody				from 'com/content-common/common-body';
-import UIButton							from 'com/ui/button/button';
-import UILink							from 'com/ui/link/link';
-import UIIcon							from 'com/ui/icon/icon';
+import { Component } from 'preact';
+import ContentCommonBody from 'com/content-common/common-body';
+import {Button, Link, Icon} from 'com/ui';
 
-import $File							from 'shrub/js/file/file';
+import { node_CanUpload, node_GetEmbed } from 'internal/lib';
+import { getLocaleTimeStamp } from 'internal/time';
+
+import $File from 'backend/js/file/file';
 
 export default class ContentItemEmbedFile extends Component {
 	constructor(props) {
@@ -56,7 +57,7 @@ export default class ContentItemEmbedFile extends Component {
 				})
 				.then( r => {
 					this.setState({'status': 5});
-					console.log("Uploaded", r);
+					DEBUG && console.log("Uploaded", r);
 				})
 				.catch(err => {
 					this.setState({'status': 5});
@@ -72,7 +73,7 @@ export default class ContentItemEmbedFile extends Component {
 		if ( !user || !user.id || !node )
 			return null;
 
-		console.log("onDelete", e.id, e.name);
+        DEBUG && console.log("onDelete", e.id, e.name);
 
 		return $File.RequestDelete(e.id, e.name, node.id)
 			.then( r => {
@@ -89,7 +90,7 @@ export default class ContentItemEmbedFile extends Component {
 				}
 			})
 			.then( r => {
-				console.log("Deleted", r);
+                DEBUG && console.log("Deleted", r);
 			})
 			.catch(err => {
 				alert(err);
@@ -120,11 +121,11 @@ export default class ContentItemEmbedFile extends Component {
 						let func = this.onDelete.bind(this, e);
 						if ( whichEmbed.id == e.id ) {
 							//[{e.status.toString(16)}]
-							files.push(<li><strong>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></strong></li>);
+							files.push(<li><strong>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <Button class="-button" style="display: inline;" onclick={func}>delete</Button></strong></li>);
 						}
 						else {
 							//[{e.status.toString(16)}]
-							files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
+							files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <Button class="-button" style="display: inline;" onclick={func}>delete</Button></li>);
 						}
 					}
 				});
@@ -133,7 +134,7 @@ export default class ContentItemEmbedFile extends Component {
 			// Hack, append a few more items
 			for ( let idx = 0; idx < state.uploads.length; ++idx ) {
 				if ( idx == (state.uploads.length - 1) ) {
-					files.push(<li><strong>{state.uploads[idx].name}</strong> <UIIcon>info</UIIcon></li>);
+					files.push(<li><strong>{state.uploads[idx].name}</strong> <Icon src="info" /></li>);
 				}
 				else {
 					files.push(<li>{state.uploads[idx].name}</li>);
@@ -150,7 +151,7 @@ export default class ContentItemEmbedFile extends Component {
 			];
 
 			const isUploading = (state.status > 0 && state.status < 5);
-			const uploadButton = isUploading ? "" : <UIButton class="-button">Upload .zip file</UIButton>;
+			const uploadButton = isUploading ? "" : <Button class="-button">Upload .zip file</Button>;
 
 			return (
 				<ContentCommonBody class="-files -body -upload">
@@ -159,11 +160,11 @@ export default class ContentItemEmbedFile extends Component {
 					<ul>{files}</ul>
 					{(state.status > 0) ? <div class="-footer">Status: {status[state.status]}</div> : ""}
 					<label>
-						<input type="file" name="file" style="display: none;" onchange={this.onUpload} />
+						<input type="file" name="file" style="display: none;" onChange={this.onUpload} />
 						{uploadButton}
 					</label>
-					<div class="-footer">For details on how to prepare a file for embedding, see the <UILink href="//ludumdare.com/resources/guides/embedding/">Embedding Guide</UILink>.</div>
-					<div class="-footer"><UIIcon>info</UIIcon> It can take a few minutes for an embedded game to update.</div>
+					<div class="-footer">For details on how to prepare a file for embedding, see the <Link href="//ludumdare.com/resources/guides/embedding/">Embedding Guide</Link>.</div>
+					<div class="-footer"><Icon src="info" /> It can take a few minutes for an embedded game to update.</div>
 				</ContentCommonBody>
 			);
 		}

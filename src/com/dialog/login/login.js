@@ -1,17 +1,16 @@
-import {h, Component}					from 'preact/preact';
+import { Component } from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
-import NavLink							from 'com/nav-link/link';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 export default class DialogLogin extends Component {
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			login: "",
-			password: "",
-			remember: false
+			'login': "",
+			'password': "",
+			'remember': false
 		};
 
 		// Bind functions (avoiding the need to rebind every render)
@@ -25,20 +24,20 @@ export default class DialogLogin extends Component {
 	}
 
 	onLoginChange( e ) {
-		this.setState({ 'login': e.target.value.trim(), 'error': null });
+		this.setState({'login': e.target.value.trim(), 'error': null});
 	}
 
 	onPasswordChange( e ) {
 		const login = this.nameInput != null ? this.nameInput.value : this.state.login;
-		this.setState({ 'password': e.target.value, 'login': login, 'error': null });
+		this.setState({'password': e.target.value, 'login': login, 'error': null});
 	}
 	onRememberChange( e ) {
-		this.setState({ remember: e.target.checked });
+		this.setState({'remember': e.target.checked});
 	}
 
 	onKeyDown( callback, e ) {
 		if (!e) {
-			var e = window.event;
+			e = window.event;
 		}
 		if (e.keyCode === 13) {
 			callback(e);
@@ -59,13 +58,13 @@ export default class DialogLogin extends Component {
 				}
 				else {
 					//console.log(r);
-					this.setState({ error: r.message ? r.message : r.response });
+					this.setState({'error': r.message ? r.message : r.response});
 				}
 				return r;
 			})
 			.catch( err => {
 				//console.log(err);
-				this.setState({ error: err });
+				this.setState({'error': err});
 			});
 	}
 
@@ -76,33 +75,28 @@ export default class DialogLogin extends Component {
 	}
 
 	render( props, {login, password, remember, error} ) {
-		const new_props = {
-			'title': 'Log in',
-			'error': error,
-		};
-
 		return (
-			<form onsubmit={(e) => {e.preventDefault();}} ref={(form) => {this.submitForm = form;}} autocomplete="on">
-				<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
+			<form onSubmit={(e) => e.preventDefault} ref={(form) => (this.submitForm = form)} autocomplete="on">
+				<DialogCommon okText="Log in" ok={this.doLogin} cancel title="Log in" error={error}>
 					<div>
 						<div class="-input-container">
-							<input name="user" autofocus id="dialog-login-login" onchange={this.onLoginChange} onkeydown={this.onKeyDownUser} class="-text -block focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} ref={(input)=>{this.nameInput = input;}}/>
+							<input name="user" autofocus autocomplete="username" id="dialog-login-login" onChange={this.onLoginChange} onKeyDown={this.onKeyDownUser} class="-text -block focusable" type="text" placeholder="Name, account name, or e-mail" maxLength={254} value={login} ref={(input) => (this.nameInput = input)}/>
 						</div>
 					</div>
 					<div>
 						<div class="-input-container">
-							<input name="password" id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDownPwd} class="-text -block focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
+							<input name="password" autocomplete="current-password" id="dialog-login-password" onChange={this.onPasswordChange} onKeyDown={this.onKeyDownPwd} class="-text -block focusable" type="password" placeholder="Password" maxLength={128} value={password} />
 						</div>
 					</div>
 					<div style="overflow:hidden">
-						<div class="_float-right -link" id="dialog-login-forgot" onclick={e => {
+						<div class="_float-right -link" id="dialog-login-forgot" onClick={e => {
 							location.href = "#user-reset";
 							/*e.stopPropagation(); e.preventDefault();*/
-						} }>
+						}}>
 							Forgot Password?
 						</div>
 						<div title="LOL. This is broken. Sorry!" class="_hidden">
-							<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
+							<input id="dialog-login-remember" onChange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
 							<span>Stay Logged In</span>
 						</div>
 					</div>

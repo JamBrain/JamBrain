@@ -1,5 +1,6 @@
-import {h, Component} 					from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import { Component } from 'preact';
+import './tv.less';
+import { Icon } from 'com/ui';
 
 import DialogBase 						from 'com/dialog/base/base';
 
@@ -10,8 +11,10 @@ export default class DialogTV extends Component {
 	constructor( props ) {
 		super(props);
 
-		this.state = this.calcSizes();
-		this.state.showchat = false;
+		this.state = {
+			'showchat': false
+		};
+		Object.assign(this.state, this.calcSizes());
 
 		this.onResize = this.onResize.bind(this);
 		this.onChatClick = this.onChatClick.bind(this);
@@ -26,10 +29,12 @@ export default class DialogTV extends Component {
 		};
 	}
 
+	/*
 	shouldComponentUpdate( nextProps, nextState ) {
 		// At the moment, there are no external events that should trigger an update (I ignore my props)
 		return true;
 	}
+	*/
 
 	componentDidMount() {
 		window.addEventListener('resize', this.onResize);
@@ -50,7 +55,7 @@ export default class DialogTV extends Component {
 
 		var WindowWidth = window.innerWidth;
 		var WindowHeight = window.innerHeight - 64; /* Chop off 64 pixels from height to not hide the View Bar */
-		ret.showchat = this.state.showchat;
+		//ret.showchat = this.state.showchat;
 
 		// Hitbox: 288 wide minimum
 
@@ -141,7 +146,7 @@ export default class DialogTV extends Component {
 	onChatClick( e ) {
 		if ( this.canShowChat() ) {
 			//console.log("chat: ",this.state.showchat);
-			this.setState({'showchat': !this.state.showchat});
+			this.setState(prevState => ({'showchat': !prevState.showchat}));
 			this.onResize(e);
 		}
 	}
@@ -150,11 +155,11 @@ export default class DialogTV extends Component {
 		var ShowStream = null;
 		var ShowSide = <div class="-chat" style={'width:'+state.chat[0]+'px; height:'+state.chat[1]+'px;'}></div>;
 
-		if ( props.extra.length > 1 ) {
-			if ( props.extra[0] == "twitch" ) {
+		if ( props.args.length > 1 ) {
+			if ( props.args[0] == "twitch" ) {
 				ShowStream = Video.EmbedTwitch(
 					"-tv",
-					"//player.twitch.tv/?channel="+props.extra[1]+"&parent="+window.location.host,
+					"//player.twitch.tv/?channel="+props.args[1]+"&parent="+window.location.host,
 					state.video[0],
 					state.video[1]
 				);
@@ -162,7 +167,7 @@ export default class DialogTV extends Component {
 				if ( state.showchat ) {
 					ShowSide = Video.EmbedTwitch(
 						"-chat",
-						"//www.twitch.tv/embed/"+props.extra[1]+"/chat?parent="+window.location.host,
+						"//www.twitch.tv/embed/"+props.args[1]+"/chat?parent="+window.location.host,
 						state.chat[0],
 						state.chat[1]
 					);
@@ -172,28 +177,30 @@ export default class DialogTV extends Component {
 
 		var ShowBar = null;
 		if ( true ) {
-			var Left = null;
+			const Left = null;
+			/*
 			if ( false ) {
 				Left = (
 					<div class="-left">
 						<div class="">User</div>
 						<div class="">Project Name</div>
-						<div class="-button"><SVGIcon baseline>{props.following ? 'star-full' : 'star-empty'}</SVGIcon><div>Follow Project</div></div>
+						<div class="-button"><Icon class="-baseline" src={props.following ? 'star-full' : 'star-empty'} /><div>Follow Project</div></div>
 					</div>
 				);
 			}
+			*/
 
-			ShowBar = (
+			ShowBar = <>
 				<div class="-bar">
 					<div class="-right">
-						<div class={["-button", this.canShowChat() ? "" : "-disabled"]} onclick={this.onChatClick}>
-							<SVGIcon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</SVGIcon>
+						<div class={`-button ${this.canShowChat() ? '' : "-disabled"}`} onClick={this.onChatClick}>
+							<Icon class="-baseline" src={state.showchat ? 'bubble' : 'bubble-empty'} />
 							<div>Chat</div>
 						</div>
 					</div>
 					{Left}
 				</div>
-			);
+			</>;
 		}
 
 		// TODO: Make DialogBase more simple (and move current DialogBase to DialogCommon)

@@ -1,8 +1,6 @@
-import {h, Component}	 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
-
-import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import { Component } from 'preact';
+import './text.less';
+import {Diff}	 				from 'shallow';
 
 export default class InputText extends Component {
 	constructor( props ) {
@@ -11,35 +9,36 @@ export default class InputText extends Component {
 		this.onModify = this.onModify.bind(this);
 	}
 
+	// MK: This normally checks children. Is this correct?
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props, nextProps);
+		return Diff(this.props, nextProps);
 	}
 
 	onModify( e ) {
-		if ( this.props.onmodify )
-			this.props.onmodify(e);
+		if ( this.props.onModify )
+			this.props.onModify(e);
 	}
 
 	render( props ) {
-		const {maxlength} = props;
+		const {maxLength} = props;
 
 		let ShowLimit = null;
-		if ( maxlength )
-			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{maxlength}</span></div>;
+		if ( maxLength )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{maxLength}</span></div>;
 
 		return (
-			<div class={cN('input-text', props.class)}>
+			<div class={`input-text ${props.class ?? ''}`}>
 				<input
 					value={props.value}
 					placeholder={props.placeholder}
-					maxlength={props.maxlength}
+					maxLength={props.maxLength}
 					type="text"
-					oninput={this.onModify}
+					onInput={this.onModify}
 					ref={(input) => { this.textinput = input; }}
 				/>
 				<div class="-footer">
 					{ShowLimit}
-					<div class="-left if-sidebar-block"></div>
+					<div class="-left _block_if-sidebar"></div>
 				</div>
 			</div>
 		);

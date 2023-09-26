@@ -1,8 +1,9 @@
-import {h, Component}	 				from 'preact/preact';
+import {Component} from 'preact';
+import './user.less';
 
-import ContentError						from 'com/content-error/error';
+import {ContentError} from 'com/content';
 
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentSimple					from 'com/content-simple/simple';
 import ContentHeadliner					from 'com/content-headliner/headliner';
 
@@ -10,7 +11,7 @@ import ContentCommonNav					from 'com/content-common/common-nav';
 
 import ButtonFollow						from 'com/content-common/common-nav-button-follow';
 
-//import $Node							from 'shrub/js/node/node';
+//import $Node							from 'backend/js/node/node';
 
 
 export default class ContentUser extends Component {
@@ -18,10 +19,12 @@ export default class ContentUser extends Component {
 		super(props);
 	}
 
+
 	isEditMode() {
 		let {extra} = this.props;
 		return extra && extra.length && (extra[extra.length-1] == 'edit');
 	}
+
 
 	render( props ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
@@ -43,7 +46,7 @@ export default class ContentUser extends Component {
 		props.flagIcon = "user";
 		props.flagClass = "-col-bc";
 
-		props.subtitle = '@'+node.slug;
+		props.subtitle = '(@'+node.slug+")";
 		props.notitleedit = true;
 
 		props.authored = true;
@@ -57,7 +60,7 @@ export default class ContentUser extends Component {
 //			props.minimized = true;
 //		}
 
-		if ( IsHome || this.isEditMode() ) {
+		//if ( IsHome || this.isEditMode() ) {
 			let BodyNavBar = [];
 			if ( !this.isEditMode() ) {
 				if ( user && user.id && (node.id !== user.id) ) {
@@ -66,12 +69,12 @@ export default class ContentUser extends Component {
 			}
 
 			return (
-				<ContentSimple {...props} class={cN("content-user", props.class)}>
+				<ContentSimple {...props} class={`content-user ${props.class ?? ''}`}>
 					<ContentCommonNav>{BodyNavBar}</ContentCommonNav>
 				</ContentSimple>
 			);
-		}
+		//}
 
-		return <ContentHeadliner node={node} name="user" icon="user" flagclass="-col-bc" published="Joined" at games articles trophies />;
+		//return <ContentHeadliner node={node} name="user" icon="user" flagclass={node.id == user.id ? "-col-bc -inv" : "-col-bc"} childclass={node.id == user.id ? "-col-bc" : "-inv -inv-lit"} at />;// published="Joined" at games articles trophies />;
 	}
 }

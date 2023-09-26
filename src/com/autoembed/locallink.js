@@ -1,39 +1,44 @@
-import {h, Component} from 'preact/preact';
+import {Link, Icon} from 'com/ui';
+import './locallink.less';
 
-import NavLink from 'com/nav-link/link';
-import SVGIcon from 'com/svg-icon/icon';
+/**
+ * @typedef LocalLinkProps
+ * @property {string} href
+ * @property {string} [text]
+ * @property {string} [title]
+ * @property {string} [target]
+ * @property {boolean} [hashLink]
+ */
 
-export default class LocalLink extends Component {
-  constructor( props ) {
-    super(props);
-  }
+/**
+ * @deprecated
+ * @param {LocalLinkProps} props
+ * */
+export default function LocalLink( props ) {
+	let ShowIcon;
+	if (props.hashLink) {
+		ShowIcon = (
+			<span class="-icon-domain">
+				<Icon class="-baseline -small" src="link" />
+			</span>
+		);
+	}
+	else {
+		ShowIcon = (
+			<span class="-icon-domain">
+				<Icon class="-baseline -small" src="l-udum" />
+				<Icon class="-baseline -small" src="d-are" />
+			</span>
+		);
+	}
 
-  render( props ) {
-		let ShowIcon;
-    if (props.hashLink) {
-			ShowIcon = (
-        <span class="-icon-domain">
-          <SVGIcon baseline small name={'link'}/>
-        </span>
-			);
-		}
-		else {
-			ShowIcon = (
-        <span class="-icon-domain">
-          <SVGIcon baseline small name={'l-udum'}/>
-          <SVGIcon baseline small name={'d-are'}/>
-        </span>
-			);
-		}
-
-    return (
-      <span class="smart-link local-link">
-        <NavLink href={props.href} title={props.title} target={props.target}>
-          <span class="-the-rest">
-            {props.text}
-          </span>
-        </NavLink>
-      </span>
-    );
-  }
+	return (
+		<span class="smart-link local-link">
+			<Link href={props.href} title={props.title} target={props.target}>
+				<span class="-the-rest">
+					{props.text}
+				</span>
+			</Link>
+		</span>
+	);
 }

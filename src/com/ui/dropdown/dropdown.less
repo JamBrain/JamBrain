@@ -1,9 +1,40 @@
-@import 'defs.less';
+//@import 'defs.less';
 
-.ui-dropdown {
+.ui_dropdown {
 	vertical-align: top;
 	position: relative;
+	z-index: 10000;
 
+	> .ui_gap {
+		height: 0.5rem;
+	}
+
+	> :first-child {
+		.ui_tick.up {
+			visibility: hidden;
+		}
+		.ui_tick.down {
+			visibility: visible;
+		}
+	}
+
+	> *:not(:first-child) {
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	> *:focus, &:focus-within > * {
+		visibility: visible;
+		opacity: 1;
+
+		.ui_tick.up {
+			visibility: visible;
+		}
+		.ui_tick.down {
+			visibility: hidden;
+		}
+	}
+/*
 	&.-show {
 		& > .-button {
 			z-index: 10001;
@@ -17,27 +48,27 @@
 			z-index: 9999;
 		}
 	}
-
-	& > .-button {
+*/
+	& > .ui_button {
 		overflow: auto;
 		position: relative;
 
-		& > .-tick {
+		& > .ui_tick {
 			position: absolute;
-			margin: auto 0.5em;
+			margin: auto 0.5rem;
 			top: 0;
 			bottom: 0;
 			right: 0;
 		}
 	}
-
+/*
 	& > .-content {
 		position: absolute;
 
 		white-space: nowrap;
 
 		& .-gap {
-			height: 0.5em;
+			height: 0.5rem;
 		}
 	}
 
@@ -48,17 +79,13 @@
 		top: 0px;
 		bottom: 0px;
 	}
-
+*/
 	/* Alignment */
-	&.-right {
-		& > .-content {
-			right: 0;
-		}
+	&.-right > * {
+		right: 0;
 	}
 
-	&.-left {
-		& > .-content {
-			left: 0;
-		}
+	&.-left > * {
+		left: 0;
 	}
 }

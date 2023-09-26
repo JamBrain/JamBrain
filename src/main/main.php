@@ -6,40 +6,48 @@ if ( !defined('GIT_VERSION') ) {
 }
 
 if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== false ) {
-	include __DIR__."/../embed/obsolete-browser.php";
+	include __DIR__."/obsolete-browser.php";
 	die();
 }
 
-@include __DIR__."/../shrub/config.php";
+@include __DIR__."/../backend/config.php";
 
 // TODO: Figure out if this is the live server, and disable this feature if it is //
 define( 'DEBUG', isset($_GET['debug'])?1:0 );
-define( 'USE_MINIFIED', DEBUG ? '.debug' : '.min' );
-define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
+define( 'DEV', isset($_GET['dev'])?1:0 );
+define( 'BUILD_PREFIX', DEBUG ? '.debug' : (DEV ? '.dev' : '.min') );
+define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.constant('GIT_VERSION') : '' );
 
 const STATIC_DOMAINS = [
+	'ldjam.work' => 'static.jammer.work',		// ldjam.com dev
+	'jam.ludumdare.work' => 'static.jammer.work',	// jam.ludumdare.com dev
+	'bio.jammer.work' => 'static.jammer.work',	// jammer.bio dev
+	'id.jammer.work' => 'static.jammer.work',	// jammer.id dev
+	'host.jammer.work' => 'static.jammer.work',	// jam.host dev
+	'jammer.work' => 'static.jammer.work',
+
 	'ldjam.com' => 'static.jam.host',
 	'beta.ldjam.com' => 'static.jam.host',
+	'ldjam.io' => 'static.jam.host',
+	'ldjam.dev' => 'static.jam.host',
+	'jam.ludumdare.com' => 'static.jam.host',
 	'jammer.bio' => 'static.jam.host',
+	'jammer.id' => 'static.jam.host',
 	'jam.host' => 'static.jam.host',
-
-	'ldjam.work' => 'static.jammer.work',		// ldjam.com dev
-	'bio.jammer.work' => 'static.jammer.work',	// jammer.bio dev
-	'host.jammer.work' => 'static.jammer.work',	// jam.host dev
 ];
-const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
+const DEFAULT_STATIC_DOMAIN = 'static.jam.host';
 if ( !defined('STATIC_DOMAIN') ) {
 	define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
 }
 define( 'STATIC_ENDPOINT', '//'.STATIC_DOMAIN );
 
 const SHORTENER_DOMAINS = [
-	'ldjam.work' => 'url.ldjam.work',			// dev
+	'ldjam.work' => 'url.ldjam.work',		// ldjam.com dev
+	'jam.ludumdare.work' => 'url.jam.ludumdare.work',
+	'jammer.work' => 'url.jammer.work',
+
 	'ldjam.com' => 'ldj.am',
-	'beta.ldjam.com' => 'ldj.am',
-	//'bio.jammer.work' => '???',
-	//'bio.jammer.dev' => '???',
-	//'jammer.bio' => '???',
+	'jammer.bio' => 'jam.bio',
 ];
 const DEFAULT_SHORTENER_DOMAIN = 'ldj.am';
 if ( !defined('SHORTENER_DOMAIN') ) {
@@ -66,9 +74,9 @@ if ( !defined('API_DOMAIN') ) {
 }
 define( 'API_ENDPOINT', '//'.API_DOMAIN );
 
-define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
-define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
-define( 'SVG_FILE',  "/-/all.min.svg?".VERSION_STRING );
+define( 'JS_FILE',   "/-/app".BUILD_PREFIX.".js?".VERSION_STRING );
+define( 'CSS_FILE',  "/-/app".BUILD_PREFIX.".css?".VERSION_STRING );
+define( 'SVG_FILE',  "/-/app.min.svg?".VERSION_STRING );
 define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic&display=swap" );
 define( 'FONT_DOMAIN', "//fonts.gstatic.com" );
 
@@ -120,9 +128,9 @@ $inline_js_nonce = bin2hex(random_bytes(8));
 		var API_ENDPOINT = "<?=API_ENDPOINT?>";
 		var SERVER_TIMESTAMP = "<?=gmdate('Y-m-d\TH:i:s.000\Z'/*DATE_W3C*/);?>";
 		var CLIENT_TIMESTAMP = new Date().toISOString();
-		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((constant("SECURE_LOGIN_ONLY") && !isset($_GET['insecure']))?'true':'false') : 'false' ?>;
+		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((constant('SECURE_LOGIN_ONLY') && !isset($_GET['insecure']))?'true':'false') : 'false' ?>;
 		<?php /* Load SVG */ ?>
-		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
+		<?php include __DIR__."/preload-svg.js.php"; ?>
 	</script>
 	<script src="<?=JS_FILE?>"></script>
 	<noscript>This website requires JavaScript</noscript>

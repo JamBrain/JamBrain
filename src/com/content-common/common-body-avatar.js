@@ -1,13 +1,10 @@
-import {h, Component} 					from 'preact/preact';
-import Shallow			 				from 'shallow/shallow';
+import { Component } from 'preact';
+import './common-body-avatar.less';
 
-import NavLink							from 'com/nav-link/link';
-import ButtonLink						from 'com/button-link/link';
-import IMG2								from 'com/img2/img2';
-import SVGIcon							from 'com/svg-icon/icon';
+import {Button, Image, Icon} from 'com/ui';
 
-import $Node							from 'shrub/js/node/node';
-import $Asset							from 'shrub/js/asset/asset';
+import $Node from 'backend/js/node/node';
+import $Asset from 'backend/js/asset/asset';
 
 export default class ContentCommonBodyAvatar extends Component {
 	constructor( props ) {
@@ -52,9 +49,7 @@ export default class ContentCommonBodyAvatar extends Component {
 	render( props ) {
 		const isInProfile = props.node && (props.node.type === "user" && props.href === props.node.path);
 		const isInteractive = (isInProfile && props.editing) || (!isInProfile && !props.editing);
-		let Classes = cN("content-common-body -avatar", props.class,
-			isInProfile && props.editing ? '-editing' : '',
-			isInteractive ? '-interactive' : '');
+		const Classes = `body -avatar ${props.class ?? ''} ${isInProfile && props.editing ? '-editing' : ''} ${isInteractive ? '-interactive' : ''}`;
 
 		let AvatarFail = '///content/internal/user64.png';
 		let Avatar = props.src ? props.src : AvatarFail;
@@ -63,18 +58,18 @@ export default class ContentCommonBodyAvatar extends Component {
 		if (isInteractive) {
 			return isInProfile && props.editing ?
 				(<label>
-					<input type="file" name="asset" style="display: none;" onchange={this.onEdit} />
+					<input type="file" name="asset" style="display: none;" onChange={this.onEdit} />
 					<div class={Classes}>
-						<IMG2 src={Avatar} failsrc={AvatarFail} />
-						<SVGIcon>edit</SVGIcon>
+						<Image src={Avatar} srcError={AvatarFail} />
+						<Icon src="edit" />
 					</div>
 				</label>) :
-				(<ButtonLink class={Classes} href={props.href}>
-					<IMG2 alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
-				</ButtonLink>);
+				(<Button class={Classes} href={props.href}>
+					<Image alt={name + "'s avatar image"} src={Avatar} srcError={AvatarFail} />
+				</Button>);
 		}
 		return (<span class={Classes}>
-					<IMG2 alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+					<Image alt={name + "'s avatar image"} src={Avatar} srcError={AvatarFail} />
 				</span>);
 	}
 }

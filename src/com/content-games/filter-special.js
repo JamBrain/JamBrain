@@ -1,22 +1,21 @@
-import { h, Component } from 'preact/preact';
-import SVGIcon							from 'com/svg-icon/icon';
+import {Component} from 'preact';
+import {Icon} from 'com/ui';
 
 export default class FilterSpecial extends Component {
-
-    render ( {text, icon, onclick}, state ) {
+    render ( {text, icon, onClick}, state ) {
 
         let ShowRemove = null;
-        if (onclick) {
+        if (onClick) {
             let { value } = this.props;
             if (!value) {
                 value = text;
             }
-            ShowRemove = <button onclick={() => onclick(value)}><SVGIcon>cross</SVGIcon></button>;
+            ShowRemove = <button onClick={() => onClick(value)}><Icon src="cross" /></button>;
         }
 
         return (
-            <div class='filter-special'>
-                <SVGIcon class='icon'>{icon}</SVGIcon>{text}
+            <div class="filter-special">
+                <Icon class='icon' src={icon} />{text}
                 {ShowRemove}
             </div>
         );

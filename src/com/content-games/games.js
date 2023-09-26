@@ -1,9 +1,10 @@
-import {h, Component}	 				from 'preact/preact';
+import {Component} from 'preact';
+import './games.less';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content-error/error';
+import {ContentError} from 'com/content';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 import ContentItemBox					from 'com/content-item/item-box';
 
 import ContentCommonBody				from 'com/content-common/common-body';
@@ -11,30 +12,34 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentMore						from 'com/content-more/more';
 
-import LayoutChangeableGrid 			from 'com/layout/grid/changeable-grid';
+import ChangeableGrid 					from 'com/grid/changeable-grid';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
+
 
 export default class ContentGames extends Component {
-
 	constructor( props ) {
 		super(props);
 
 		this.state = {
 			'feed': [],
-			'hash': {},
-			'offset': 24-5, //10-5
-			'added': null,
-			'loaded': false
+			'inFeed': {},
+			'nodes': {},
+			'firstLoad': false,
+			//'hash': {},
+			'offset': 24-5,
+			//'added': null,
 		};
 
-		this.fetchMore = this.fetchMore.bind(this);
+		// Bound in the definition, so we can include state
+		//this.fetchMore = this.fetchMore.bind(this);
 	}
+
 
 	componentDidMount() {
 		let props = this.props;
 
-		this.getFeed(
+		this._getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
 			props.types ? props.types : ['item'],
@@ -46,23 +51,136 @@ export default class ContentGames extends Component {
 		);
 	}
 
-	appendFeed( newfeed ) {
-		var feed = this.state.feed;
-		var hash = this.state.hash;
+	_appendFeed( newFeed ) {
+		$Node.GetKeyed(newFeed)
+		.then(r => {
+			this.setState(prevState => {
+				//console.log("set", prevState);
+				let feed = [...prevState.feed];
+				let inFeed = {...prevState.inFeed};
+				let nodes = {...prevState.nodes, ...r.node};
 
-		for ( var idx = 0; idx < newfeed.length; idx++ ) {
-			var info = newfeed[idx];
-			if ( !hash[info['id']] ) {
-				hash[info['id']] = feed.length;
-				feed.push(info);
-			}
-		}
-		this.setState({'feed': feed, 'hash': hash, 'added': newfeed.length});
+				// For all items in the new feed
+				for ( const item of newFeed ) {
+					// Item is in the feed
+					if ( item.id in inFeed ) {
+						// If the item is newer, update it
+						if ( Date.parse(item.modified) > Date.parse(feed[inFeed[item.id]].modified) ) {
+							feed[inFeed[item.id]] = item;
+						}
+					}
+					// if not, add it
+					else {
+						inFeed[item.id] = feed.length;
+						feed.push(item);
+					}
+				}
+
+				let ret = {'feed': feed, 'inFeed': inFeed, 'nodes': nodes, 'firstLoad': true};
+				//console.log("dun", ret);
+				return ret;
+			});
+		});
 	}
 
+/*
+	_appendFeed( newFeed ) {
+		this.setState(prevState => {
+			let feed = [...prevState.feed];
+			let inFeed = {...prevState.inFeed};
+			let changed = [...prevState.changed];
+
+			// For all items in the new feed
+			for ( const item of newFeed ) {
+				// Item is in the feed
+				if ( item.id in inFeed ) {
+					// If the item is newer, update it
+					if ( Date.parse(item.modified) > Date.parse(feed[inFeed[item.id]].modified) ) {
+						feed[inFeed[item.id]] = item;
+						changed.push(item.id);
+					}
+				}
+				// if not, add it
+				else {
+					inFeed[item.id] = feed.length;
+					changed.push(item.id);
+					feed.push(item);
+				}
+			}
+			$Node.GetKeyed(changed)
+			.then(r => {
+				this.setState(prevState => {
+					return {'node': {...prevState.nodes, ...r.node}, 'firstLoad': true};
+				});
+			});
+
+			return {'feed': feed, 'inFeed': inFeed, 'firstLoad': true};
+		});
+	}
+
+/*
+	_appendFeed( newfeed ) {
+		console.log("append", newfeed);
+		this.setState(prevState => {
+			let feed = prevState.feed;
+			let hash = prevState.hash;
+
+			//console.log("b4", feed, hash);
+
+			let keys = [];
+
+			for ( let node of newfeed ) {
+				if ( !hash[node.id] ) {
+					hash[node.id] = feed.length;
+					//feed.push(info);
+					keys.push(node);
+				}
+			}
+
+			$Node.GetKeyed( keys )
+			.then(r => {
+				this.setState(() => {
+					//let feed = prevState.feed;
+					//const hash = prevState.hash;
+
+					//console.log("hush", feed, hash);
+*
+					for ( let node of r.node ) {
+						feed[hash[node.id]].node = node;
+					}
+
+					//return {'feed': feed};
+
+					return {
+						'feed': feed,
+						'hash': hash,
+						'added': newfeed.length
+					};
+				});
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
+
+			return null;
+
+
+
+			console.log("aftr", feed, hash);
+
+			return {
+				'feed': feed,
+				'hash': hash,
+				'added': newfeed.length
+			};
+
+		});
+	}
+*/
+/*
 	getFeedIdsWithoutNodes() {
-		var feed = this.state.feed;
-		var hash = this.state.hash;
+		let feed = this.state.feed;
+		//var hash = this.state.hash;
 
 		var keys = [];
 		for (var idx = 0; idx < feed.length; idx++ ) {
@@ -71,56 +189,71 @@ export default class ContentGames extends Component {
 		}
 		return keys;
 	}
+*/
 
-	getMissingNodes() {
-		var keys = this.state.feed;//this.getFeedIdsWithoutNodes();
+/*
+	_getMissingNodes( newFeed ) {
+		let keys = newFeed;//this.state.feed;//this.getFeedIdsWithoutNodes();
+
+		//console.log("MEOOO", this.state.feed, newFeed);
 
 		if ( keys.length ) {
 			return $Node.GetKeyed( keys )
 				.then(r => {
-					var feed = this.state.feed;
-					var hash = this.state.hash;
+					this.setState(prevState => {
+						let feed = prevState.feed;
+						const hash = prevState.hash;
 
-					for ( var node_id in r.node ) {
-						var id = r.node[node_id].id;
+						console.log("hush", feed, hash);
 
-						feed[hash[id]].node = r.node[node_id];
-					}
+						for ( let node of r.node ) {
+							feed[hash[node.id]].node = node;
+						}
 
-					this.setState({'feed': feed, 'hash': hash});
+						.then(() => {
+							return this._getMissingNodes(r.feed);
+						});
+
+						return {'feed': feed};
+					});
 				})
 				.catch(err => {
 					this.setState({ 'error': err });
 				});
 		}
-
+		return null;
 	}
+*/
 
-	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
+	_getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
+		return $Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
 		.then(r => {
-			this.setState({ 'loaded': true });
+			//this.setState({ 'loaded': true });
+			//console.log("getfeed", r);
 
-			if ( r.feed && r.feed.length ) {
-				this.appendFeed(r.feed);
-				return this.getMissingNodes();
+			if ( r.status == 200 ) {
+				return this._appendFeed(r.feed);
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			//console.log("failfeed");
+			this.setState({'error': err});
 		});
 	}
 
-	fetchMore( offset ) {
 
-		console.log("loading more");
+	_fetchMore( offset ) {
+		DEBUG && console.log("[com/ContentGames]", "fetchMore", offset);
 
 		var props = this.props;
-		var offset = this.state.offset;
 //		var morenode = this.state.feed[this.state.feed.length-1];
 //		var more = morenode.created ? morenode.created : morenode.modified;
 
-		this.getFeed(
+		// Step the offset
+		this.setState({'offset': offset + 24});
+
+		// Fetch the feed (given the old offset)
+		this._getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
 			props.types ? props.types : ['item'],
@@ -130,11 +263,9 @@ export default class ContentGames extends Component {
 			offset,
 			this.props.limit ? this.props.limit : 24+5
 		);
-
-		this.setState({'offset': offset + 24});
 	}
 
-	static matchesFilter(node, filter) {
+	static _matchesFilter(node, filter) {
 		if ( node === undefined ) {
 			return false;
 		}
@@ -159,7 +290,7 @@ export default class ContentGames extends Component {
 
 	render( props, state ) {
 		const {filter} = props;
-		let {feed, added, error, loaded, defaultLayout, layout} = state;
+		let {feed, nodes, offset, firstLoad, error, layout} = state;
 
 		let LoadMore = null;
 
@@ -177,18 +308,20 @@ export default class ContentGames extends Component {
 		}
 
 		if ( error ) {
-			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
+			return <ContentError code={400}>Bad Request: Couldn't load games ({error})</ContentError>;
 		}
-		else if ( feed && (feed.length > 0) ) {
+		else if ( firstLoad && (feed.length > 0) ) {
 			if ( !props.nomore /*|| added >= 10*/ ) {
-				LoadMore = <ContentMore onclick={this.fetchMore} />;
+				LoadMore = <ContentMore onClick={this._fetchMore.bind(this, offset)} />;
 			}
 
-			let Games = feed.map((r, index) => {
-				if ( ContentGames.matchesFilter(r.node, filter) ) {
+			let games = feed.map((r, index) => {
+				let id = r.id;
+				let node = nodes[id];
+				if ( node && ContentGames._matchesFilter(node, filter) ) {
 					return (
 						<ContentItemBox
-							node={r.node}
+							node={node}
 							path={props.path}
 							noevent={props.noevent ? props.noevent : null}
 						/>
@@ -197,21 +330,21 @@ export default class ContentGames extends Component {
 			});
 
 			return (
-				<div class={cN('content-base', props.class)}>
+				<div class={`content ${props.class ?? ''}`}>
 					{props.children}
-					<LayoutChangeableGrid columns={layout}>
-						{Games}
-					</LayoutChangeableGrid>
+					<ChangeableGrid columns={layout}>
+						{games}
+					</ChangeableGrid>
 					{LoadMore}
 				</div>
 			);
 		}
-		else if ( loaded && feed && (feed.length == 0) ){
+		else if ( firstLoad && (feed.length == 0) ) {
 			return (
-				<ContentCommon {...props}>
+				<ContentArticle {...props}>
 					<ContentCommonBodyTitle href={""} title={"No Games!"} />
-					<ContentCommonBody>Sorry, there are no published games yet</ContentCommonBody>
-				</ContentCommon>
+					<ContentCommonBody>Sorry, no published games found</ContentCommonBody>
+				</ContentArticle>
 			);
 		}
 

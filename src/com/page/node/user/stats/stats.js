@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import { Component } from 'preact';
 
 export default class UserStats extends Component {
 	constructor( props ) {
@@ -9,7 +9,7 @@ export default class UserStats extends Component {
 		let {node, user, path, extra} = props;
 
 		return (
-			<div class="content-base">Coming soon</div>
+			<div class="content">Coming soon</div>
 		);
 	}
 }

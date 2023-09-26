@@ -9,16 +9,16 @@
 
 <?php # Provide quick access to create & modify platform tags in the database for testing purposes
 
-const CONFIG_PATH = "../src/shrub/";
-const SHRUB_PATH = "../src/shrub/src/";
+const CONFIG_PATH = "../src/backend/";
+const BACKEND_PATH = "../src/backend/src/";
 
-# Use shrub wrapper for db access
+# Use backend wrapper for db access
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."constants.php";
-require_once __DIR__."/".SHRUB_PATH."core/db.php";
-require_once __DIR__."/".SHRUB_PATH."core/core.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
-require_once __DIR__."/".SHRUB_PATH."user/user.php";
+require_once __DIR__."/".BACKEND_PATH."constants.php";
+require_once __DIR__."/".BACKEND_PATH."core/db.php";
+require_once __DIR__."/".BACKEND_PATH."core/core.php";
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."user/user.php";
 
 
 $category = "platform";
@@ -56,7 +56,7 @@ function LoadTagsForCategory($category)
 	{
 		$tagids[] = $s["id"];
 	}
-	
+
 	# Get complete nodes for the tags.
 	if(count($tagids) > 0)
 	{
@@ -79,7 +79,7 @@ Function AddNewTag($category, $name, $warning = null)
 	$newtag = node_Add( $parent, $firstuserid, "tag", $category, "", $slug, $name, "");
 
 	// Uncertain if this node needs to be published. Probably not.
-	
+
 	if($warning != null)
 	{
 		SetWarning($newtag, $warning);
@@ -134,7 +134,7 @@ if($_GET)
 		{
 			$nodebyname[$n["name"]] = $n;
 		}
-		
+
 		foreach($defaulttags as $tag)
 		{
 			$warning = null;
@@ -142,13 +142,13 @@ if($_GET)
 			{
 				$warning = $defaultwarnings[$tag];
 			}
-			
+
 			if(!key_exists($tag, $nodebyname))
 			{
 				AddNewTag($category, $tag, $warning);
 			}
 		}
-		
+
 		$nodes = LoadTagsForCategory($category);
 	}
 
@@ -164,7 +164,7 @@ if($_POST)
 		{
 			if($n["id"] == $id) { $node = $n; break; }
 		}
-		
+
 		if($node && $id)
 		{
 			if(key_exists("changename",$_POST))
@@ -173,29 +173,29 @@ if($_POST)
 				$slug = coreSlugify_Name($name);
 				node_Edit($id, $node["parent"], $node["author"], $node["type"], $node["subtype"], $node["subsubtype"], $slug, $name, $node["body"]);
 			}
-			
+
 			if(key_exists("changewarning",$_POST))
 			{
 				$newwarning = $_POST["tagwarning"];
-				SetWarning($id, $newwarning);		
+				SetWarning($id, $newwarning);
 			}
-			
+
 			if(key_exists("removewarning",$_POST))
 			{
-				ClearWarning($id);		
+				ClearWarning($id);
 			}
-			
+
 			if(key_exists("addwarning",$_POST))
 			{
 				$index = random_int(1,count($randomwarnings))-1;
-				SetWarning($id, $randomwarnings[$index]);		
+				SetWarning($id, $randomwarnings[$index]);
 			}
-			
+
 			if(key_exists("delete",$_POST))
 			{
 				RemoveTag($id, $node);
 			}
-			
+
 			$nodes = LoadTagsForCategory($category);
 		}
 	}
@@ -206,7 +206,7 @@ if($_POST)
 		AddNewTag($category, $name);
 		$nodes = LoadTagsForCategory($category);
 	}
-	
+
 }
 
 $count = count($nodes);

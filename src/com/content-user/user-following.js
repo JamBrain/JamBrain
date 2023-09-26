@@ -1,17 +1,17 @@
-import { h, Component } 				from 'preact/preact';
+import { Component } from 'preact';
 
-import SVGIcon							from 'com/svg-icon/icon';
+import {Icon} from 'com/ui';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content-error/error';
+import {ContentError} from 'com/content';
 
 import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar from 'com/content-user/user-bar';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from '../../backend/js/node/node';
 
 export default class ContentUserFollowing extends Component {
 	constructor( props ) {
@@ -29,22 +29,22 @@ export default class ContentUserFollowing extends Component {
 
     componentDidMount() {
         // make sure we actually have a following to display
-        if (this.hasFollowing() && this.hasPermission()){
+        if (this.hasFollowing() && this.hasPermission()) {
             // if were looking at our own page then display following
             this.getFollowing(this.props.user.private.meta.star);
         }
 
     }
 
-    hasPermission(){
+    hasPermission() {
         return (this.props.node.id == this.props.user.id);
     }
 
-    hasFollowing(){
+    hasFollowing() {
         return (this.props.user['private'] && this.props.user.private['meta']&& this.props.user.private.meta['star']);
     }
 
-    getFollowing(ids){
+    getFollowing(ids) {
         $Node.Get(ids)
         .then(r => {
             this.setState({
@@ -59,38 +59,33 @@ export default class ContentUserFollowing extends Component {
         props.class.push("content-user-following");
 
         // display a loading bar whilst we wait
-        if (!this.hasPermission()){
+        if (!this.hasPermission()) {
             // if were not allowed to see the nodes following then display an error
-            return <ContentError code="403">Forbidden: You do not have permission to see who this user is following</ContentError>;
+            return <ContentError code={403}>Forbidden: You do not have permission to see who this user is following</ContentError>;
         }
-        else if (!this.hasFollowing())
-        {
+        else if (!this.hasFollowing()) {
             return (
-                <ContentCommon {...props}>
+                <ContentArticle {...props}>
                     <ContentCommonBody>You are not following anyone</ContentCommonBody>
-                </ContentCommon>
+                </ContentArticle>
             );
         }
-        else if (state.followingNodes && state.followingNodes.length > 0){
-
+        else if (state.followingNodes && state.followingNodes.length > 0) {
             // turn our array of following nodes to ContentUserBar 's
             var following = state.followingNodes
             .sort( (a,b) => {
-
-
-
                 var a_friend = false;
                 var b_friend = false;
 
-                if ( props.user.private && props.user.private.refs && props.user.private.refs.star ){
+                if ( props.user.private && props.user.private.refs && props.user.private.refs.star ) {
                     props.user.private.refs.star.indexOf(a.id) != -1;
                     props.user.private.refs.star.indexOf(b.id) != -1;
                 }
 
-                if ( a_friend == b_friend){ // either their both freinds or both following
+                if ( a_friend == b_friend) { // either their both freinds or both following
                     return 0;
                 }
-                else if (a_friend){ // a is freind, b is followed
+                else if (a_friend) { // a is freind, b is followed
                     return -1;
                 }
                 else { // b is freind, a is followed
@@ -104,16 +99,16 @@ export default class ContentUserFollowing extends Component {
             });
 
             return (
-                <ContentCommon {...props}>
+                <ContentArticle node_id={node.id}>
 					<ContentCommonBody>
-						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><SVGIcon baseline small gap>user-plus</SVGIcon><strong>Follow</strong></span> button.</p>
-						<p>Users that follow each other will be shown below as <span><SVGIcon baseline small gap>users</SVGIcon><strong>Friends</strong></span>.</p>
+						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><Icon class="-baseline -small -gap" src="user-plus" /><strong>Follow</strong></span> button.</p>
+						<p>Users that follow each other will be shown below as <span><Icon class="-baseline -small -gap" src="users" /><strong>Friends</strong></span>.</p>
 					</ContentCommonBody>
 					{following}
-                </ContentCommon>
+                </ContentArticle>
             );
         }
-        else{
+        else {
             // Show a spinner whilst were loading
             return <ContentLoading />;
         }

@@ -1,9 +1,10 @@
-import {h, Component}					from 'preact/preact';
+import { Component } from 'preact';
 import ContentCommonBody				from 'com/content-common/common-body';
-import UIButton							from 'com/ui/button/button';
-import UILink							from 'com/ui/link/link';
+import {Button, Link} from 'com/ui';
 
-import $File							from 'shrub/js/file/file';
+import { node_CanUpload } from 'internal/lib';
+
+import $File							from 'backend/js/file/file';
 
 export default class ContentItemFiles extends Component {
 	constructor(props) {
@@ -55,7 +56,7 @@ export default class ContentItemFiles extends Component {
                 })
                 .then( r => {
                     this.setState({'status': 5});
-                    console.log("Uploaded", r);
+                    DEBUG && console.log("Uploaded", r);
                 })
                 .catch(err => {
                     this.setState({'status': 5});
@@ -68,10 +69,11 @@ export default class ContentItemFiles extends Component {
     onDelete( e ) {
         let {node, user} = this.props;
 
-        if ( !user || !user.id || !node )
+        if ( !user || !user.id || !node ) {
             return null;
+        }
 
-        console.log("onDelete", e.id, e.name);
+        DEBUG && console.log("onDelete", e.id, e.name);
 
         return $File.RequestDelete(e.id, e.name, node.id)
             .then( r => {
@@ -88,7 +90,7 @@ export default class ContentItemFiles extends Component {
                 }
             })
             .then( r => {
-                console.log("Deleted", r);
+                DEBUG && console.log("Deleted", r);
             })
             .catch(err => {
                 alert(err);
@@ -115,7 +117,7 @@ export default class ContentItemFiles extends Component {
                 if ( (e.status & 0x8) && !(e.status & 0x40) ) {
                     let func = this.onDelete.bind(this, e);
                     //[{e.status.toString(16)}]
-                    files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
+                    files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <Button class="-button" style="display: inline;" onclick={func}>delete</Button></li>);
                 }
             });
 
@@ -133,7 +135,7 @@ export default class ContentItemFiles extends Component {
             ];
 
             const isUploading = (state.status > 0 && state.status < 5);
-            const uploadButton = isUploading ? "" : <UIButton class="-button">Upload file</UIButton>;
+            const uploadButton = isUploading ? "" : <Button class="-button">Upload file</Button>;
 
             return (
                 <ContentCommonBody class="-files -body -upload">
@@ -157,7 +159,7 @@ export default class ContentItemFiles extends Component {
         let files = [];
         Object.values(latestFiles).forEach(e => {
             if ( (e.status & 0x8) && !(e.status & 0x40) ) {
-                files.push(<li><UILink href={"//files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
+                files.push(<li><Link href={"//files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</Link> - {e.size} bytes</li>);
             }
         });
 

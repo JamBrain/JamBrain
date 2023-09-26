@@ -1,17 +1,7 @@
-import { h, Component } from 'preact/preact';
-import ButtonLink		from 'com/button-link/link';
+import {Button} from 'com/ui';
 
-export default class SidebarDummyTV extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
-	render( {}, {} ) {
-
-		return (
-			<div class="sidebar-base sidebar-shortlist sidebar-dummytv">
-				<ButtonLink class="-footer" href="//www.twitch.tv/communities/ludumdare">More Live Streams</ButtonLink>
-			</div>
-		);
-	}
+export default function SidebarDummyTV( props ) {
+	return <div class="side-item sidebar-shortlist sidebar-dummytv">
+		<Button class="-footer" href="//www.twitch.tv/communities/ludumdare">More Live Streams</Button>
+	</div>;
 }

@@ -1,16 +1,9 @@
-import { h, Component } 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import { UISpinner } from 'com/ui';
 
-export default class ContentLoading extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
-	render( {error} ) {
-		return (
-			<div class="content-base">
-				{ error ? error : <NavSpinner /> }
-			</div>
-		);
-	}
+export default function ContentLoading( props ) {
+	return (
+		<div class="content">
+			{ props.error ? props.error : <UISpinner /> }
+		</div>
+	);
 }

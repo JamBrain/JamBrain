@@ -1,0 +1,20 @@
+{
+"files.trimTrailingWhitespace": true,
+"editor.tabSize": 4,
+"editor.insertSpaces": false,
+"files.exclude": {
+	"node_modules": true,
+	"**/node_modules": true,
+	".output": true,
+	".vscode": true
+},
+"less.lint.validProperties": [
+	"composes"
+],
+"html.autoClosingTags": false,
+"html.autoCreateQuotes": false,
+"javascript.autoClosingTags": false,
+"javascript.autoCreateQuotes": false,
+"typescript.autoClosingTags": false,
+"typescript.autoCreateQuotes": false
+}

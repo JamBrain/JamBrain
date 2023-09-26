@@ -1,13 +1,9 @@
-import {h, Component}					from 'preact/preact';
+import {Component}			from 'preact';
 
-import Router							from 'com/router/router';
-import Route							from 'com/router/route';
+import {ContentRouter, Route} from "com/router";
 
-import ContentList						from 'com/content-list/list';
 import ContentEvent						from "com/content-event/event";
 import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
-import ContentError						from 'com/content-error/error';
-
 
 import PageNavRoot						from '../nav/root';
 
@@ -25,14 +21,14 @@ import PageMyHome 						from 'com/page/root/my/home';
 import PageMySettings 					from 'com/page/root/my/settings';
 import PageMyStats	 					from 'com/page/root/my/stats';
 import PageMyNotifications 				from 'com/page/root/my/notifications';
-import PageDevPalette 					from 'com/page/dev/palette';
+//import PageDevPalette 					from 'com/page/dev/palette';
 
 import HeaderNoob						from 'com/header/noob/noob';
+
 
 export default class PageRoot extends Component {
 	render( props ) {
 		const {node, user, path, extra, featured} = props;
-		let Dummy = <div />;
 
 		let ShowIntro = null;
 		if (!user || !user.id) {
@@ -52,33 +48,32 @@ export default class PageRoot extends Component {
 		}
 
 		return (
-			<ContentList class="page-root">
+			<>
 				{ShowIntro}
 				{ActiveEvent}
 				<PageNavRoot {...props} />
-				<Router node={props.node} props={props} name="root">
-					<Route static path="/" default={true} component={PageRootHome} />
-					<Route static path="/my" component={PageMyHome}>
-						<Route static path="/notifications" component={PageMyNotifications} />
-						<Route static path="/stats" component={PageMyStats} />
-						<Route static path="/settings" component={PageMySettings} />
+				<ContentRouter props={props} key="root">
+					<Route path="/" component={PageRootHome} />
+					<Route path="/my" component={PageMyHome}>
+						<Route path="/notifications" component={PageMyNotifications} />
+						<Route path="/stats" component={PageMyStats} />
+						<Route path="/settings" component={PageMySettings} />
 					</Route>
-					<Route static path="/dev">
-						<Route static path="/palette" component={PageDevPalette} />
+					<Route path="/dev">
 					</Route>
-					<Route static path="/news" component={PageRootFeedNews} />
-					<Route static path="/feed" component={PageRootFeed} />
-					<Route static path="/feed/raw" component={PageRootFeedRaw} />
-					<Route static path="/feed/news" component={PageRootFeedNews} />
-					<Route static path="/feed/hot" component={Dummy} />
-					<Route static path="/games/:filter?/:subfilter?/:target?" component={PageRootGames} />
-					<Route static path="/explore" component={PageRootExplore} />
-					<Route static path="/tools" component={PageRootTools} />
-					<Route static path="/communities" component={PageRootCommunities} />
-					<Route static path="/search" component={PageRootSearch} />
-					<Route type="error" component={ContentError} />
-				</Router>
-			</ContentList>
+					<Route path="/news" component={PageRootFeedNews} />
+					<Route path="/feed" component={PageRootFeed}>
+						<Route path="/raw" component={PageRootFeedRaw} />
+						<Route path="/news" component={PageRootFeedNews} />
+						<Route path="/hot" />
+					</Route>
+					<Route path="/games/:filter?/:subfilter?/:target?/*" component={PageRootGames} />
+					<Route path="/explore/*" component={PageRootExplore} />
+					<Route path="/tools/*" component={PageRootTools} />
+					<Route path="/communities/*" component={PageRootCommunities} />
+					<Route path="/search/*" component={PageRootSearch} />
+				</ContentRouter>
+			</>
 		);
 	}
 }

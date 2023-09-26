@@ -1,11 +1,11 @@
-import {h, Component} 					from 'preact/preact';
-import Sanitize							from 'internal/sanitize/sanitize';
+import { Component } 					from 'preact';
+import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import {UISpinner} from 'com/ui';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 export default class DialogActivate extends Component {
 	constructor( props ) {
@@ -16,7 +16,7 @@ export default class DialogActivate extends Component {
 		};
 
 		var Vars = Sanitize.getHTTPVars();
-		console.log("v",Vars);
+		//console.log("v",Vars);
 
 		// Get activation ID
 		this.ActID = Vars.id;
@@ -51,24 +51,24 @@ export default class DialogActivate extends Component {
 				});
 			}
 			else {
-				console.log(r);
+				//console.log(r);
 				this.setState({ 'error': r.response, 'loading': false });
 			}
 		})
 		.catch( err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({ 'error': err, 'loading': false });
 		});
 	}
 
 	onNameChange( e ) {
-		var name = e.target.value.trim();
-		var slug = Sanitize.makeSlug(name);
+		let name = e.target.value.trim();
+		let slug = Sanitize.makeSlug(name);
 
 		$User.Have( name, this.state.mail )
 		.then( r => {
 			if ( r.status === 200 ) {
-				this.setState({ valid_slug: (r.available && slug !== "" ? 1 : -1) });
+				this.setState({ 'valid_slug': (r.available && slug !== "" ? 1 : -1) });
 			}
 			else {
 				//console.log(r);
@@ -81,13 +81,13 @@ export default class DialogActivate extends Component {
 			this.setState({ 'error': err, 'loading': false });
 		});
 
-		this.setState({ name: name, slug: slug, valid_slug: 0, error: null });
+		this.setState({ 'name': name, 'slug': slug, 'valid_slug': 0, 'error': null });
 	}
 	onPasswordChange( e ) {
-		this.setState({ password: e.target.value, error: null });
+		this.setState({ 'password': e.target.value, 'error': null });
 	}
 	onPassword2Change( e ) {
-		this.setState({ password2: e.target.value, error: null });
+		this.setState({ 'password2': e.target.value, 'error': null });
 	}
 
 
@@ -180,7 +180,7 @@ export default class DialogActivate extends Component {
 		if ( loading ) {
 			return (
 				<DialogCommon empty explicit {...new_props}>
-					<NavSpinner />
+					<UISpinner />
 				</DialogCommon>
 			);
 		}
@@ -194,14 +194,14 @@ export default class DialogActivate extends Component {
 
 		if ( created ) {
 			return (
-				<DialogCommon ok onok={this.doFinishActivation} explicit {...new_props}>
-					Account <code>{this.slug}</code> Created. You can now <strong>Log In</strong>.
+				<DialogCommon ok={this.doFinishActivation} explicit {...new_props}>
+					Account <code>{slug}</code> Created. You can now <strong>Log In</strong>.
 				</DialogCommon>
 			);
 		}
 
 		return (
-			<DialogCommon ok oktext="Create Account" onok={this.doActivate} cancel oncancel={this.doFinishActivation} explicit {...new_props}>
+			<DialogCommon oktext="Create Account" ok={this.doActivate} cancel={this.doFinishActivation} explicit {...new_props}>
 				<div>
 					<span class="-label">E-mail:</span>
 					<div class="-input-container">
@@ -211,7 +211,7 @@ export default class DialogActivate extends Component {
 				<div>
 					<span class="-label">Name:</span>
 					<div class="-input-container">
-						<input autofocus id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} />
+						<input autofocus id="dialog-activate-name" autocomplete="username" onChange={this.onNameChange} class="-text focusable" type="text" name="username" maxLength={32} placeholder="How your name appears" value={name} />
 						<LabelYesNo value={this.isValidName()} />
 					</div>
 				</div>
@@ -227,14 +227,14 @@ export default class DialogActivate extends Component {
 				<div>
 					<span class="-label">Password:</span>
 					<div class="-input-container">
-						<input id="dialog-activate-password" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" value={password} />
+						<input id="dialog-activate-password" autocomplete="new-password" onInput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxLength={128} value={password} />
 						<LabelYesNo value={this.isValidPassword()} />
 					</div>
 				</div>
 				<div>
 					<span class="-label">Password Again:</span>
 					<div class="-input-container">
-						<input id="dialog-activate-password2" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Confirmation" value={password2} />
+						<input id="dialog-activate-password2" autocomplete="new-password" onInput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxLength={128} placeholder="Confirmation" value={password2} />
 						<LabelYesNo value={this.isValidPassword2()} />
 					</div>
 				</div>

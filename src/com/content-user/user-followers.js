@@ -1,13 +1,13 @@
-import { h, Component } 				from 'preact/preact';
+import { Component } from 'preact';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content-error/error';
+import {ContentError} from 'com/content';
 
 import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar from 'com/content-user/user-bar';
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from '../../backend/js/node/node';
 
 export default class ContentUserFollowers extends Component {
 	constructor( props ) {
@@ -18,28 +18,28 @@ export default class ContentUserFollowers extends Component {
         this.hasFollowers = this.hasFollowers.bind(this);
 
         this.state = {
-            "followerNodes" : []
+            "followerNodes": []
         };
 
     }
 
     componentDidMount() {
         // make sure we actually have followers to display
-        if (this.hasFollowers() && this.hasPermission()){
+        if (this.hasFollowers() && this.hasPermission()) {
             // if were looking at our own page then display followers
             this.getFollowers(this.props.user.private.refs.star);
         }
     }
 
-    hasPermission(){
+    hasPermission() {
         return (this.props.node.id == this.props.user.id);
     }
 
-    hasFollowers(){
+    hasFollowers() {
         return (this.props.user['private'] && this.props.user.private['refs']&& this.props.user.private.refs['star']);
     }
 
-    getFollowers(ids){
+    getFollowers(ids) {
         $Node.Get(ids)
         .then(r => {
             this.setState({
@@ -53,20 +53,18 @@ export default class ContentUserFollowers extends Component {
         props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
         props.class.push("content-user-follower");
 
-        if (!this.hasPermission()){
+        if (!this.hasPermission()) {
             // if were not allowed to see the nodes followers then display an error
-            return <ContentError code="401">Permission Denied : Cannot see who other peoples followers are </ContentError>;
+            return <ContentError code={401}>Permission Denied : Cannot see who other peoples followers are </ContentError>;
         }
-        else if (!this.hasFollowers())
-        {
+        else if (!this.hasFollowers()) {
             return (
-                <ContentCommon {...props}>
+                <ContentArticle {...props}>
                     <h1> No one is currently following you </h1>
-                </ContentCommon>
+                </ContentArticle>
             );
         }
-        else if (state.followerNodes && state.followerNodes.length > 0){
-
+        else if (state.followerNodes && state.followerNodes.length > 0) {
             // turn our array of follower nodes to ContentUserBar 's
             var followers = state.followerNodes
             .sort( (a,b) => {
@@ -74,10 +72,10 @@ export default class ContentUserFollowers extends Component {
                 var a_friend = props.user.private.meta.star.indexOf(a.id) != -1;
                 var b_friend = props.user.private.meta.star.indexOf(b.id) != -1;
 
-                if ( a_friend == b_friend){ // either their both freinds or both followers
+                if ( a_friend == b_friend) { // either their both freinds or both followers
                     return 0;
                 }
-                else if (a_friend){ // a is freind, b is follower
+                else if (a_friend) { // a is freind, b is follower
                     return -1;
                 }
                 else { // b is freind, a is follower
@@ -91,12 +89,12 @@ export default class ContentUserFollowers extends Component {
             });
 
             return (
-                <ContentCommon {...props}>
+                <ContentArticle {...props}>
                     {followers}
-                </ContentCommon>
+                </ContentArticle>
             );
         }
-        else{
+        else {
             // Show a spinner whilst were loading
             return <ContentLoading />;
         }

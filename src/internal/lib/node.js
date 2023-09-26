@@ -1,14 +1,34 @@
-;(function(){
-
 /**
 	Node Library - get information about nodes
 
 	NOTE: these functions will be globally available. No need to include anything. Also you can't use ES6 here.
 
-	Try to mirror what's available in "src/shrub/src/node/node_util.php"
+	Try to mirror what's available in "src/backend/src/node/node_util.php"
 */
 
-window.node_IsPublished = function( node ) {
+/**
+ * @typedef {Object} Node
+ * @property {number} id
+ * @property {string} type
+ * @property {string} subtype
+ * @property {string} subsubtype
+ * @property {number} author
+ * @property {number} parent
+ * @property {number} published //dates
+ * @property {number} created
+ * @property {number} modified
+ * @property {Object} [meta]
+ * @property {Object} [private]
+ * @property {Object} [files]
+ */
+
+
+/**
+ *
+ * @param {Node} node
+ * @returns {number|null}
+ */
+export function node_IsPublished( node ) {
 	// Return null if arguments are invalid
 	if ( !node )
 		return null;
@@ -16,7 +36,13 @@ window.node_IsPublished = function( node ) {
 	return node.published;
 }
 
-window.node_IsAuthor = function( node, user ) {
+/**
+ *
+ * @param {Node} node
+ * @param {Node|Object} user // NOTE: you might want to make this Node only, but some "cleverness" code makes a dummy object with just an id
+ * @returns {boolean|null}
+ */
+export function node_IsAuthor( node, user ) {
 	// Return null if either arguments are invalid
 	if ( !user || !node )
 		return null;
@@ -36,8 +62,12 @@ window.node_IsAuthor = function( node, user ) {
 	return false;
 }
 
-
-window.node_CountAuthors = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {number}
+ */
+export function node_CountAuthors( node ) {
 	if ( !node.meta || !node.meta['author'] )
 		return node.author ? 1 : 0;
 	return node.meta['author'].length;
@@ -53,7 +83,13 @@ function intersection(a, b) {
     });
 }
 
-window.nodeUser_IsFriend = function( user, node ) {
+/**
+ *
+ * @param {Node} user
+ * @param {Node} node
+ * @returns {boolean|null}
+ */
+export function nodeUser_IsFriend( user, node ) {
 	// Return null if either arguments are invalid
 	if ( !user || !node )
 		return null;
@@ -65,7 +101,13 @@ window.nodeUser_IsFriend = function( user, node ) {
 	return false;
 }
 
-window.nodeUser_IsFollowing = function( user, node ) {
+/**
+ *
+ * @param {Node} user
+ * @param {Node} node
+ * @returns {boolean|null}
+ */
+export function nodeUser_IsFollowings( user, node ) {
 	// Return null if either arguments are invalid
 	if ( !user || !node )
 		return null;
@@ -76,7 +118,12 @@ window.nodeUser_IsFollowing = function( user, node ) {
 	return false;
 }
 
-window.nodeUser_GetFriends = function( user ) {
+/**
+ *
+ * @param {Node} user
+ * @returns {number[]|null}
+ */
+export function nodeUser_GetFriends( user ) {
 	// Return null if argument is invalid
 	if ( !user )
 		return null;
@@ -88,20 +135,26 @@ window.nodeUser_GetFriends = function( user ) {
 }
 
 // Is creating allowed on this node? Optionally specify the fulltype
-window.node_CanCreate = function( node, fulltype = null ) {
+/**
+ *
+ * @param {Node} node
+ * @param {string|null} [fulltype]
+ * @returns {boolean|null}
+ */
+export function node_CanCreate( node, fulltype = null ) {
 	// Return null if argument is invalid
 	if ( !node || !node.meta ) {
 		return null;
 	}
 
-	// If omitted, then the answer is no
+	// If omitted or not a string, then the answer is no
 	if ( !node.meta['can-create'] || (typeof node.meta['can-create'] != 'string') ) {
 		return false;
 	}
 
 	// If length is 1, it's a legacy value (i.e. 0 or 1)
 	if ( node.meta['can-create'].length == 1 ) {
-		return parseInt(node.meta['can-create']) == 1;
+		return Number(node.meta['can-create']) == 1;
 	}
 	// Otherwise it's a v2 value. If no fulltype is specified, the answer is either no (false) or maybe (true).
 	else if ( fulltype === null ) {
@@ -113,17 +166,23 @@ window.node_CanCreate = function( node, fulltype = null ) {
 
 	// the answer is yes (true) if fulltype is one of the keys
 	return (keys.indexOf(fulltype) >= 0);
-};
+}
 
 // Is transforming (type changing) allowed on this node? Optionally specify the fulltype
-window.node_CanTransform = function( node, fulltype = null ) {
+/**
+ *
+ * @param {Node} node
+ * @param {string|null} [fulltype]
+ * @returns {boolean|null}
+ */
+export function node_CanTransform( node, fulltype = null ) {
 	// Return null if argument is invalid
 	if ( !node || !node.meta ) {
 		return null;
 	}
 
 	// If omitted, then the answer is no
-	if ( ('can-transform' in node.meta) === false ) {
+	if ( !node.meta['can-transform'] ) {
 		return false;
 	}
 
@@ -137,55 +196,81 @@ window.node_CanTransform = function( node, fulltype = null ) {
 
 	// the answer is yes (true) if fulltype is one of the keys
 	return (keys.indexOf(fulltype) >= 0);
-};
+}
 
-window.nodeEvent_CanTheme = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {boolean|null}
+ */
+export function nodeEvent_CanTheme( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
-	return node.meta && parseInt(node.meta['can-theme']);
-};
-window.nodeEvent_CanGrade = function( node ) {
+	return node.meta && (Number(node.meta['can-theme']) > 0);
+}
+/**
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function nodeEvent_CanGrade( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
-	return node.meta && parseInt(node.meta['can-grade']);
-};
+	return node.meta && (Number(node.meta['can-grade']) > 0);
+}
 // TODO: Obsolete the 'event-finished' metadata
-window.nodeEvent_IsFinished = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {boolean|null}
+ */
+export function nodeEvent_IsFinished( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
-	return node.meta && parseInt(node.meta['event-finished']);
-};
+	return node.meta && (Number(node.meta['event-finished']) > 0);
+}
 // NOTE: this expects you to call it with the parent. A better function
 // should be able to lookup the parent itself given the node.
-window.node_CanUpload = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {boolean|null}
+ */
+export function node_CanUpload( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
-	return node.meta && parseInt(node.meta['can-upload']);
-};
+	return node.meta && (Number(node.meta['can-upload']) > 0);
+}
 
 // Is publishing allowed on this node? Optionally specify the fulltype
-window.node_CanPublish = function( node, fulltype = null ) {
+/**
+ *
+ * @param {Node} node
+ * @param {string} [fulltype]
+ * @returns {boolean|null}
+ */
+export function node_CanPublish( node, fulltype = null ) {
 	// Return null if argument is invalid
 	if ( !node || !node.meta ) {
 		return null;
 	}
 
 	// If omitted, then the answer is no
-	if ( ('can-publish' in node.meta) === false ) {
+	if ( !node.meta['can-publish]'] ) {
 		return false;
 	}
 
 	// If length is 1, it's a legacy value (i.e. 0 or 1)
 	if ( node.meta['can-publish'].length == 1 ) {
-		return parseInt(node.meta['can-publish']) == 1;
+		return Number(node.meta['can-publish']) == 1;
 	}
 	// Otherwise it's a v2 value. If no fulltype is specified, the answer is either no (false) or maybe (true).
 	else if ( fulltype === null ) {
@@ -197,9 +282,14 @@ window.node_CanPublish = function( node, fulltype = null ) {
 
 	// the answer is yes (true) if fulltype is one of the keys
 	return (keys.indexOf(fulltype) >= 0);
-};
+}
 
-window.node_GetFullType = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {string|null}
+ */
+export function node_GetFullType( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
@@ -215,7 +305,12 @@ window.node_GetFullType = function( node ) {
 	return fulltype;
 }
 
-window.node_HasEmbed = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {boolean|null}
+ */
+export function node_HasEmbed( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
@@ -230,11 +325,16 @@ window.node_HasEmbed = function( node ) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
-window.node_GetEmbed = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {Object|null}
+ */
+export function node_GetEmbed( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
@@ -253,17 +353,27 @@ window.node_GetEmbed = function( node ) {
 			}
 		}
 	}
-	
+
 	return file;
 }
 
-window.nodeItem_GetPlatforms = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {string[]}
+ */
+export function nodeItem_GetPlatforms( node ) {
 	if ( node && node.meta && node.meta.platform ) {
 		return node.meta.platform;
 	}
 	return [];
 }
-window.nodeItem_GetTags = function( node ) {
+/**
+ *
+ * @param {Node} node
+ * @returns {string[]}
+ */
+export function nodeItem_GetTags( node ) {
 	if ( node && node.meta && node.meta.tag ) {
 		return node.meta.tag;
 	}
@@ -271,25 +381,33 @@ window.nodeItem_GetTags = function( node ) {
 }
 
 
-//window.nodeUser_IsTeamLeader = function( user, project ) {
-//
-//}
-
-window.nodes_HasParent = function( nodes, parent_id ) {
+/**
+ *
+ * @param {Node[]} nodes
+ * @param {number} parent_id
+ * @returns {boolean|null}
+ */
+export function nodes_HasParent( nodes, parent_id ) {
 	// Return null if argument is invalid
 	if ( !nodes )
 		return null;
 
 	// TODO: Confirm nodes is an array
 
-	for ( idx = 0; idx < nodes.length; idx++ ) {
+	for ( let idx = 0; idx < nodes.length; idx++ ) {
 		if ( nodes[idx].parent == parent_id )
 			return true;
 	}
 	return false;
-};
+}
 
-window.nodeKeys_HasParent = function( nodes, parent_id ) {
+/**
+ *
+ * @param {Node[]} nodes
+ * @param {number} parent_id
+ * @returns {boolean|null}
+ */
+export function nodeKeys_HasParent( nodes, parent_id ) {
 	// Return null if argument is invalid
 	if ( !nodes )
 		return null;
@@ -302,9 +420,15 @@ window.nodeKeys_HasParent = function( nodes, parent_id ) {
 			return true;
 	}
 	return false;
-};
+}
 
-window.nodeKeys_HasPublishedParent = function( nodes, parent_id ) {
+/**
+ *
+ * @param {Node[]} nodes
+ * @param {number} parent_id
+ * @returns {boolean|null}
+ */
+export function nodeKeys_HasPublishedParent( nodes, parent_id ) {
 	// Return null if argument is invalid
 	if ( !nodes )
 		return null;
@@ -317,6 +441,29 @@ window.nodeKeys_HasPublishedParent = function( nodes, parent_id ) {
 			return true;
 	}
 	return false;
-};
+}
 
-})();
+
+export default {
+	node_IsPublished,
+	node_IsAuthor,
+	node_CountAuthors,
+	nodeUser_IsFriend,
+	nodeUser_IsFollowings,
+	nodeUser_GetFriends,
+	node_CanCreate,
+	node_CanTransform,
+	nodeEvent_CanTheme,
+	nodeEvent_CanGrade,
+	nodeEvent_IsFinished,
+	node_CanUpload,
+	node_CanPublish,
+	node_GetFullType,
+	node_HasEmbed,
+	node_GetEmbed,
+	nodeItem_GetPlatforms,
+	nodeItem_GetTags,
+	nodes_HasParent,
+	nodeKeys_HasParent,
+	nodeKeys_HasPublishedParent,
+};

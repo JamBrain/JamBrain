@@ -1,13 +1,21 @@
-import {h, render, Component, options}	from 'preact/preact';
+//import 'preact/devtools';
+import 'preact/debug';
 
-// @ifdef DEBUG
-import {}								from 'preact-devtools/devtools';
-// @endif
+import '../polyfill';	// So we can use .at()
 
-import Sanitize							from 'internal/sanitize/sanitize';
+import { render, Component } from 'preact';
+import './main-ld.less';
+import 'com/defaults.less';
+import 'com/fonts.less';
+import 'com/helpers.less';
+import 'com/markup.less';
 
-import Router							from 'com/router/router';
-import Route							from 'com/router/route';
+import { setupNavigation } from 'com/ui/link';
+
+import titleParser						from 'internal/titleparser';
+import Sanitize							from 'internal/sanitize';
+
+import { ContentRouter, Route } from "com/router";
 
 import Layout							from "com/page/layout";
 
@@ -20,7 +28,6 @@ import PageUser 						from 'com/page/node/user/user';
 import PageUsers 						from 'com/page/node/users/users';
 import PageEvent 						from 'com/page/node/event/event';
 import PageEvents 						from 'com/page/node/events/events';
-import PageError 						from 'com/page/error/error';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
 import DialogLogin						from 'com/dialog/login/login';
@@ -28,7 +35,6 @@ import DialogRegister					from 'com/dialog/register/register';
 import DialogActivate					from 'com/dialog/activate/activate';
 import DialogReset						from 'com/dialog/reset/reset';
 import DialogPassword					from 'com/dialog/password/password';
-import DialogAuth						from 'com/dialog/auth/auth';
 import DialogSession					from 'com/dialog/session/session';
 import DialogSavebug					from 'com/dialog/savebug/savebug';
 import DialogUserConfirm				from 'com/dialog/user/user-confirm';
@@ -40,50 +46,85 @@ import DialogErrorPublish				from 'com/dialog/errorpublish/errorpublish';
 
 //import AlertBase						from 'com/alert-base/base';
 
-import $Node							from 'shrub/js/node/node';
-import $User							from 'shrub/js/user/user';
-import $NodeLove						from 'shrub/js/node/node_love';
+import $Node							from 'backend/js/node/node';
+import $User							from 'backend/js/user/user';
+import $NodeLove						from 'backend/js/node/node_love';
 
 
-window.LUDUMDARE_ROOT = '/';
-window.SITE_ROOT = 1;
+const SITE_ROOT = 1;
 
-
-// NOTE: Deprecated
-// Add special behavior: when class attribute is an array, flatten it to a string
-options.vnode = function _CustomVNode(vnode) {
-	if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
-		if ( vnode.attributes.class.length ) {
-			vnode.attributes.class = vnode.attributes.class.join(' ');
-		}
-		else {
-			// NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
-			delete vnode.attributes.class;
-		}
-	}
-};
+function getSlugsFromURL( url ) {
+	const newURL = new URL(url);
+	return Sanitize.trimSlashes(newURL.pathname).split('/');
+}
 
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		console.log("[constructor]");
-		// @ifdef DEBUG
-		console.log("Running in DEBUG mode");
-		// @endif
 
+		// Debug mode
+		DEBUG && console.log("[constructor]");
+		if ( DEBUG ) {
+			const urlParams = new URLSearchParams(window.location.search);
+			const debugParam = urlParams.get('debug');
+			const debugPort = debugParam ? parseInt(debugParam) : 0;
+			const hasValidPort = LIVE && debugPort > 0;
+
+			console.log(hasValidPort ? "Running in LIVE DEBUG mode" : "Running in DEBUG mode");
+
+			if ( hasValidPort ) {
+				const buildServerURL = `http://ldjam.work:${debugPort}/esbuild`;
+
+				let liveBuild = new EventSource(buildServerURL);
+
+				liveBuild.addEventListener('open', (e) => {
+					console.log(`Connected to local build.js server: ${buildServerURL}`, e);
+				});
+				liveBuild.addEventListener('error', (e) => {
+					console.log('Unable to connect to local build.js server.', e);
+				});
+				liveBuild.addEventListener('change', (e) => {
+					const { added, removed, updated } = JSON.parse(e.data);
+
+					// CSS reloading (inline)
+					// MK NOTE: this doesn't seem to work. Was copy+pasted from sample, so it's not really verified.
+					if (!added.length && !removed.length && updated.length === 1) {
+						for (const link of document.getElementsByTagName('link')) {
+							const url = new URL(link.href);
+
+							if (url.host === location.host && url.pathname === updated[0]) {
+								const next = /** @type {HTMLLinkElement} */ (link.cloneNode());
+
+								next.href = updated[0] + '?' + Math.random().toString(36).slice(2);
+								next.onload = () => link.remove();
+								link.parentNode.insertBefore(next, link.nextSibling);
+
+								return;
+							}
+						}
+					}
+
+					// JS reloading (full reload)
+					location.reload();
+				});
+			}
+		}
+
+		/*
+		// Start by cleaning the URL
 		let clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
-			// @ifdef DEBUG
-			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
-			// @endif
+			DEBUG && console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
 
 			this.storeHistory(window.history.state, null, clean.path);
 		}
+		*/
+
 
 		this.state = {
 			// URL walking
 			'path': '',
-			'slugs': clean.slugs,
+			'slugs': getSlugsFromURL(window.location.href),
 			'extra': [],
 
 			// Active Node
@@ -104,30 +145,53 @@ class Main extends Component {
 			'user': null
 		};
 
-		window.addEventListener('hashchange', this.onHashChange.bind(this));
-		window.addEventListener('navchange', this.onNavChange.bind(this));
-		window.addEventListener('popstate', this.onPopState.bind(this));
+		//window.addEventListener('hashchange', this.onHashChange.bind(this));
+		//window.addEventListener('navchange', this.onNavChange.bind(this));
+		//window.addEventListener('popstate', this.onPopState.bind(this));
+
+		setupNavigation((newURL) => {
+			const newSlugs = getSlugsFromURL(newURL);//Sanitize.trimSlashes(new URL(newURL).pathname).split('/');
+			this.fetchNode(newSlugs);
+
+			const newState = {
+				'scrollX': window.scrollX,
+				'scrollY': window.scrollY
+			};
+
+			window.scrollTo(0, 0);
+
+			return newState;
+		},
+		(newState, newURL) => {
+			const newSlugs = getSlugsFromURL(newURL);
+
+			this.fetchNode(newSlugs).then(() => {
+				if (!newState) return;
+				window.scrollTo(newState.scrollX, newState.scrollY);
+			});
+		});
 
 		this.onLogin = this.onLogin.bind(this);
 	}
 
 	componentDidMount() {
-		this.fetchUser();
-		this.fetchFeatured();	// Fetches root, featured, and all games associated with you
-		this.fetchNode();
+		DEBUG && console.log("[componentDidMount] +");
 
-//		return Promise.all([
-//			this.fetchUser(),
-//			this.fetchFeatured(),
-//			this.fetchNode()
-//		]).then(r => {
-//
-//		});
-//		.catch(err => {
-//			this.setState({'error': err});
-//		});
+		const newSlugs = getSlugsFromURL(window.location.href);
+
+		return Promise.all([
+			this.fetchUser(),
+			this.fetchRoot(),	// Fetches root, featured, and id's of all games associated with you
+			this.fetchNode(newSlugs)
+		]).then(r => {
+			DEBUG && console.log("[componentDidMount] -");
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
 	}
 
+	/*
 	storeHistory( input, page_title = null, page_url = null ) {
 		if ( window.history && window.history.replaceState && input ) {
 			history.replaceState({
@@ -140,6 +204,7 @@ class Main extends Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
+		// MK: substr is deprecated. Use slice or substring.
 		if (window.location.href.substr(-3) == "#--") {
 			history.replaceState({}, '', window.location.href.replace("#--", ""));
 		}
@@ -149,6 +214,16 @@ class Main extends Component {
 		if (this.state.node != prevState.node) {
 			this.handleAnchors();
 		}
+	}
+
+
+	cleanURL( url ) {
+		url.pathname = Sanitize.clean_Path(url.pathname);
+		url.search = Sanitize.clean_Query(url.search);
+		url.hash = Sanitize.clean_Hash(url.hash);
+		url.slugs = Sanitize.trimSlashes(url.pathname).split('/');
+
+		return url;
 	}
 
 	cleanLocation( location ) {
@@ -166,45 +241,66 @@ class Main extends Component {
 
 		return clean;
 	}
+*/
 
-	getDialog() {
-		let props = Sanitize.parseHash(window.location.hash);
+	/**
+	 * @typedef {Object} DialogProps
+	 * @prop {string} dialog
+	 * @prop {string[]} [args]
+	 */
 
-		if ( window.location.hash ) {
-			if ( window.location.hash.indexOf("/") != 1 && props.path !== "--") {
-				switch (props.path) {
-					case 'user-login':
-						props.onlogin = this.onLogin;
-						return <DialogLogin {...props} />;
-					case 'user-confirm':
-						return <DialogUserConfirm {...props} />;
-					case 'user-activate':
-						return <DialogActivate {...props} />;
-					case 'user-register':
-						return <DialogRegister {...props} />;
-					case 'user-auth':
-						return <DialogAuth {...props} />;
-					case 'user-reset':
-						return <DialogReset {...props} />;
-					case 'user-password':
-						return <DialogPassword {...props} />;
-					case 'expired':
-						return <DialogSession {...props} />;
-					case 'savebug':
-						return <DialogSavebug {...props} />;
-					case 'create':
-						return <DialogCreate {...props} />;
-					case 'submit':
-						return <DialogSubmit {...props} />;
-					case 'tv':
-						return <DialogTV {...props} />;
-					case 'error-upload':
-						return <DialogErrorUpload {...props} />;
-					case 'error-publish':
-						return <DialogErrorPublish {...props} />;
-					default:
-						return <DialogUnfinished {...props} />;
-				}
+	/**
+	 * @param {string} url
+	 * @returns {DialogProps}
+	 */
+	getDialogProps( url ) {
+		const newURL = new URL(url);
+
+		const dialogPath = newURL.searchParams.get("a");
+		if (!dialogPath) return null;
+
+		const dialogPathParts = dialogPath.split("!");
+		if (!dialogPathParts.length) return null;
+
+		return {
+			"dialog": dialogPathParts[0],
+			"args": dialogPathParts.slice(1)
+		};
+	}
+
+	showDialog() {
+		let props = this.getDialogProps(window.location.href);
+
+		if ( props ) {
+			switch (props.dialog) {
+				case 'user-login':
+					return <DialogLogin {...props} onLogin={this.onLogin} />;
+				case 'user-confirm':
+					return <DialogUserConfirm {...props} />;
+				case 'user-activate':
+					return <DialogActivate {...props} />;
+				case 'user-register':
+					return <DialogRegister {...props} />;
+				case 'user-reset':
+					return <DialogReset {...props} />;
+				case 'user-password':
+					return <DialogPassword {...props} />;
+				case 'expired':
+					return <DialogSession {...props} />;
+				case 'savebug':
+					return <DialogSavebug {...props} />;
+				case 'create':
+					return <DialogCreate {...props} />;
+				case 'submit':
+					return <DialogSubmit {...props} />;
+				case 'tv':
+					return <DialogTV {...props} />;
+				case 'error-upload':
+					return <DialogErrorUpload {...props} />;
+				case 'error-publish':
+					return <DialogErrorPublish {...props} />;
+				default:
+					return <DialogUnfinished {...props} />;
 			}
 		}
 		return null;
@@ -212,71 +308,75 @@ class Main extends Component {
 
 	// Called by the login dialog
 	onLogin() {
-		this.setState({'user': null});
-//		this.fetchUser();
-//		this.fetchFeatured();
+		this.setState({ 'user': null });
 	}
 
 	// *** //
 
-	fetchFeatured( node_id ) {
-		console.log("[fetchFeatured] +");
+	// Fetch the root (and featured game). DOES NOT require user to be loaded first!
+	fetchRoot() {
+		DEBUG && console.log("[fetchRoot] +");
 
 		return $Node.What(SITE_ROOT).then(r => {
+			DEBUG && console.log("[fetchRoot] * Root: ", r.root.id, r.root);
+
 			let newState = {};
-
-			if ( !r.featured )
-				return;
-
 			newState.root = r.root;
-			newState.featured = r.featured;
-			newState.featured.what = r.node;
 
-			//console.log("root:", r.root);
-			//console.log("featured:", r.featured);
-			//console.log("node:", r.node);
+			if ( r.featured ) {
+				DEBUG && console.log("[fetchRoot] * Featured: ", r.featured.id, "("+r.featured.name+")", r.featured);
+				DEBUG && console.log("[fetchRoot] * What you made: ", r.node);
 
-			let focus = 0;
-			let focusDate = 0;
-			let lastPublished = 0;
+				newState.featured = r.featured;
+				newState.featured.what = r.node;
 
-			console.log("[fetchFeatured] Hack! We don't support choosing your active game yes, so use logic to detect it");
-			for ( let key in r.node ) {
-				let newDate = new Date(r.node[key].modified).getTime();
-				if ( newDate > focusDate ) {
-					focusDate = newDate;
-					focus = key|0;
+				let focus = 0;
+				let focusDate = 0;
+				let lastPublished = 0;
+
+				DEBUG && console.log("[fetchRoot] * Hack! We don't support choosing your active game yes, so use logic to detect it");
+
+				// TODO: according to TS, r.node is not an integer, but rather a string. Number should not be needed here.
+				for ( let key in r.node ) {
+					let newDate = new Date(r.node[key].modified).getTime();
+					if ( newDate > focusDate ) {
+						focusDate = newDate;
+						focus = Number(key);
+					}
+					if ( r.node[key].published ) {
+						lastPublished = Number(key);
+						DEBUG && console.log('[fetchRoot] * '+key+' is published');
+					}
 				}
-				if ( r.node[key].published ) {
-					lastPublished = key|0;
-					console.log('[fetchFeatured] '+key+' is published');
+				if ( focus ) {
+					DEBUG && console.log('[fetchRoot] * '+focus+' was the last modified');
 				}
-			}
-			if ( focus ) {
-				console.log('[fetchFeatured] '+focus+' was the last modified');
-			}
 
-			// If the last updated is published, focus on that
-			if ( r.node[focus] && r.node[focus].published ) {
-				newState.featured.focus_id = focus;
-			}
-			// If not, make it the last known published game
-			else if ( lastPublished ) {
-				newState.featured.focus_id = lastPublished;
-			}
-			// Otherwise, just the last one we found
-			else { //if ( focus > 0 ) {
-				newState.featured.focus_id = focus;
-			}
+				// If the last updated is published, focus on that
+				if ( r.node[focus] && r.node[focus].published ) {
+					newState.featured.focus_id = focus;
+				}
+				// If not, make it the last known published game
+				else if ( lastPublished ) {
+					newState.featured.focus_id = lastPublished;
+				}
+				// Otherwise, just the last one we found
+				else { //if ( focus > 0 ) {
+					newState.featured.focus_id = focus;
+				}
 
-			console.log('[fetchFeatured] - '+newState.featured.focus_id+' chosen as focus_id');
+				DEBUG && console.log('[fetchRoot] * '+newState.featured.focus_id+' chosen as focus_id');
+			}
 
 			this.setState(newState);
+
+			DEBUG && console.log('[fetchRoot] - ');
 		});
 	}
 
-	fetchNode( newArgs ) {
-		console.log("[fetchNode] +");
+	// Fetch the node our current URL points at
+	fetchNode( slugs, newArgs ) {
+		DEBUG && console.log("[fetchNode] + Slugs:", slugs);
 
 		let args = ['node', 'parent', '_superparent', 'author'];
 		if ( newArgs ) {
@@ -284,50 +384,42 @@ class Main extends Component {
 		}
 
 		// Walk to the active node
-		return $Node.Walk(SITE_ROOT, this.state.slugs, args).then(r => {
+		return $Node.Walk(SITE_ROOT, slugs, args).then(r => {
 			// Store the path determined by the walk
 			if ( r.node_id ) {
-				let NewState = {};
+				DEBUG && console.log("[fetchNode] * Walked", r.node_id, r);
 
-				NewState.path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
+				let NewState = {};
+				NewState.path = (r.path.length ? '/' : '') +slugs.slice(0, r.path.length).join('/');
 				NewState.extra = r.extra;
 
 				NewState.node = r.node[r.node_id];
 				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
 				NewState._superparent = NewState.node._superparent ? r.node[NewState.node._superparent] : null;
 				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
-//
-//				if ( r.node[SITE_ROOT] ) {
-//					NewState.root = r.node[SITE_ROOT];
-//				}
 
 				this.setState(NewState);
 
-//				// If root was returned, then trigger a featured lookup ("|0" is string-to-integer conversion)
-//				if ( r.node[SITE_ROOT] && r.node[SITE_ROOT].meta['featured'] && ((r.node[SITE_ROOT].meta['featured']|0) > 0) ) {
-//					return this.fetchFeatured(r.node[SITE_ROOT].meta['featured']|0);
-//				}
+				DEBUG && console.log("[fetchNode] - Node:", r.node_id);
 
-				console.log("[fetchNode] - Node:", r.node_id);
-
-				return null;
+				return r;
 			}
+			// MK TODO: Should we do this?
 			throw "[fetchNode] Unable to walk tree";
 		})
 		.catch(err => {
-			this.setState({'error': err});
+			this.setState({ 'error': err });
 		});
 	}
 
+	// Fetch the active user (if logged in)
 	fetchUser() {
-		console.log("[fetchUser] +");
-
-		let User = {
-			'id': 0
-		};
+		DEBUG && console.log("[fetchUser] +");
 
 		// Fetch Active User
 		return $Node.GetMy().then(r => {
+			let User = {};
+
 			if ( r.node ) {
 				User = Object.assign({}, r.node);
 				User['private'] = {};
@@ -336,43 +428,52 @@ class Main extends Component {
 			}
 
 			// Finally, user is ready
-			this.setState({'user': User});
+			this.setState({ 'user': User });
 
-			console.log("[fetchUser] - You are", User.id, "("+User.name+")");
+			DEBUG && console.log("[fetchUser] * You are", User.id, "("+User.name+")", User);
 
-			// This should be a function
-			if ( User && User.private && User.private.meta && User.private.meta.admin ) {
-				console.log("[fetchUser] - Administrator");
+			// TODO: This test should be a function
+			if ( DEBUG && User && User.private && User.private.meta && User.private.meta.admin ) {
+				console.log("[fetchUser] * Administrator");
 			}
+			// @endif
 
-			// Pre-cache my Love (nothing to do with it)
-			return $NodeLove.GetMy();
+			// Pre-cache my Love (for later)
+			return r.node ? $NodeLove.GetMy() : r;
+		})
+		.then(r => {
+			DEBUG && console.log("[fetchUser] - User: ", this.state.user);
+			return r;
 		})
 		.catch(err => {
 			// An error here isn't actually an error. It just means we have no user
-			this.setState({'user': User});
+			this.setState({ 'user': { 'id': 0 } });
 		});
 	}
 
 	// *** //
-
+/*
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
-		console.log("hashchange: ", e.newURL);
-		let slugs = this.cleanLocation(window.location).slugs;
+		DEBUG && console.log("hashchange: ", e.newURL);
 
-		if ( slugs.join() === this.state.slugs.join() ) {
-			this.setState({});
-		}
-		else {
-			this.setState({
-				'slugs': slugs
-			});
-		}
+		this.setState(prevState => {
+			let { slugs } = this.cleanLocation(window.location);
+
+			// If slugs are the same, we don't need to change them
+			if ( slugs.join() === prevState.slugs.join() ) {
+				return {};
+			}
+
+			return { 'slugs': slugs };
+		});
 
 		this.handleAnchors();
 	}
+*/
 
+/*
+	// TODO: stop doing this, and remove the funny anchor feature
 	handleAnchors(evtHash) {
 		if ( window.location.hash || evtHash ) {
 			let hash = Sanitize.parseHash(evtHash || window.location.hash);
@@ -382,34 +483,41 @@ class Main extends Component {
 				if ( heading ) {
 					heading.scrollIntoView();
 
-					let viewBar = document.getElementsByClassName("view-bar")[0];
-					if ( viewBar ) {
-						window.scrollBy(0, -viewBar.clientHeight);
-					}
+					/* MK: I can't find a "view-bar" */
+					/*
+					//let viewBar = document.getElementsByClassName("view-bar")[0];
+					//if ( viewBar ) {
+					//	window.scrollBy(0, -viewBar.clientHeight);
+					//}
 				}
 			}
 		}
 	}
+*/
 
+/*
 	// When we navigate by clicking forward
 	onNavChange( e ) {
-		console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
+		DEBUG && console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
+
+		this.cleanURL(e.detail.location);
 
 		if ( e.detail.location.href !== e.detail.old.href ) {
-			let slugs = this.cleanLocation(e.detail.location).slugs;
+			history.pushState(null, null, e.detail.location.href);
 
-			if ( slugs.join() !== this.state.slugs.join() ) {
-				history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
-
-				this.setState({
-					'slugs': slugs,
-					'node': {
-						'id': 0
-					}
-				});
-				this.fetchNode();
-			}
+			this.fetchNode(e.detail.location.slugs);
 		}
+
+
+		//if ( e.detail.location.href !== e.detail.old.href ) {
+		//	let clean = this.cleanLocation(e.detail.location);
+
+		//	if ( clean.slugs.join() !== this.state.slugs.join() ) {
+		//		history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
+
+		//		this.fetchNode(clean.slugs);
+		//	}
+		//}
 
 		// Scroll to top
 		window.scrollTo(0, 0);
@@ -418,7 +526,8 @@ class Main extends Component {
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
-		console.log("popstate: ", e.state);
+		DEBUG && console.log("popstate: ", e.state);
+
 		// NOTE: This is sometimes called on a HashChange with a null state
 		if ( e.state ) {
 			this.setState(e.state);
@@ -426,8 +535,9 @@ class Main extends Component {
 
 		this.handleAnchors();
 	}
+*/
 
-	getTitle( node ) {
+	generateTitle( node ) {
 		let Title = "";
 		let TitleSuffix = window.location.host;
 		if (window.location.host == "ldjam.com") {
@@ -435,7 +545,7 @@ class Main extends Component {
 		}
 
 		if ( node.name ) {
-			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			Title = titleParser(node.name, true);
 			if ( Title === "" ) {
 				Title = TitleSuffix;
 			}
@@ -450,23 +560,23 @@ class Main extends Component {
 	}
 
 	render( {}, state ) {
-		let {node, parent, _superparent, author, user, featured, path, extra} = state;
-		let NewProps = {node, parent, _superparent, author, user, featured, path, extra};
+		let { node, parent, _superparent, author, user, featured, path, extra } = state;
+		let props = { node, parent, _superparent, author, user, featured, path, extra };
 
 		if ( node ) {
-			document.title = this.getTitle(node);
-
-			// Set the robots meta tag
-			let robots_value = "noindex";
-			if (node._trust > 0) {
-				robots_value = "all";
-			}
-			document.querySelector('meta[name="robots"]').setAttribute("content", robots_value);
+			document.title = this.generateTitle(node);
 		}
+
+		// Set the robots meta tag
+		let robots_value = "noindex";
+		if (node._trust > 0) {
+			robots_value = "all";
+		}
+		document.querySelector('meta[name="robots"]').setAttribute("content", robots_value);
 
 		return (
 			<Layout {...state}>
-				<Router node={node} props={NewProps} path={extra}>
+				<ContentRouter nodefault props={props} key="main">
 					<Route type="root" component={PageRoot} />
 
 					<Route type="page" component={PagePage} />
@@ -474,6 +584,7 @@ class Main extends Component {
 
 					<Route type="item">
 						<Route subtype="game" component={PageItem} />
+						<Route subtype="tool" component={PageItem} />
 					</Route>
 
 					<Route type="tag" component={PageTag} />
@@ -483,10 +594,8 @@ class Main extends Component {
 
 					<Route type="event" component={PageEvent} />
 					<Route type={["events", "group", "tags"]} component={PageEvents} />
-
-					<Route type="error" component={PageError} />
-				</Router>
-				{this.getDialog()}
+				</ContentRouter>
+				{this.showDialog()}
 			</Layout>
 		);
 	}

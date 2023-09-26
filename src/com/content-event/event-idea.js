@@ -1,10 +1,12 @@
-import {h, Component} 					from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
-import SVGIcon 							from 'com/svg-icon/icon';
-import UIButton							from 'com/ui/button/button';
-import $Node							from 'shrub/js/node/node';
-import $ThemeIdea						from 'shrub/js/theme/theme_idea';
-import Sanitize							from 'internal/sanitize/sanitize';
+import {Component} from 'preact';
+import './event-idea.less';
+
+import {Icon, Button} from 'com/ui';
+import {ContentSimple} from 'com/content/simple';
+
+import $Node							from 'backend/js/node/node';
+import $ThemeIdea						from 'backend/js/theme/theme_idea';
+import Sanitize							from 'internal/sanitize';
 
 const SHOW_PREVIOUS = 6;
 
@@ -37,7 +39,7 @@ export default class ContentEventIdea extends Component {
 		.then(r => {
 			//console.log(r);
 			if ( r.ideas ) {
-				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas)});
+				this.setState(prevState => ({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, prevState.maxIdeas)}));
 			}
 			else {
 				this.setState({'ideas': {}});
@@ -55,7 +57,7 @@ export default class ContentEventIdea extends Component {
 				const events = r.feed;//.map((e) => (e.id));
 				$Node.Get(events).then((r2) => {
 					const eventThemes = r2.node
-						.sort((a,b) => (new Date(b.meta['event-start']) - new Date(a.meta['event-start'])))
+						.sort((a,b) => (new Date(b.meta['event-start']).valueOf() - new Date(a.meta['event-start']).valueOf()))
 						.filter((n) => n.id !== this.props.node.id)
 						.map((n) => {
 							return {'id': n.id, 'start': n.meta['event-start'], 'theme': n.meta['event-theme'], 'name': n.name};
@@ -88,7 +90,7 @@ export default class ContentEventIdea extends Component {
 	}
 
 	removeIdea( id, e ) {
-		id = parseInt(id);
+		id = Number(id);
 
 		//console.log('remove:', id );
 		this.setState({'error': null});
@@ -96,7 +98,7 @@ export default class ContentEventIdea extends Component {
 			$ThemeIdea.Remove(this.props.node.id, id)
 			.then(r => {
 				//console.log(r.ideas);
-				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas)});
+				this.setState(prevState => ({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, prevState.maxIdeas)}));
 			})
 			.catch(err => {
 				this.setState({'error': "Error processing the request. Make sure you are still logged in."});
@@ -132,20 +134,20 @@ export default class ContentEventIdea extends Component {
 			});
 		}
 		else if ( (idea.length > 0) && (idea.length <= 64) ) {
-			this.setState({
-				'enableSubmit': canHaveMoreIdeas(this.state.ideas, true, this.state.maxIdeas),
+			this.setState(prevState => ({
+				'enableSubmit': canHaveMoreIdeas(prevState.ideas, true, prevState.maxIdeas),
 				'processingIdea': idea,
 				'error': null,
-			});
+			}));
 			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
 				//console.log('r', r);
-				this.setState({
+				this.setState(prevState => ({
 					'ideas': r.ideas,
 					'idea': (r.status === 201) ? '' : idea,
-					'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas),
+					'enableSubmit': canHaveMoreIdeas(r.ideas, false, prevState.maxIdeas),
 					'processingIdea': null,
-				});
+				}));
 			})
 			.catch(err => {
 				this.setState({'error': "Error processing the request. Make sure you are still logged in.", 'processingIdea': null});
@@ -161,14 +163,15 @@ export default class ContentEventIdea extends Component {
 
 		return (
 			<div class="-item">
-				<SVGIcon>lightbulb</SVGIcon>
-				<div class="-text" title={idea}>{idea}</div>
-				<div class="-x" onclick={this.removeIdea.bind(this, id)}>
-					<SVGIcon>cross</SVGIcon>
+				<Icon src="lightbulb" />
+				<div class="-text">{idea}</div>
+				<div class="-x" onClick={this.removeIdea.bind(this, id)}>
+					<Icon src="cross" />
 				</div>
 			</div>
 		);
 	}
+
 	renderIdeas() {
 		return Object.keys(this.state.ideas).map(this.renderIdea);
 	}
@@ -176,101 +179,101 @@ export default class ContentEventIdea extends Component {
 	render( props, state ) {
 		const {node, user} = props;
 		const {idea, ideas, error, enableSubmit, maxIdeas, previousThemes} = state;
-		if ( node.slug && ideas ) {
-			if ( user && user['id'] ) {
-				if (maxIdeas == 0) {
-					return (
-						<div class="idea-body">
-							<h3>Theme Suggestion Round</h3>
-							<div>This event doesn't allow suggesting themes.</div>
-						</div>
-					);
-				}
-				let ShowPrevious = null;
-				if ( previousThemes && previousThemes.length > 0 ) {
-					const ShowThemeList = previousThemes.slice(0, SHOW_PREVIOUS).map((prevEvent) => {
-						let Theme = null;
-						if ( prevEvent.theme ) {
-							Theme = <div class="event-theme">{prevEvent.theme}</div>;
-						}
-						else {
-							Theme = <div class="event-no-theme">Event did not have a theme</div>;
-						}
-						return (
-							<div class="previous-theme previous-theme-item" key={prevEvent.id}>
-								<div class="event-name">{prevEvent.name}</div>
-								{Theme}
-							</div>
-						);
-					});
-					ShowPrevious = (
-						<div class="previous-theme">
-							<h4>Previous Themes</h4>
-							{ShowThemeList}
-						</div>
-					);
-				}
-				const ShowError = error ? <div class="content-base content-post idea-error">{error}</div> : null;
-				let ShowSubmit = null;
-				if ( enableSubmit ) {
-					ShowSubmit = (
-						<div class="idea-form">
-							<input type="text"
-								class="-suggestion"
-								onchange={this.textChange} onkeydown={this.onKeyDown}
-								placeholder="Your suggestion" maxlength="64" value={idea} />
-								<UIButton onclick={this.submitIdeaForm}>
-								<SVGIcon>suggestion</SVGIcon> Submit
-							</UIButton>
-						</div>
-					);
-				}
-				let ShowMySuggestions = null;
-				if ( hasSubmittedIdeas(ideas) ) {
-					ShowMySuggestions = (
-						<div class="idea-mylist">
-							{this.renderIdeas()}
-						</div>
-					);
-				}
-				let ShowRemaining = null;
-				const remaining = Math.max(0, maxIdeas - Object.keys(ideas).length);
-				if ( remaining > 1 ) {
-					ShowRemaining = <div class="foot-note small">You have <strong>{remaining}</strong> suggestions left</div>;
-				}
-				else if ( remaining == 1 ) {
-					ShowRemaining = <div class="foot-note small">You have <strong>1</strong> suggestion left</div>;
+
+		const title = "Theme Suggestion Round";
+		const titleClass = `-event -ideas ${props.class ?? ''}`;
+
+		// While node or ideas haven't finished loading
+		if ( !node || !node.id || !ideas ) {
+			return null;
+		}
+
+		if ( !user || !user.id ) {
+			// TODO: insert a login button
+			return <ContentSimple title={title} class={titleClass}><p>Please log in</p></ContentSimple>;
+		}
+
+
+		if ( !maxIdeas ) {
+			return <ContentSimple title={title} class={titleClass}><p>This event doesn't allow suggesting themes</p></ContentSimple>;
+		}
+
+		let ShowPrevious = null;
+		if ( previousThemes && previousThemes.length > 0 ) {
+			const ShowThemeList = previousThemes.slice(0, SHOW_PREVIOUS).map((prevEvent) => {
+				let Theme = null;
+				if ( prevEvent.theme ) {
+					Theme = <div class="event-theme">{prevEvent.theme}</div>;
 				}
 				else {
-					ShowRemaining = <div class="foot-note small">You have no suggestions left</div>;
+					Theme = <div class="event-no-theme">Event did not have a theme</div>;
 				}
 				return (
-					<div class="idea-body">
-						<h3>Theme Suggestion Round</h3>
-						{ShowPrevious}
-						<h4>Your Suggestions</h4>
-						{ShowMySuggestions}
-						{ShowSubmit}
-						{ShowError}
-						{ShowRemaining}
-					</div>
+					<p class="previous-theme previous-theme-item" key={prevEvent.id}>
+						<div class="event-name">{prevEvent.name}</div>
+						{Theme}
+					</p>
 				);
-			}
-			else {
-				return (
-					<div class="idea-body">
-						<h3>Theme Suggestion Round</h3>
-						<div>Please log in</div>
-					</div>
-				);
-			}
+			});
+			ShowPrevious = (
+				<div class="previous-theme">
+					<h4>Previous Themes</h4>
+					{ShowThemeList}
+				</div>
+			);
+		}
+		const ShowError = error ? <div class="content content-post idea-error">{error}</div> : null;
+		let ShowSubmit = null;
+		if ( enableSubmit ) {
+			ShowSubmit = (
+				<p class="idea-form">
+					<input type="text"
+						class="-suggestion"
+						onChange={this.textChange} onKeyDown={this.onKeyDown}
+						placeholder="Your suggestion" maxLength={64} value={idea}
+						/>
+					<Button onClick={this.submitIdeaForm}><Icon src="suggestion" /> Submit</Button>
+				</p>
+			);
+		}
+
+		let ShowMySuggestions = null;
+		if ( hasSubmittedIdeas(ideas) ) {
+			ShowMySuggestions = <p class="idea-mylist">{this.renderIdeas()}</p>;
+		}
+
+		let ShowRemaining = null;
+		const remaining = Math.max(0, maxIdeas - Object.keys(ideas).length);
+		if ( remaining > 1 ) {
+			ShowRemaining = <p class="foot-note small">You have <strong>{remaining}</strong> suggestions left</p>;
+		}
+		else if ( remaining == 1 ) {
+			ShowRemaining = <p class="foot-note small">You have <strong>1</strong> suggestion left</p>;
 		}
 		else {
+			ShowRemaining = <p class="foot-note small">You have no suggestions left</p>;
+		}
+
+		// Render
+		return (
+			<ContentSimple title={title} class={titleClass}>
+				{ShowPrevious}
+				<h2>Your Suggestions</h2>
+				{ShowMySuggestions}
+				{ShowSubmit}
+				{ShowError}
+				{ShowRemaining}
+			</ContentSimple>
+		);
+
+		/*
+		else {
 			return (
-				<div class="content-base content-post">
+				<div class="content content-post">
 					{error ? error : <NavSpinner />}
 				</div>
 			);
 		}
+		*/
 	}
 }

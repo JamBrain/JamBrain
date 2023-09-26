@@ -2,8 +2,8 @@
 require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api2.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."api2.php";
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
 
 
 const MAX_NODES = 500;
@@ -54,7 +54,7 @@ api_Exec([
 /// ?parent: return the parent of the node(s) as well
 /// ?parents: return the parents of the node(s) as well
 /// ?superparent: return the superparent of the node(s) as well
-["node2/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+["node2/get", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
 	if ( !json_ArgCount() )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 
@@ -118,7 +118,7 @@ api_Exec([
 }],
 /// Walk a node backwards to figure out where it is
 /// Usage: node/walk/:root_id/path/to/something/
-["node2/walk", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+["node2/walk", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
 	if ( !json_ArgCount() )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 
@@ -218,7 +218,7 @@ api_Exec([
 		$RESPONSE['node'] = $out;
 	}
 }],
-["node2/where", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+["node2/where", API_GET | API_AUTH, function(&$RESPONSE, $HEAD_REQUEST) {
 	// At this point we can bail if it's just a HEAD request
 	if ( $HEAD_REQUEST )
 		json_EmitHeadAndExit();
@@ -226,9 +226,9 @@ api_Exec([
 	// if not logged in, where will be blank
 	$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate(userAuth_GetID());
 }],
-// Figure out what event is featured, and if you are athenticated, what you made for it.
+// Figure out what event is featured, and if you are authenticated, what you made for it.
 // NOTE: This is slightly different than the original behavior, but it combines several requests in to a single batch
-["node2/what", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+["node2/what", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
 	$root_id = intval(json_ArgShift());
 	if ( !$root_id )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -255,10 +255,11 @@ api_Exec([
 
 	// Authentication: rather than error out (i.e. API_AUTH) we check user_id manually here
 	$user_id = userAuth_GetID();
+	// If logged in, what have you authored?
 	$RESPONSE['node'] = ($user_id && $focus_id) ? nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $focus_id) : [];
 }],
 // If you are athenticated, return your node, and any metadata that is for your eyes only.
-["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+["node2/getmy", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
 	// At this point we can bail if it's just a HEAD request
 	if ( $HEAD_REQUEST )
 		json_EmitHeadAndExit();
@@ -289,7 +290,7 @@ api_Exec([
 /// IMPORTANT: Yes, this does not require auth. When auth is unavailable, the love belongs to the IP address.
 ///    This does make it possible for every user to give 2 loves to a thing, but overall it's way better
 ///    that a thing can be loved without a login than it is to force a user to create an account to love.
-["node2/love/add", API_POST | API_CHARGE, function(&$RESPONSE) {
+["node2/love/add", API_POST, function(&$RESPONSE) {
 	$RESPONSE['got'] = true;
 }],
 ]);

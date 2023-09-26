@@ -1,9 +1,9 @@
-import {h, Component} 					from 'preact/preact';
-import Sanitize							from 'internal/sanitize/sanitize';
+import { Component } 					from 'preact';
+import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export default class DialogCreate extends Component {
 	constructor( props ) {
@@ -13,16 +13,16 @@ export default class DialogCreate extends Component {
 	}
 
 	doCreate( e ) {
-		var event_id = this.props.extra.length ? Number.parseInt(this.props.extra[0]) : 0;
-		var node_type = this.props.extra.length > 1 ? (this.props.extra[1]) : "";
-		var node_subtype = this.props.extra.length > 2 ? (this.props.extra[2]) : "";
+		var event_id = this.props.args.length ? Number(this.props.args[0]) : 0;
+		var node_type = this.props.args.length > 1 ? (this.props.args[1]) : "";
+		var node_subtype = this.props.args.length > 2 ? (this.props.args[2]) : "";
 
-		console.log(event_id, node_type, node_subtype);
+		//console.log(event_id, node_type, node_subtype);
 
 		if ( event_id ) {
 			$Node.Add(event_id, node_type, node_subtype)
 			.then(r => {
-				console.log('hurr', r);
+				//console.log('hurr', r);
 
 				if ( r.path ) {
 					if ( r.type == 'post' ) {
@@ -57,11 +57,11 @@ export default class DialogCreate extends Component {
 		var TargetNode = null;
 		var What = "";
 
-		if ( props.extra && props.extra.length ) {
-			TargetNode = Number.parseInt(props.extra[0]);
+		if ( props.args && props.args.length ) {
+			TargetNode = Number(props.args[0]);
 
-			if ( props.extra.length > 1 ) {
-				What = props.extra.slice(1).join('/');
+			if ( props.args.length > 1 ) {
+				What = props.args.slice(1).join('/');
 			}
 		}
 
@@ -112,7 +112,7 @@ export default class DialogCreate extends Component {
 		new_props.canceltext = "No";
 
 		return (
-			<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
+			<DialogCommon ok={this.doCreate} cancel explicit {...new_props}>
 				<div>{"Would you like to create a game?"}</div>
 			</DialogCommon>
 		);

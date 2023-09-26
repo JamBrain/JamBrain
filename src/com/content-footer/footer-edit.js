@@ -1,4 +1,5 @@
-import { h, Component } 				from 'preact/preact';
+import {Component} from 'preact';
+import './footer-common.less';
 
 export default class ContentFooterEdit extends Component {
 	constructor( props ) {
@@ -11,8 +12,7 @@ export default class ContentFooterEdit extends Component {
 
 	render( {}, {} ) {
 		return (
-			<div class="content-footer content-footer-common content-footer-edit">
-			</div>
+			<div class="content-footer content-footer-common content-footer-edit" />
 		);
 	}
 }

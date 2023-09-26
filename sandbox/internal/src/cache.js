@@ -7,7 +7,7 @@
 var ttlPrefix = "!!#";		// TTL variable prefix
 var dataPrefix = "!!$";		// Data variable prefix
 var userPrefix = "@";		// User Data variable prefix
-	
+
 // The cache uses Session Storage (free'd after closing browser) //
 var storage = window.sessionStorage;
 var canWrite = false;
@@ -30,10 +30,10 @@ if ( storage ) {
 			// Writing failed //
 		}
 	}
-	
+
 	window.cache_Exists = function( key ) {
 		var ttl = storage.getItem( ttlPrefix+key );
-	
+
 		// Does it exist? //
 		if ( ttl == null ) {
 			return false;
@@ -46,19 +46,19 @@ if ( storage ) {
 
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	window.cache_Fetch = function( key ) {
 		if ( !cache_Exists(key) )
 			return null;
-	
+
 		// Return Data //
 		return JSON.parse(storage.getItem( dataPrefix+key ));
 	}
-		
-	// Remove expired items. 
+
+	// Remove expired items.
 	// Optionally, specify the maximum number of items to remove.
 	//
 	// NOTE: Due to differences in browser implementations, this is not guaranteed
@@ -72,13 +72,13 @@ if ( storage ) {
 			var key = storage.key(idx);
 			// For this, we only care about items with the ttlPrefix
 			if ( key && key.indexOf(ttlPrefix) === 0 ) {
-				key = key.substr(ttlPrefix.length);
+				key = key.slice(ttlPrefix.length);
 				if ( Date.now() > storage.getItem(ttlPrefix+key) ) {
 					// Remove in reverse order, just in case
 					storage.removeItem( dataPrefix+key );
 					storage.removeItem( ttlPrefix+key );
 					itemsRemoved++;
-					
+
 					// CLEVERNESS: If omitted, max_items is undefined, and
 					//   itemsRemoved will always be 1+.
 					if ( itemsRemoved === max_items ) {
@@ -89,8 +89,8 @@ if ( storage ) {
 		}
 		return itemsRemoved;
 	}
-	
-	// NOTE: User data is assumed to be any key prefixed with an @ sign.	
+
+	// NOTE: User data is assumed to be any key prefixed with an @ sign.
 	window.cache_FlushUserData = function() {
 		// Since we can't be 100% sure the browser isn't fragmenting the key order,
 		// we need to repeat until we are sure there are no user data keys left.
@@ -101,7 +101,7 @@ if ( storage ) {
 			for ( var idx = storage.length; idx--; ) {
 				var key = storage.key(idx);
 				if ( key && key.indexOf(ttlPrefix) === 0 ) {
-					key = key.substr(ttlPrefix.length);
+					key = key.slice(ttlPrefix.length);
 					if ( key.indexOf(userPrefix) === 0 ) {
 						// Remove in reverse order, just in case
 						storage.removeItem( dataPrefix+key );
@@ -134,7 +134,7 @@ if ( canWrite ) {
 		catch (e) {
 			// Flush and try again //
 			cache_Flush();
-	
+
 			try {
 				storage.setItem( ttlPrefix+key, ttl );
 				storage.setItem( dataPrefix+key, JSON.stringify(value) );
@@ -143,31 +143,31 @@ if ( canWrite ) {
 				// Cleanup - Only ttlPrefix should exist, but just in case //
 				storage.removeItem( dataPrefix+key );
 				storage.removeItem( ttlPrefix+key );
-				
+
 				return false;
 			}
 		}
-	
-		// Success //	
+
+		// Success //
 		return true;
 	}
 
 	window.cache_Create = function( key, value, new_ttl ) {
 		if ( cache_Exists(key) )
 			return false;
-		
+
 		return cache_Store( key, value, new_ttl );
 	}
 
 	window.cache_Touch = function( key, new_ttl ) {
 		if ( !cache_Exists(key) )
 			return false;
-			
+
 		if ( typeof new_ttl === 'undefined' )
 			var ttl = Number.MAX_VALUE;
 		else
 			var ttl = Date.now()+new_ttl;
-	
+
 		// Update the TTL //
 		try {
 			storage.setItem( ttlPrefix+key, ttl );
@@ -183,7 +183,7 @@ if ( canWrite ) {
 				return false;
 			}
 		}
-	
+
 		// Success //
 		return true;
 	}

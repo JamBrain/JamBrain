@@ -1,0 +1,113 @@
+@import "defs.less";
+
+
+/* Variables */
+#content .content.-basic {
+	--common-col: @COL_NDDD;
+	--common-bg: @COL_L;
+	--common-a: @COL_A;
+	/*--content-a-bg: transparent;*/
+
+	--common-a-lit: @COL_L;
+	--common-a-lit-bg: var(--common-a);
+
+	--common-footer: @COL_NDDDD;
+}
+
+
+/* Styles */
+#content .content.-basic {
+	position: relative;
+	overflow-wrap: break-word;
+	hyphens: auto;
+
+	/* Include a margin on all document blocks */
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	pre,
+	blockquote,
+	table {
+		margin-left: 1rem;
+		margin-right: 1rem;
+	}
+
+
+	/* Disable underlines on links */
+	& a {
+		text-decoration: none;
+	}
+
+	/* Add false padding to links by removing it with margin */
+	& .a,
+	& a {
+		/*border-radius: 0.25em;*/
+		padding: 0.125em 0.25em;
+		margin: -0.125em -0.25em;
+	}
+
+
+	/* NOTE: header not .header */
+	> header {
+		font-size: 1.75rem;
+		padding-top: 1rem;
+
+		h1 {
+			margin-top: 0;
+		}
+	}
+
+	/* NOTE: footer not .footer */
+	> footer {
+		margin-top: 1rem; /*1.5rem;*/
+		border-bottom: 8px solid var(--common-footer);
+	}
+}
+
+
+/* Colors */
+#content .content.-basic {
+	color: var(--common-col);
+
+	/* Optionally don't fill the background */
+	&:not(.-transparent) {
+		background: var(--common-bg);
+	}
+
+	/* Links */
+	& .a,
+	& a {
+		color: var(--common-a);
+		/*background: var(--content-a-bg);*/
+	}
+
+	& a:visited {
+		color: var(--common-a);
+	}
+
+	& .a:hover,
+	& .a:focus,
+	& a:hover,
+	& a:focus {
+		color: var(--common-a-lit);
+		background: var(--common-a-lit-bg);
+	}
+}
+
+
+/* Fade-in Animation */
+#content .content.-basic {
+	animation: anim-fadein 0.2s ease-in;
+	@keyframes anim-fadein {
+		/* invisible for 50% of time */
+		0%   { opacity: 0; }
+		/* fade in for remaining 50% */
+		50%  { opacity: 0; }
+		/* done */
+		100% { opacity: 1; }
+	}
+}

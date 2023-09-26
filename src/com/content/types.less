@@ -1,0 +1,253 @@
+@import "defs.less";
+
+#content .content,
+#content .content-item {
+	--CONTENT-TEXT: @COL_NDDD;
+	--CONTENT-BG: @COL_L;
+	--CONTENT-BORDER: @COL_NLLL; /* that dropshadow'y effect */
+
+	--CONTENT-LINK-TEXT: @COL_A;
+	/*--CONTENT-LINK-BG: transparent;*/
+	--CONTENT-LINK-LIT-TEXT: @COL_L;
+	--CONTENT-LINK-LIT-BG: var(--CONTENT-LINK-TEXT);
+
+	--FOOTER-BUTTON-TEXT: @COL_NLLLLL;
+	--FOOTER-BUTTON-LIT: @COL_A;
+	--FOOTER-BUTTON-LIT-BG: @COL_L;
+}
+
+#content .content,
+#content .content-item {
+	position: relative;
+
+	/*overflow: hidden;*/
+	display: flow-root;
+	overflow-wrap: break-word;
+	hyphens: auto;
+
+	color: var(--CONTENT-TEXT);
+
+	&.-bg {
+		background: var(--CONTENT-BG);
+		/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
+	}
+
+	&.-border {
+		border-bottom: 8px solid var(--CONTENT-BORDER);
+	}
+
+	/* Links */
+	a {
+		color: var(--CONTENT-LINK-TEXT);
+		/*background: var(--CONTENT-LINK-BG);*/
+	}
+
+	a:hover,
+	a:focus {
+		color: var(--CONTENT-LINK-LIT-TEXT);
+		background: var(--CONTENT-LINK-LIT-BG);
+	}
+}
+
+
+#content .content,
+#content .content-item {
+	& ._block-if-minimized,
+	& ._inline-if-minimized {
+		display: none;
+	}
+
+	& ._block-if-not-minimized {
+		display: block;
+	}
+
+	& ._inline-if-not-minimized {
+		display: inline-block;
+	}
+
+	&.-minimized {
+		& ._block-if-not-minimized,
+		& ._inline-if-not-minimized {
+			display: none;
+		}
+
+		& ._block-if-minimized {
+			display: block;
+		}
+
+		& ._inline-if-minimized {
+			display: inline-block;
+		}
+	}
+}
+
+#content .content > footer,
+#content .content-item > footer {
+	position: relative;
+	color: var(--FOOTER-BUTTON-TEXT);
+
+	margin-top: 1.5rem; /*-4px; /* Not sure why this needs to be -4px, and not -8px */
+
+	&:not(:empty) {
+		height: 2rem;
+	}
+
+	& a {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		color: var(--FOOTER-BUTTON-TEXT);
+
+		&:hover,
+		&:focus {
+			color: var(--FOOTER-BUTTON-LIT-BG);
+
+			&:active {
+				color: var(--FOOTER-BUTTON-LIT);
+			}
+		}
+	}
+
+	& > .left {
+		position: absolute;
+
+		left: 0;
+		bottom: -8px;
+		display: flex;
+
+		& > .ui_button {
+			padding-left: 2.5rem;
+
+			&:first-child {
+				padding-left: 0; /*1rem;	/* match whatever button uses */
+			}
+
+			/* Right Wedge */
+			&:after {
+				position: absolute;
+				display: block;
+
+				content: '';
+				right: -2.5rem;
+				top: 0;
+				border-top: calc(2.5rem / 2) solid transparent;
+				border-right: calc(2.5rem / 2) solid transparent;
+				border-bottom: calc(2.5rem / 2) solid;
+				border-left: calc(2.5rem / 2) solid;
+			}
+		}
+	}
+
+	& > .right {
+		position: absolute;
+
+		right: 0;
+		bottom: -8px;
+		display: flex;
+
+		& > .ui_button {
+			padding-right: 2.5rem;
+
+			&:last-child {
+				padding-right: 1rem;	/* match whatever button uses */
+			}
+
+			&.-edit {
+				padding-right: 0;
+			}
+
+			/* Left Wedge */
+			&:before {
+				position: absolute;
+				display: block;
+
+				content: '';
+				left: -2.5rem;
+				top: 0;
+				border-top: calc(2.5rem / 2) solid transparent;
+				border-right: calc(2.5rem / 2) solid;
+				border-bottom: calc(2.5rem / 2) solid;
+				border-left: calc(2.5rem / 2) solid transparent;
+			}
+		}
+	}
+}
+
+
+
+
+/* Variables */
+#content .content,
+#content .content-item {
+	--common-bg: @COL_L;
+	--common-a: @COL_A;
+	/*--content-a-bg: transparent;*/
+
+	--common-a-lit: @COL_L;
+	--common-a-lit-bg: var(--common-a);
+
+	--common-footer: @COL_NDDDD;
+}
+
+
+/* Styles */
+#content .content,
+#content .content-item {
+	position: relative;
+	overflow-wrap: break-word;
+	hyphens: auto;
+
+	/* Include a margin on all document blocks */
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	pre,
+	blockquote,
+	table {
+		margin-left: 1rem;
+		margin-right: 1rem;
+	}
+
+	/* Add false padding to links by removing it with margin */
+	& a {
+		/*border-radius: 0.25em;*/
+		padding: 0.125em 0.25em;
+		margin: -0.125em -0.25em;
+	}
+
+
+	/* NOTE: header not .header */
+	> header {
+		font-size: 1.75rem;
+		padding-top: 1rem;
+
+		h1 {
+			margin-top: 0;
+		}
+	}
+
+	/* NOTE: footer not .footer */
+	> footer {
+		margin-top: 1rem; /*1.5rem;*/
+		border-bottom: 8px solid var(--common-footer);
+	}
+}
+
+
+/* Fade-in Animation */
+#content .content,
+#content .content-item {
+	animation: anim-fadein 0.2s ease-in;
+	@keyframes anim-fadein {
+		/* invisible for 50% of time */
+		0%   { opacity: 0; }
+		/* fade in for remaining 50% */
+		50%  { opacity: 0; }
+		/* done */
+		100% { opacity: 1; }
+	}
+}

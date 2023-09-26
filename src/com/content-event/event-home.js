@@ -1,9 +1,8 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
-
-import $Theme							from 'shrub/js/theme/theme';
+import {Component} from 'preact';
+import {Link, Icon} from 'com/ui';
 import marked 							from 'internal/marked/marked';
+
+import $Theme							from 'backend/js/theme/theme';
 
 
 export default class ContentEventHome extends Component {
@@ -32,7 +31,7 @@ export default class ContentEventHome extends Component {
 
 
 	render( {node, /*user,*/ path, extra}, {stats /*, error*/} ) {
-		let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
+		let EventMode = (node.meta['event-mode']) ? Number(node.meta['event-mode']) : 0;
 
 		var EventModeText = "";
 		switch ( EventMode ) {
@@ -63,7 +62,7 @@ export default class ContentEventHome extends Component {
 			""
 		];
 
-		var ThemeSelectionDiv = EventModeText ? <NavLink href={path+'/theme'} class="-item"><SVGIcon>mallet</SVGIcon> {EventModeText}</NavLink> : "";
+		var ThemeSelectionDiv = EventModeText ? <Link href={path+'/theme'} class="-item"><Icon src="mallet" /> {EventModeText}</Link> : "";
 
 		var ShowStats = null;
 		if ( stats ) {
@@ -78,7 +77,7 @@ export default class ContentEventHome extends Component {
 
 			ShowStats = (
 				<div class="">
-					<h2><SVGIcon baseline small>stats</SVGIcon> Theme Selection Stats</h2>
+					<h2><Icon class="-baseline -small" src="stats" /> Theme Selection Stats</h2>
 					{ShowIdeaCount}
 					{ShowUsersWithIdeas}
 				</div>
@@ -91,15 +90,15 @@ export default class ContentEventHome extends Component {
 		}
 
 		var markedOptions = {
-			highlight: function(code, lang) {
+			'highlight': function(code, lang) {
 				var language = Prism.languages.clike;
 				if (Prism.languages[lang])
 					language = Prism.languages[lang];
 				return Prism.highlight(code, language);
 			},
-			sanitize: true, // disable HTML
-			smartypants: true, // enable automatic fancy quotes, ellipses, dashes
-			langPrefix: 'language-'
+			'sanitize': true, // disable HTML
+			'smartypants': true, // enable automatic fancy quotes, ellipses, dashes
+			'langPrefix': 'language-'
 		};
 
 		// NOTE: only parses the first child
@@ -115,9 +114,9 @@ export default class ContentEventHome extends Component {
 					{ShowEventMode}
 				</div>
 				<div class="event-nav">
-					<NavLink class="-item -selected"><SVGIcon>feed</SVGIcon> Feed</NavLink>
-					<NavLink class="-item"><SVGIcon>news</SVGIcon> News</NavLink>
-					<NavLink class="-item"><SVGIcon>gamepad</SVGIcon> Join Event</NavLink>
+					<Link class="-item -selected"><Icon src="feed" /> Feed</Link>
+					<Link class="-item"><Icon src="news" /> News</Link>
+					<Link class="-item"><Icon src="gamepad" /> Join Event</Link>
 					{ThemeSelectionDiv}
 				</div>
 				{ShowStats}

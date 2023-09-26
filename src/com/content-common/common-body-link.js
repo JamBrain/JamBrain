@@ -1,15 +1,13 @@
-import {h, Component} 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
-import Sanitize							from '../../internal/sanitize/sanitize';
+import {Component} from 'preact';
+import './common-body-link.less';
 
-import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import Sanitize							from 'internal/sanitize';
 
 import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
-import UIButton from 'com/ui/button/button';
+import {Button, Icon, Tooltip} from 'com/ui';
 
-import $Tag								from 'shrub/js/tag/tag';
+import $Tag								from 'backend/js/tag/tag';
 
 
 export default class ContentCommonBodyLink extends Component {
@@ -62,51 +60,51 @@ export default class ContentCommonBodyLink extends Component {
 	}
 
 	render( props, state ) {
-		let UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'URL (example: http://some.website.com/file.zip)';
+		let urlPlaceholder = props.urlPlaceholder ?? 'URL (example: http://some.website.com/file.zip)';
 		const {index, tag} = this.getTagAndIndex();
 		if ( props.editing && state.itemlist && state.indexes ) {
 			return (
-				<div class={cN('content-common-link', '-editing', props.class)}>
+				<div class={`link -editing ${props.class ?? ''}`}>
 					<InputDropdown class="-tag"
 						items={state.itemlist}
 						value={tag[0]}
-						onmodify={props.onModifyTag}
+						onModify={props.onModifyTag}
 						useClickCatcher={true}
 						selfManaged={true}
 					/>
 					<InputText class="-name"
 						value={props.name}
-						onmodify={props.onModifyName}
+						onModify={props.onModifyName}
 						placeholder={tag[1]}
-						maxlength={64}
+						maxLength={64}
 					/>
 					<InputText class="-url"
 						value={props.url}
-						onmodify={props.onModifyUrl}
-						placeholder={UrlPlaceholder}
-						maxlength={512}
+						onModify={props.onModifyUrl}
+						placeholder={urlPlaceholder}
+						maxLength={512}
 					/>
-					<UIButton onclick={props.onRemove} title="Remove"><SVGIcon>cross</SVGIcon></UIButton>
+					<Button onClick={props.onRemove} tooltip="Remove"><Icon src="cross" /></Button>
 				</div>
 			);
 		}
 		else if ( state.itemlist && props.url ) {
-			let Text = Sanitize.sanitize_URI(props.url);
-			let Href = Text.indexOf('//') != -1 ? Text : '';
+			let text = Sanitize.sanitize_URI(props.url);
+			let href = text.indexOf('//') != -1 ? text : '';
 
-			let ShowLink = Href ? (<a href={Href} target="_blank">{Text}</a>) : <span>{Text}</span>;
+			let showLink = href ? (<a href={href} target="_blank">{text}</a>) : <span>{text}</span>;
 
-			let ShowName = props.name ? props.name : tag[1];
+			let showName = props.name ? props.name : tag[1];
 
-			let Icon = 'earth';
+			let icon = 'earth';
 			if ( state.items[index].icon ) {
-				Icon = state.items[index].icon;
+				icon = state.items[index].icon;
 			}
 
 			return (
-				<div class={cN('content-common-link', props.class)}>
-					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><SVGIcon small>{Icon}</SVGIcon> <span>{ShowName}</span></div>
-					<div class="-url">{ShowLink}</div>
+				<div class={`link ${props.class ?? ''}`}>
+					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><Icon class="-small" src={icon} /> <span>{showName}</span></div>
+					<div class="-url">{showLink}</div>
 				</div>
 			);
 		}

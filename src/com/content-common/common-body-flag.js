@@ -1,27 +1,28 @@
-import { h, Component }								from 'preact/preact';
-import { shallowDiff }	 							from 'shallow-compare/index';
+import {Component, toChildArray}	from 'preact';
+import {Diff}				from 'shallow';
+import './common-body-flag.less';
 
-import SVGIcon										from 'com/svg-icon/icon';
+import { Icon } from 'com/ui';
 
 export default class ContentCommonFlag extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
-	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+    shouldComponentUpdate( nextProps ) {
+		return Diff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
-	render( props ) {
+    render( props ) {
 		//var _class = "content-common-flag" + (props.class ? " "+props.class : "");
 
         let Icon = null;
         if ( props.icon ) {
-            Icon = <SVGIcon>{props.icon}</SVGIcon>;
+            Icon = <Icon src={props.icon} />;
         }
 
         return (
-            <div class={cN('content-common-flag', props.class)}>
+            <div class={`flag ${props.class ?? ''}`}>
                 {Icon}
                 {props.children}
             </div>
@@ -32,7 +33,7 @@ export default class ContentCommonFlag extends Component {
             let FlagClass = cN('content-common-flag', props.flagClass ? props.flagClass : '');
 
             if ( props.flagIcon )
-                ShowFlag = <div class={FlagClass}><SVGIcon>{props.flagIcon}</SVGIcon> <span>{props.flag}</span></div>;
+                ShowFlag = <div class={FlagClass}><UIIcon>{props.flagIcon}</UIIcon> <span>{props.flag}</span></div>;
             else if ( props.flag )
                 ShowFlag = <div class={FlagClass}><span>{props.flag}</span></div>;
         }

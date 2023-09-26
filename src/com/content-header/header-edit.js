@@ -1,16 +1,18 @@
-import { h, Component } 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import { Component } from 'preact';
+import './header-edit.less';
+import { Diff } from 'shallow';
 
 export default class ContentHeaderEdit extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
+	// MK: This normally checks children. Is this correct?
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props, nextProps);
+		return Diff(this.props, nextProps);
 	}
 
-	render( {title, authors, link, published, onmodify}, {} ) {
+	render( {title, authors, link, published, onModify}, {} ) {
 		//console.log('here', authors);
 		var ShowAuthors = null;
 		if ( authors ) {
@@ -33,7 +35,7 @@ export default class ContentHeaderEdit extends Component {
 		return (
 			<div class="content-header content-header-common content-header-edit">
 				<div class="-label">Title:</div>
-				<input type="text" value={title} oninput={onmodify} placeholder="Titles can use **bold** markup" />
+				<input type="text" value={title} onInput={onModify} placeholder="Titles can use **bold** markup" />
 				{ShowAuthors}
 				{ShowLink}
 			</div>

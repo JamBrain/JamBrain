@@ -7,13 +7,13 @@
 			if (this == null) {
 				throw new TypeError('Array.prototype.includes called on null or undefined');
 			}
-	
+
 			var O = Object(this);
-			var len = parseInt(O.length, 10) || 0;
+			var len = Number(O.length, 10) || 0;
 			if (len === 0) {
 				return false;
 			}
-			var n = parseInt(arguments[1], 10) || 0;
+			var n = Number(arguments[1], 10) || 0;
 			var k;
 			if (n >= 0) {
 				k = n;

@@ -1,8 +1,9 @@
-import {h, Component}					from 'preact/preact';
-import ContentCommonBody				from 'com/content-common/common-body';
-import ButtonBase						from 'com/button-base/base';
-import UIIcon							from 'com/ui/icon/icon';
-import UILink							from 'com/ui/link/link';
+import { Component } from 'preact';
+import './item-rulescheck.less';
+
+import { node_CanPublish, node_CountAuthors, node_IsPublished } from 'internal/lib';
+import ContentCommonBody from 'com/content-common/common-body';
+import {Link, Icon, Button} from 'com/ui';
 
 export default class ContentItemRulesCheck extends Component {
 	constructor(props) {
@@ -91,8 +92,9 @@ export default class ContentItemRulesCheck extends Component {
 
 	render(props, state) {
 		const MandatoryCompo = <span class="-mandatory">(<span>COMPO ONLY</span>)</span>;
-		const IconUnChecked = <UIIcon small baseline class="-checkbox" src="checkbox-unchecked" />;
-		const IconChecked = <UIIcon small baseline class="-checkbox" src="checkbox-checked" />;
+		// MK TODO: remove the dash from the "-checkbox" style
+		const IconUnChecked = <Icon class="-checkbox -small -baseline" src="checkbox-unchecked" />;
+		const IconChecked = <Icon class="-checkbox -small -baseline" src="checkbox-checked" />;
 
 		const {
 			changeFormat, readRules, workedSolo, createdAll, createdWithin48,
@@ -104,62 +106,63 @@ export default class ContentItemRulesCheck extends Component {
 				<div class="-label">Submission Checklist</div>
 				<div class="-items">
 					{node_IsPublished(props.node) && (
-					<ButtonBase onclick={this.handleChange.bind(this, 'changeFormat', !changeFormat)}>
+					<Button onClick={this.handleChange.bind(this, 'changeFormat', !changeFormat)}>
 						{changeFormat ? IconChecked : IconUnChecked}
 						I wish to change my event format.
 						{props.node.subsubtype ? "(currently: "+this.getFormatName()+")" : ""}
-					</ButtonBase>
+					</Button>
 					)}
 
-					<ButtonBase onclick={this.handleChange.bind(this, 'readRules', !readRules)}>
+					<Button onclick={this.handleChange.bind(this, 'readRules', !readRules)}>
 						{readRules ? IconChecked : IconUnChecked}
-						I have read and understood <UILink blank href="//ludumdare.com/rules/"><strong>the rules</strong></UILink>.
-					</ButtonBase>
+						I have read and understood <Link blank href="//ludumdare.com/rules/"><strong>the rules</strong></Link>.
+					</Button>
 
-					<ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
+					<Button onClick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
 						{optedOut ? IconChecked : IconUnChecked}
 						I have opted-out of all or any categories we are not eligible for (see opt-outs above).
-					</ButtonBase>
+					</Button>
 
 					{(node_CanPublish(props.parent, "item/game/jam") || node_CanPublish(props.parent, "item/game/compo")) && (
-					<ButtonBase onclick={this.handleChange.bind(this, 'willVote', !willVote)}>
+					<Button onClick={this.handleChange.bind(this, 'willVote', !willVote)}>
 						{willVote ? IconChecked : IconUnChecked}
 						I understand that if we want a score at the end, we need to play, rate, and give feedback on other games.
-					</ButtonBase>
+					</Button>
 					)}
 
 					{node_CanPublish(props.parent, "item/game/compo") && (node_CountAuthors(props.node) <= 1) && (
-					<div>
-						<ButtonBase onclick={this.handleChange.bind(this, 'workedSolo', !workedSolo)}>
+					<div class="-items">
+						<Button onClick={this.handleChange.bind(this, 'workedSolo', !workedSolo)}>
 							{workedSolo ? IconChecked : IconUnChecked}
 							I worked alone.
 							{MandatoryCompo}
-						</ButtonBase>
-						<ButtonBase onclick={this.handleChange.bind(this, 'createdAll', !createdAll)}>
+						</Button>
+						<Button onClick={this.handleChange.bind(this, 'createdAll', !createdAll)}>
 							{createdAll ? IconChecked : IconUnChecked}
 							I created all the code, art, sound, music, and other assets myself during the event.
 							{MandatoryCompo}
-						</ButtonBase>
-						<ButtonBase onclick={this.handleChange.bind(this, 'createdWithin48', !createdWithin48)}>
+						</Button>
+						<Button onClick={this.handleChange.bind(this, 'createdWithin48', !createdWithin48)}>
 							{createdWithin48 ? IconChecked : IconUnChecked}
 							I created everything in 48 hours.
 							{MandatoryCompo}
-						</ButtonBase>
-						<ButtonBase onclick={this.handleChange.bind(this, 'includedSource', !includedSource)}>
+						</Button>
+						<Button onClick={this.handleChange.bind(this, 'includedSource', !includedSource)}>
 							{includedSource ? IconChecked : IconUnChecked}
 							I have included source code.
 							{MandatoryCompo}
-						</ButtonBase>
+						</Button>
 					</div>
 					)}
 				</div>
 				<div class="-footer">
 					<p>
-						<UIIcon baseline src="warning" class="-warning" />
+						{/* MK TODO: Remove the dash from the -warning style */}
+						<Icon class="-warning -baseline" src="warning" />
 						<span> <strong>IMPORTANT:</strong> Before you can select an Event Format and Publish, you must agree to <em>some</em> questions above.</span>
 					</p>
 					<p>
-						<span>You can change your format at any time, but be aware: Once a format has closed, it can no longer be selected. Contact <UILink href="https://ludumdare.com/support">support</UILink> for assistance.</span>
+						<span>You can change your format at any time, but be aware: Once a format has closed, it can no longer be selected. Contact <Link href="https://ludumdare.com/support">support</Link> for assistance.</span>
 					</p>
 				</div>
 			</ContentCommonBody>

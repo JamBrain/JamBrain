@@ -1,6 +1,7 @@
-import {h, Component}					from 'preact/preact';
+import { Component } from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
 
+/** @deprecated */
 export default class DialogPromise extends Component {
 	constructor(props) {
 		super(props);
@@ -19,9 +20,9 @@ export default class DialogPromise extends Component {
 		this.base.remove();
 	}
 
-	render(props, state) {
+	render(props) {
 		return (
-			<DialogCommon onok={this.onConfirm} oncancel={this.onCancel} {...props}>
+			<DialogCommon ok={this.onConfirm} cancel={this.onCancel} {...props}>
 				{props.children}
 			</DialogCommon>
 		);

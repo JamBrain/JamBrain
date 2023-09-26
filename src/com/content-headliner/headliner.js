@@ -1,14 +1,18 @@
-import {h, Component} 					from 'preact/preact';
+import { Component } from 'preact';
+import './headliner.less';
 
-import SVGIcon							from 'com/svg-icon/icon';
-import ButtonLink						from 'com/button-link/link';
+import {getLocaleDate, getRoughAge} from 'internal/time';
 
-//import $Node							from 'shrub/js/node/node';
+import {Icon, Button, Tooltip} from 'com/ui';
 
+//import $Node from 'backend/js/node/node';
+
+/** @deprecated */
 export default class ContentHeadliner extends Component {
 	constructor( props ) {
 		super(props);
 	}
+
 
 	renderItem( node ) {
 		let props = this.props;
@@ -28,33 +32,33 @@ export default class ContentHeadliner extends Component {
 
 			if ( props.love ) {
 				Subtext.push(
-					<div title="Love" class="-statistic">
-						<SVGIcon small baseline>heart</SVGIcon> <span>{node.love}</span>
-					</div>
+					<Tooltip text="Love" class="-statistic -block">
+						<Icon class="-small -baseline" src="heart" /> <span>{node.love}</span>
+					</Tooltip>
 				);
 			}
 
 			if ( props.comments ) {
 				Subtext.push(
-					<div title="Comments" class="-statistic">
-						<SVGIcon small baseline>bubble</SVGIcon> <span>{node.comments}</span>
-					</div>
+					<Tooltip text="Comments" class="-statistic">
+						<Icon class="-small -baseline" src="bubble" /> <span>{node.comments}</span>
+					</Tooltip>
 				);
 			}
 
 			if ( props.games && node.games ) {
 				Subtext.push(
-					<div title="Games" class="-statistic">
-						<SVGIcon small baseline>gamepad</SVGIcon> <span>{node.games}</span>
-					</div>
+					<Tooltip text="Games" class="-statistic">
+						<Icon class="-small -baseline" src="gamepad" /> <span>{node.games}</span>
+					</Tooltip>
 				);
 			}
 
 			if ( props.articles && node.articles ) {
 				Subtext.push(
-					<div title="Articles" class="-statistic">
-						<SVGIcon small baseline>article</SVGIcon> <span>{node.articles}</span>
-					</div>
+					<Tooltip text="Articles" class="-statistic">
+						<Icon class="-small -baseline" src="article" /> <span>{node.articles}</span>
+					</Tooltip>
 				);
 			}
 
@@ -78,10 +82,11 @@ export default class ContentHeadliner extends Component {
 
 
 			// Render
-			return <ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>{Body}</ButtonLink>;
+			return <Button class={`item -list-item ${props.childclass ?? ''}`} href={node.path}>{Body}</Button>;
 		}
 		return null;
 	}
+
 
 	renderNullItem() {
 		let props = this.props;
@@ -92,8 +97,9 @@ export default class ContentHeadliner extends Component {
 			</div>
 		);
 
-		return <div class={cN("item -list-item", props.childclass)} >{Body}</div>;
+		return <div class={`item -list-item ${props.childclass ?? ''}`}>{Body}</div>;
 	}
+
 
 	renderItems( node ) {
 		if ( !node ) {
@@ -111,6 +117,7 @@ export default class ContentHeadliner extends Component {
 		}
 	}
 
+
 	renderWhen( node, label, show_new_for_minutes = 24*60 ) {
 		if ( node.published ) {
 			let date_pub = new Date(node.published);
@@ -123,14 +130,14 @@ export default class ContentHeadliner extends Component {
 			let ret = [];
 
 			// Optionally include [NEW] label
-			if ( (show_new_for_minutes !== null) && (pub_diff < (parseInt(show_new_for_minutes)*60*1000)) ) {
+			if ( (show_new_for_minutes !== null) && (pub_diff < (show_new_for_minutes*60*1000)) ) {
 				ret.push(<span class="-label">NEW</span>);
 				ret.push(' ');
 			}
 
 			ret.push(<span>{label}</span>);
 			ret.push(' ');
-			ret.push(<span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>);
+			ret.push(<Tooltip text={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</Tooltip>);
 
 			// x minutes ago
 			return <div>{ret}</div>;
@@ -140,61 +147,49 @@ export default class ContentHeadliner extends Component {
 		}
 	}
 
-	render( props ) {
-		// Build the corner flag
+
+	renderFlag( props ) {
+		// Build the flag
 		let Flag = [];
 		// The Icon
 		if ( props.icon ) {
-			Flag.push(<SVGIcon big>{props.icon}</SVGIcon>);
+			Flag.push(<Icon class="-big" src={props.icon} />);
 		}
 		// The Name
 		if ( props.name ) {
 			// If there's an icon, optionally hide the name if sidebar is hidden
-			let NameClass = cN('-text', props.icon ? 'if-sidebar-inline' : '');
+			let NameClass = `-text ${props.icon ? '_inline_if-sidebar' : ''}`;
 			// Add name text
 			Flag.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
 		}
 
-
-		let ShowCornerFlag = null;
-		// Show the flag (if it was built)
-		if ( Flag.length ) {
-			if ( props.href ) {
-				ShowCornerFlag = <ButtonLink class={cN("corner-flag", props.flagclass)} href={props.href}>{Flag}</ButtonLink>;
-			}
-			else {
-				ShowCornerFlag = <div class={cN("corner-flag", props.flagclass)}>{Flag}</div>;
-			}
-		}
+		// Only show the flag if it contains something
+		return Flag.length ? <Button class={`flag ${props.flagclass ?? ''}`} href={props.href}>{Flag}</Button> : null;
+	}
 
 
-		let ShowFooter = null;
+	renderFooter( props ) {
 		// Show the footer
 		if ( props.footer ) {
-			if ( props.footerhref ) {
-				ShowFooter = <ButtonLink class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</ButtonLink>;
-			}
-			else {
-				ShowFooter = <div class={cN("item -footer-item", props.childclass)}>{props.footer}</div>;
-			}
+			return <Button class={`item -footer-item ${props.childclass ?? ''}`} href={props.footerhref}>{props.footer}</Button>;
 		}
 		// Show the more footer
 		else if ( props.more ) {
-			ShowFooter = (
-				<ButtonLink class={cN("item -more-item", props.childclass)} href={props.more}>
-					<SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon>
-				</ButtonLink>
+			return (
+				<Button class={`item -more-item ${props.childclass ?? ''}`} href={props.more}>
+					<Icon src="circle" /><Icon src="circle" /><Icon src="circle" />
+				</Button>
 			);
 		}
+	}
 
+
+	render( props ) {
+		let Flag = this.renderFlag(props);
+		let Items = this.renderItems(props.node);
+		let Footer = this.renderFooter(props);
 
 		// Render
-		return (
-			<div class={cN('content-base content-headliner', props.class)} style={props.style}>
-				{ShowCornerFlag}
-				{this.renderItems(props.node)}
-				{ShowFooter}
-			</div>
-		);
+		return <header class={`content -headliner ${props.class ?? ''}`} style={props.style}>{Flag}{Items}{Footer}</header>;
 	}
 }

@@ -1,0 +1,24 @@
+img {
+	/* By default images are 'inline' elements that act like 'inline-block', so lets remove ambiguity */
+	display: inline-block;
+
+	/* By default images 'fill' the entire space, breaking aspect ratio. 'cover' will maintain aspect ratio */
+	object-fit: cover;
+
+	/* Modifier style that centers the image */
+	&.-center {
+		display: block;
+
+		/* instead of "margin: 0 auto;", this wont break the top and bottom margins */
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	/* Modifier styles that float the image left or right */
+	&.-left {
+		float: left;
+	}
+	&.-right {
+		float: right;
+	}
+}

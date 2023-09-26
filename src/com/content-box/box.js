@@ -1,13 +1,14 @@
-import { h, Component } 				from 'preact/preact';
-import Shallow							from 'shallow/shallow';
+import { Component } from 'preact';
+import './box.less';
 
-import ContentLoading					from 'com/content-loading/loading';
-import SVGIcon							from 'com/svg-icon/icon';
-import IMG2								from 'com/img2/img2';
+import Shallow from 'shallow';
 
-import ButtonLink						from 'com/button-link/link';
+import ContentLoading from 'com/content-loading/loading';
+import {Button, Icon, Image} from 'com/ui';
 
-import $Node							from '../../shrub/js/node/node';
+import { node_CountAuthors } from 'internal/lib';
+
+import $Node from 'backend/js/node/node';
 
 export default class ContentBox extends Component {
 	constructor( props ) {
@@ -37,7 +38,7 @@ export default class ContentBox extends Component {
 				.then(r => {
 					if ( r && r.node && r.node.length ) {
 						var Parent = r.node[0];
-						this.setState({'parent': Parent});
+						this.setState({ 'parent': Parent });
 					}
 				});
 		}
@@ -50,7 +51,7 @@ export default class ContentBox extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-		const {node, path, extra} = props;
+		const { node, path, extra } = props;
 
 		if ( node /* && state.authors */ ) {
 			var Class = ["content-box"];
@@ -67,7 +68,7 @@ export default class ContentBox extends Component {
 
 			var ShowHoverCover = null;
 			if ( node.meta['cover-hover'] ) {
-				ShowHoverCover = <IMG2 class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
+				ShowHoverCover = <Image class="-cover-hover" src={HoverCover} srcError={CoverFail} />;
 			}
 
 			var ShowEvent = null;
@@ -79,17 +80,17 @@ export default class ContentBox extends Component {
 			let SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
 				if ( !node.published ) {
-					ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
+					ShowSubEvent = <div><Icon class="-baseline -small" src="cross" /></div>;
 				}
 				else if ( node.subtype == 'game' ) {
 					ShowSubEvent = <div>GAME</div>;
 					if ( node.subsubtype ) {
 						if ( node.subsubtype == 'jam' ) {
-							ShowSubEvent = <div>JAM <SVGIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</SVGIcon></div>;
+							ShowSubEvent = <div>JAM <Icon class="-baseline -small" src={node_CountAuthors(node) === 1 ? "user" : "users"} /></div>;
 							SubEventClass = '-col-a';
 						}
 						else if ( node.subsubtype == 'extra' ) {
-							ShowSubEvent = <div>EXTRA <SVGIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</SVGIcon></div>;
+							ShowSubEvent = <div>EXTRA <Icon class="-baseline -small" src={node_CountAuthors(node) === 1 ? "user" : "users"} /></div>;
 							SubEventClass = '-col-bc';
 						}
 						else if ( node.subsubtype == 'compo' ) {
@@ -105,7 +106,7 @@ export default class ContentBox extends Component {
 							SubEventClass = '-col-ca';
 						}
 						else if ( node.subsubtype == 'unfinished' ) {
-							ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
+							ShowSubEvent = <div><Icon class="-baseline -small" src="cross" /></div>;
 						}
 					}
 				}
@@ -123,11 +124,11 @@ export default class ContentBox extends Component {
 					let parts = key.split('-');
 					if ( /*ShowTrophies.length < 6 &&*/ parts.length == 3 && parts[0] == 'grade' && parts[2] == 'result' ) {
 						if ( node.magic[key] == 1 )
-							ShowTrophies.push(<span class="-first"><SVGIcon>trophy</SVGIcon></span>);
+							ShowTrophies.push(<span class="-first"><Icon src="trophy" /></span>);
 						else if ( node.magic[key] == 2 )
-							ShowTrophies.push(<span class="-second"><SVGIcon>trophy</SVGIcon></span>);
+							ShowTrophies.push(<span class="-second"><Icon src="trophy" /></span>);
 						else if ( node.magic[key] == 3 )
-							ShowTrophies.push(<span class="-third"><SVGIcon>trophy</SVGIcon></span>);
+							ShowTrophies.push(<span class="-third"><Icon src="trophy" /></span>);
 					}
 				}
 //				ShowTrophies.sort(function(a, b) {
@@ -138,13 +139,13 @@ export default class ContentBox extends Component {
 			}
 
 			return (
-				<ButtonLink class={cN(Class, props.class)} href={node.path}>
+				<Button class={`${Class ?? ''} ${props.class ?? ''}`} href={node.path}>
 					{ShowHoverCover}
-					<IMG2 class="-cover" src={Cover} failsrc={CoverFail} />
+					<Image class="-cover" src={Cover} srcError={CoverFail} />
 					<div class="-top-bar">
 						{ShowEvent}
 					</div>
-					<div class={cN("-sub-event", SubEventClass)}>
+					<div class={`-sub-event ${SubEventClass ?? ''}`}>
 						{ShowSubEvent}
 					</div>
 					<div class="-bot-left">
@@ -155,11 +156,11 @@ export default class ContentBox extends Component {
 					<div class="-bot-bar">
 						<div class="-title">{Title}</div>
 					</div>
-				</ButtonLink>
+				</Button>
 			);
 		}
 		else if (props.placeHolder) {
-			return <div class={cN(Class, props.class, '-place-holder')} />;
+			return <div class={`${Class ?? ''} ${props.class ?? ''} -place-holder`} />;
 		}
 		else {
 			return <ContentLoading />;

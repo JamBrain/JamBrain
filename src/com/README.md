@@ -52,7 +52,7 @@ After importing, the classes can be used in JSX.
 	return <SubjectPurpose>I have a purpose!</SubjectPurpose>;
 ```
 
-For more details, see the Preact documentation: 
+For more details, see the Preact documentation:
 
 https://preactjs.com/
 
@@ -80,7 +80,7 @@ Views are just how things are arranged. These are the actual posts, articles, an
 * ...
 
 ## Sidebar
-These are the sidebar components seen in most wide views. 
+These are the sidebar components seen in most wide views.
 
 Sidebar components tend to summaries. The full data from widgets tends to be available in either a Dialog, or a separate page.
 

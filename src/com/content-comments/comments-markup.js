@@ -1,12 +1,12 @@
-import {h, Component} 					from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import { Component, toChildArray } from 'preact';
+import './comments-markup.less';
 
-import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import { Diff } from 'shallow';
+
 import InputTextArea					from 'com/input-textarea/input-textarea';
 
 import marked 							from 'internal/marked/marked';
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 const MAX_LENGTH = 4096;
 
@@ -15,8 +15,9 @@ export default class ContentCommentsMarkup extends Component {
 		super(props);
 	}
 
+	// MK: Normally this checks children. Is this correct?
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props, nextProps);
+		return Diff(this.props, nextProps);
 	}
 
 	isCommentingOnOwnPost() {
@@ -31,7 +32,7 @@ export default class ContentCommentsMarkup extends Component {
 
 	checkSelfLinking() {
 		if (this.postIsAnItem() && !this.isCommentingOnOwnPost() ) {
-			const txt = this.props.children.join('');
+			const txt = toChildArray(this.props.children).join('');
 			const {user} = this.props;
 			const authoring = (user && user.private && user.private.refs) ? user.private.refs.author : null;
 			if (authoring && authoring.length > 0) {
@@ -54,11 +55,11 @@ export default class ContentCommentsMarkup extends Component {
 
 	render( props, state ) {
 		var Class = [
-//			"content-common-body",
+//			"body",
 //			"-markup"
 		];
 
-		var Text = props.children.join('');
+		var Text = toChildArray(props.children).join('');
 
 		if ( props.editing ) {
 			//var Height = this.textarea ? this.textarea.scrollHeight : 0;
@@ -75,23 +76,23 @@ export default class ContentCommentsMarkup extends Component {
 			}
 
 			return (
-				<div class={cN(Class, props.class)}>
+				<div class={`${Class ?? ''} ${props.class ?? ''}`}>
 					<div class="-label">{props.label}</div>
 					<InputTextArea
 						user={props.user}
 						value={Text}
-						onmodify={props.onmodify}
-						onkeydown={props.onkeydown}
-						onkeyup={props.onkeyup}
-						onblur={props.onblur}
-						onfocus={props.onfocus}
+						onModify={props.onModify}
+						onKeyDown={props.onKeyDown}
+						onKeyUp={props.onKeyUp}
+						onBlur={props.onBlur}
+						onFocus={props.onFocus}
 						oncaret={props.oncaret}
 						placeholder={props.placeholder}
 						replaceText={props.replaceText}
 						replaceTextEvent={props.replaceTextEvent}
 						cursorPos={props.cursorPos}
 						ref={(input) => { this.textarea = input; }}
-						maxlength={Limit}
+						maxLength={Limit}
 					/>
 					{(ShowHelpText.length > 0) && <div class='-helparea'>{ShowHelpText}</div>}
 				</div>
@@ -120,11 +121,11 @@ export default class ContentCommentsMarkup extends Component {
 
 			markdown = mrkd.parse(Text, markedOptions);
 
-			return <div class={cN(Class, props.class)}>{markdown}</div>;
+			return <div class={`${Class ?? ''} ${props.class ?? ''}`}>{markdown}</div>;
 		}
 	}
 
 	componentDidUpdate() {
-			this.checkSelfLinking();
+		this.checkSelfLinking();
 	}
 }
