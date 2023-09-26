@@ -1,6 +1,6 @@
 
 
-export function HeadlinerNow( props ) {
+export function AlertNow( props ) {
 	return <div class="_block_if-no-sidebar">On Now: Some Event</div>;
 }
 

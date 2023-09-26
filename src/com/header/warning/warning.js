@@ -1,5 +1,5 @@
 import './warning.less';
-import '../header.less';
+import '../../page/alert/alert.less';
 
 import {Icon} from 'com/ui';
 

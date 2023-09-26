@@ -1,5 +1,5 @@
 import PageNavBar						from './bar/bar';
-import PageHeader						from './header/header';
+import PageAlert						from './alert/alert';
 import PageSidebar						from './sidebar/sidebar';
 import PageContent						from './content/content';
 import PageFooter						from './footer/footer';
@@ -13,7 +13,7 @@ export default function Layout( props ) {
 			<PageNavBar user={user} featured={featured} loading={isLoading}/>
 		</header>
 		<main>
-			<PageHeader user={user} featured={featured} root={root}/>
+			<PageAlert user={user} featured={featured} root={root}/>
 			<section id="body">
 				<PageContent>
 					{props.children}

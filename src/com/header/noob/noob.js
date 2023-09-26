@@ -1,7 +1,6 @@
 import {signal} from "@preact/signals";
 
 import './noob.less';
-import '../header.less';
 
 import {Link, ButtonIcon} from 'com/ui';
 import {ContentAside} from "com/content";

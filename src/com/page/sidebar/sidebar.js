@@ -1,4 +1,4 @@
-import {SidebarNow}	from 'com/widget';
+import {SidebarWhatsup}	from 'com/widget';
 
 import SidebarCountdown					from 'com/sidebar/countdown/countdown';
 import SidebarCalendar					from 'com/sidebar/calendar/calendar';
@@ -143,7 +143,7 @@ export default function PageSidebar( props ) {
 
 	return (
 		<div id="sidebar" role="none">
-			<SidebarNow />
+			<SidebarWhatsup featured={props.featured} />
 			{ShowCountdown}
 			<SidebarTV />
 			<SidebarUpcoming />
