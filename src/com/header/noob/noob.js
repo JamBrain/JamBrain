@@ -17,10 +17,11 @@ export default function ContentHeaderNoob() {
 		<ContentAside class="noob -bg">
 			<div class="carosel _block_if-sidebar">
 				<Image src="https://static-cdn.jtvnw.net/ttv-static/404_preview-320x180.jpg" />
+				<div>1 | 2 | 3 | 4 | 5 | <Link href="/games">MORE GAMES</Link></div>
 			</div>
 			<header class="_font2"><h1>What is Ludum Dare?</h1></header>
 			<section>
-				<p>Established in 2002, <Link href="/about">Ludum Dare</Link> is an online event that challenges you to make a game from scratch in a weekend. Join us every April and October!</p>
+				<p>Established in 2002, <Link class="ld" href="/about">Ludum Dare</Link> is an online event that challenges you to make a game from scratch in a weekend. Join us every April and October!</p>
 				<p>Get notified about events via email, RSS, social media, or add us to your calender.</p>
 				<p>
 					<ButtonIcon icon="mail" />
