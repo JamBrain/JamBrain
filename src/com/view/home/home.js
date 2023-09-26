@@ -1,21 +1,15 @@
-import { Component } from 'preact';
-import Notifications					from 'com/content-notifications/notifications';
+import Notifications from 'com/content-notifications/notifications';
 
-export default class ViewHome extends Component {
-	constructor( props ) {
-		super(props);
+export default function ViewHome( props ) {
+	let ShowContent = null;
+	if ( Array.isArray(props.show) && props.show[0] == 'notifications' ) {
+		ShowContent = <Notifications />;
 	}
 
-	render( props ) {
-		let ShowContent = null;
-		if ( Array.isArray(props.show) && props.show[0] == 'notifications' ) {
-			ShowContent = <Notifications />;
-		}
-
-		return (
-			<div id="content">
-				{ShowContent}
-			</div>
-		);
-	}
+	return (
+		<div id="content">
+			{ShowContent}
+		</div>
+	);
 }
+

@@ -13,26 +13,29 @@
 	--CONTENT-BG: @COL_NDDD;
 	--CONTENT-LINK-TEXT: @COL_AB;
 
-	& header {
-		color: @COL_B;
+	--HEADER-TEXT: @COL_B;
+
+	header {
+		color: var(--HEADER-TEXT);
 
 		& > h1 {
 			margin-bottom: 1.5rem;
 		}
 	}
 
-	& a {
+	a {
 		font-weight: bold;
 	}
 
-	& .close {
+	.close {
 		position: absolute;
-		right: 1rem;
-		top: 1rem;
+		right: 0.5rem;
+		top: 0.5rem;
+		padding: 0.5rem;
 
-		&:hover {
+		&:hover,
+		&:focus {
 			color: @COL_A;
-			cursor: pointer;
 		}
 	}
 }

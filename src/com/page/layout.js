@@ -2,7 +2,7 @@ import PageNavBar						from './bar/bar';
 import ViewHeader						from 'com/view/header/header';
 import ViewSidebar						from 'com/view/sidebar/sidebar';
 import ViewContent						from 'com/view/content/content';
-import ViewFooter						from 'com/view/footer/footer';
+import PageFooter						from 'com/view/footer/footer';
 
 export default function Layout( props ) {
 	const {user, featured, node, root, ...otherProps} = props;
@@ -21,6 +21,6 @@ export default function Layout( props ) {
 				{!props.noSidebar ? <ViewSidebar user={user} featured={featured} /> : null}
 			</section>
 		</main>
-		<ViewFooter/>
+		<PageFooter/>
 	</>;
 }
