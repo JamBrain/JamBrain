@@ -43,8 +43,6 @@ export default class ViewSidebar extends Component {
 		let nextEventName = "Ludum Dare 53";
 		let nextEventStartDate = new Date(Date.UTC(2023, 3, 29, 1, 0, 0));
 
-		/*/
-
 		// April Event //
 		let ldName = "Ludum Dare 53";
 		let ldStartDay = new Date(Date.UTC(2023, 3, 28, 0, 0, 0));					// NOTE: The day, not the date
@@ -68,22 +66,24 @@ export default class ViewSidebar extends Component {
 		/*/
 		// October Event//
 		let ldName = "Ludum Dare 54";
-		let ldStartDate = new Date(Date.UTC(2023, 7, 29, 1, 0, 0));
+		let ldStartDay = new Date(Date.UTC(2023, 8, 29, 0, 0, 0));					// NOTE: The day, not the date
+		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1-3) * oneHour));	// 6 PM EST
 
-		let compoEndDate = new Date(Date.UTC(2022, 8, 32, 22, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2022, 8, 32, 23, 0, 0));
+		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
+		let compoEndDate2 = new Date(compoEndDate.getTime() + oneHour);
 
-		let jamEndDate = new Date(Date.UTC(2022, 8, 33, 22, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2022, 8, 33, 23, 0, 0));
+		let jamEndDate = new Date(ldStartDate.getTime() + (3 * oneDay));
+		let jamEndDate2 = new Date(jamEndDate.getTime() + oneHour);
 
-		let gradeEndDate = new Date(Date.UTC(2022, 9, 21, 22, 0, 0));
-		let resultsDate = new Date(Date.UTC(2022, 9, 22, 19, 5, 0));
+		let gradeEndDate = new Date(ldStartDate.getTime() + (3 * oneWeek));
 
-		let liveShowDate = new Date(Date.UTC(2022, 9, 22, 16, 30, 0));
+		let resultsDay = new Date(ldStartDay.getTime() + (3*oneWeek) + oneDay);		// NOTE: again "day", not date
+		let liveShowDate = new Date(resultsDay.getTime() + (17 * oneHour) + (30 * oneMinute));
+		let resultsDate = new Date(resultsDay.getTime() + (20 * oneHour) + (5 * oneMinute));
 
-		let nextEventName = "Ludum Dare 54";
-		let nextEventStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
-		/*/
+		let nextEventName = "Ludum Dare 55";
+		let nextEventStartDate = new Date(Date.UTC(2023, 3, 12, 24+1, 0, 0));
+		/**/
 
 		let ItemsToShow = 2;
 
