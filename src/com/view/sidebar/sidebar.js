@@ -24,7 +24,7 @@ export default class ViewSidebar extends Component {
 		const oneDay = 24*oneHour;
 		const oneWeek = 7*oneDay;
 
-		/*
+		/*/
 		// January Event //
 		let ldName = "Ludum Dare 52";
 		let ldStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
@@ -43,9 +43,10 @@ export default class ViewSidebar extends Component {
 		let nextEventName = "Ludum Dare 53";
 		let nextEventStartDate = new Date(Date.UTC(2023, 3, 29, 1, 0, 0));
 
+		/**/
 		// April Event //
-		let ldName = "Ludum Dare 53";
-		let ldStartDay = new Date(Date.UTC(2023, 3, 28, 0, 0, 0));					// NOTE: The day, not the date
+		let ldName = "Ludum Dare 55";
+		let ldStartDay = new Date(Date.UTC(2024, 3, 12, 0, 0, 0));					// NOTE: The day, not the date
 		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1) * oneHour));		// 9 PM EST
 
 		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
@@ -60,13 +61,13 @@ export default class ViewSidebar extends Component {
 		let liveShowDate = new Date(resultsDay.getTime() + (20 * oneHour) + (30 * oneMinute));
 		let resultsDate = new Date(resultsDay.getTime() + (23 * oneHour) + (5 * oneMinute));
 
-		let nextEventName = "Ludum Dare 54";
-		let nextEventStartDate = new Date(Date.UTC(2023, 8, 29, 22, 0, 0));
+		let nextEventName = "Ludum Dare 56";
+		let nextEventStartDate = new Date(Date.UTC(2024, 9, 4, 22, 0, 0));
 
 		/*/
 		// October Event//
-		let ldName = "Ludum Dare 54";
-		let ldStartDay = new Date(Date.UTC(2023, 8, 29, 0, 0, 0));					// NOTE: The day, not the date
+		let ldName = "Ludum Dare 56";
+		let ldStartDay = new Date(Date.UTC(2024, 9, 4, 0, 0, 0));					// NOTE: The day, not the date
 		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1-3) * oneHour));	// 6 PM EST
 
 		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
@@ -81,8 +82,8 @@ export default class ViewSidebar extends Component {
 		let liveShowDate = new Date(resultsDay.getTime() + (20 * oneHour) + (30 * oneMinute));
 		let resultsDate = new Date(resultsDay.getTime() + (23 * oneHour) + (5 * oneMinute));
 
-		let nextEventName = "Ludum Dare 55";
-		let nextEventStartDate = new Date(Date.UTC(2023, 3, 12, 24+1, 0, 0));
+		let nextEventName = "Ludum Dare 57";
+		let nextEventStartDate = new Date(Date.UTC(2024, 3, 11, 24+1, 0, 0));
 		/**/
 
 		let ItemsToShow = 2;
