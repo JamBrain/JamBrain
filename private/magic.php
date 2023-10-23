@@ -233,7 +233,13 @@ if ( $featured_id ) {
 
 					// Bound everything except given grades, so a game can score below a game with no votes
 					$smart_for = max(COOL_MIN_POINTS, (min($cool_max_grades, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback)));
-					$smart_against = max(1.0, ($given_grades + min(COOL_MAX_FEEDBACK, $given_feedback)));
+					
+					// Only count received grades against your smart score, because the feedback-related score
+					// is extremely random (it is possible to receive >30 points against you for a single comment
+					// left on your game), and subject to anonymous abuse, while received grades are mostly
+					// difficult to abuse (anonymously or not), and correlate much more consistently with
+					// factors like "the number of plays"
+					$smart_against = max(1.0, $given_grades);
 					$smart = (sqrt($smart_for * 100.0 / $smart_against) * 100.0 / 10.0) - 100.0;
 
 					$cool = $classic_grade;									// ratings only, old algorithm
