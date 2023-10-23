@@ -852,7 +852,8 @@ export default class ContentItem extends Component {
 		let ShowOptOut = null;
 		// Check state.dontRateMe instead of dontRateMe, so the options are only hidden if opted out of everything
 		if ( parent && !state.dontRateMe ) {
-			let Lines = [];
+			let ImportantLines = [];
+            let OptionalLines = [];
 
 			for ( var key in parent.meta ) {
 				// Is it a valid grade ?
@@ -862,34 +863,55 @@ export default class ContentItem extends Component {
 					if ( parent.meta[key]|0 ) {
 						let BaseKey = parts[0]+'-'+parts[1];
 
-						Lines.push({
-							'key': BaseKey,
-							'name': parent.meta[BaseKey],
-							'value': (node.meta ? node.meta[BaseKey+'-out'] : false),
-							'required': parent.meta[BaseKey+"-required"] === "1",
-						});
+						if (parent.meta[BaseKey+"-required"] === "1") {
+							ImportantLines.push({
+								'key': BaseKey,
+								'name': parent.meta[BaseKey],
+								'value': (node.meta ? node.meta[BaseKey+'-out'] : false),
+							});	
+						} else {
+							OptionalLines.push({
+								'key': BaseKey,
+								'name': parent.meta[BaseKey],
+								'value': (node.meta ? node.meta[BaseKey+'-out'] : false),
+							});	
+						}
 					}
 				}
 			}
 
+			let ImportantOptLines = [];
+
+			for ( let idx = 0; idx < ImportantLines.length; idx++ ) {
+				let Line = ImportantLines[idx];
+				ImportantOptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong> (Important, see below)</UICheckbox>);
+			}
+
 			let OptLines = [];
 
-			for ( let idx = 0; idx < Lines.length; idx++ ) {
-				let Line = Lines[idx];
-				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong>{Line.required ? " (required, see below)" : ""}</UICheckbox>);
+			for ( let idx = 0; idx < OptionalLines.length; idx++ ) {
+				let Line = OptionalLines[idx];
+				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong></UICheckbox>);
 			}
 
 			ShowOptOut = (
 				<ContentCommonBody class="-opt-out -body">
 					<div class="-label">Rating Category Opt-outs</div>
+					{ImportantOptLines}
+					<div class="-footer">
+						<p>
+							<span>IMPORTANT: If you and your team didn't make all the <strong>Graphics</strong> or all <strong>Audio</strong> assets during the event you <strong>must opt-out</strong> of these categories.</span>
+						</p>
+						<p>
+							<span>Many participants are making original graphics, audio and music from scratch during the event. 
+							As a courtesy, we ask you to opt-out if you didn't do the same. 
+							See <UILink href="http://ludumdare.com/rules/">the rules</UILink>.</span>
+						</p>
+					</div>
 					{OptLines}
 					<div class="-footer">
 						<p>
-							<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
-							Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same. See <UILink href="http://ludumdare.com/rules/">the rules</UILink>.</span>
-						</p>
-						<p>
-							<span>Since some games are not meant to be Funny or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
+							<span>Since some games are not meant to be <strong>Humourous</strong> or <strong>Moody</strong>, or they don't make good use of the <strong>Theme</strong>, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
 						</p>
 						<p>
 							<UIIcon small baseline src="info" />
