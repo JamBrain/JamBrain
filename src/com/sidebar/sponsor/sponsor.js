@@ -13,8 +13,9 @@ export default class ViewSidebar extends Component {
 		/* If event is active, and it's sponsored */
 		//if ( true ) {
 			return (
-				<div class="sidebar-base sidebar-shortlist sidebar-sponsor">
+				<div class="sidebar-base sidebar-shortlist sidebar-spoonsor">
 					<div class="-title _font2"><SVGIcon baseline>trophy</SVGIcon> <span class="-text">Sponsors</span></div>
+					<div><a href="https://ldjam.com/events/ludum-dare/55/$386730/getting-started-with-gamemaker-2024"><UIImage src="///content/b/z/60c3a.png.w200.png" /></a></div>
 					<div><a href="https://ludumdare.com/news/akamai-sponsors-ld-2022/"><UIImage src="///content/b/z/4ee45.png.w200.png" /></a></div>
 				</div>
 			);
