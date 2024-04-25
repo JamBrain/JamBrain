@@ -244,13 +244,20 @@ export default class ContentCommentsComment extends Component {
 
 			// Only if authored
 			if ( author ) {
-				Name = author.name;
+				// If an author's superparent is zero, consider this user deleted
+				if ( author.superparent == 0 ) {
+					Name = "[deleted]";
+				}
+				// Otherwise superparent should be the root node
+				else {
+					Name = author.name;
 
-				if ( author.meta['real-name'] )
-					Name = author.meta['real-name'];
+					if ( author.meta['real-name'] )
+						Name = author.meta['real-name'];
 
-				if ( author.meta['avatar'] )
-					Avatar = author.meta['avatar'] + ".64x64.fit.png";
+					if ( author.meta['avatar'] )
+						Avatar = author.meta['avatar'] + ".64x64.fit.png";
+				}
 			}
 
 			let ShowTitle = [];
