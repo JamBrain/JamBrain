@@ -53,13 +53,14 @@ const SCOPE_PUBLIC = 0;
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-create", "item/game");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-transform", "item/game+item/game/compo+item/game/jam+item/game/extra+item/game/unfinished");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-grade", "0");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-publish", "");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-upload", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-grade", "0");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-theme", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-finished", "0");	// TODO: obsolete
-nodeMeta_Remove($id, 0, SCOPE_PUBLIC, "event-theme", "TBD");
+nodeMeta_Remove($id, 0, SCOPE_PUBLIC, "event-theme", "TBD");	// NOTE: noteMeta_Remove adds hidden metadata
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-mode", "1");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-idea-limit", "3");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-idea-limit", "2");
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-start", "2019-01-01T01:00:00Z");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-end", "2019-01-04T01:00:00Z");
