@@ -68,7 +68,7 @@ export default class HeaderWhatsup extends Component {
 				else if ( parseInt(featured.meta['event-mode']) == 7 && featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">RESULTS SOON:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink>. This can take a while (hours). <UILink href="https://bsky.app/profile/ludumdare.com"><UIIcon baseline small src="bluesky" /> Stay tuned</UILink>
+							<span class="-title _font2">RESULTS SOON:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink>. <UILink href="https://bsky.app/profile/ludumdare.com"><UIIcon baseline small src="bluesky" /> Check Socials</UILink>
 						</div>
 					);
 				}
