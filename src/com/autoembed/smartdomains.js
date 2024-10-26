@@ -24,10 +24,6 @@ export default SmartDomains = [
         "icon_name": "reddit"
     },
     {
-        "domain": "twitter.com",
-        "icon_name": "twitter"
-    },
-    {
         "domain": "soundcloud.com",
         "icon_name": "soundcloud"
     }
