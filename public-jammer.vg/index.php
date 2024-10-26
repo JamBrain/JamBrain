@@ -24,7 +24,7 @@ Realistically, I don't expect the community to up-and-move their activities to <
 </ul>
 I hope you tag along for our little adventure. 😃<br />
 <br />
-- Mike Kasprzak (<a href="http://twitter.com/mikekasprzak">@mikekasprzak</a>)<br />
+- Mike Kasprzak<br />
 <br /><br />
 <?php
 //include __DIR__."/../src/public-jammer.vg/main-vg.php";

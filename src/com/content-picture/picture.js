@@ -7,6 +7,8 @@ export default class ContentPicture extends Component {
 		props.user = props.user ? props.user : {};
 
 		var hasTwitter = props.user.twitter ? <span class="-twitter"> (<SVGIcon>twitter</SVGIcon> {props.user.twitter})</span> : <span />;
+		var hasBluesky = props.user.bluesky ? <span class="-bluesky"> (<SVGIcon>bluesky</SVGIcon> {props.user.bluesky})</span> : <span />;
+		var hasMastodon = props.user.mastodon ? <span class="-mastodon"> (<SVGIcon>mastodon</SVGIcon> {props.user.mastodon})</span> : <span />;
 		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 
 		return (
@@ -19,6 +21,8 @@ export default class ContentPicture extends Component {
 						on <span class="-title" title={props.date}>{props.short_date}</span>,
 						by <span class="-name">{props.user.name}</span>
 						{hasTwitter}
+						{hasBluesky}
+						{hasMastodon}
 						{hasTeam}
 					</div>
 				</div>
