@@ -66,8 +66,8 @@ export default class ViewSidebar extends Component {
 
 		/*/
 		// October Event//
-		let ldName = "Ludum Dare 56";
-		let ldStartDay = new Date(Date.UTC(2024, 9, 4, 0, 0, 0));					// NOTE: The day, not the date
+		let ldName = "Ludum Dare 58";
+		let ldStartDay = new Date(Date.UTC(2025, 9, 3, 0, 0, 0));					// NOTE: The day, not the date
 		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1-3) * oneHour));	// 6 PM EST
 
 		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
@@ -82,8 +82,8 @@ export default class ViewSidebar extends Component {
 		let liveShowDate = new Date(resultsDay.getTime() + (20 * oneHour) + (30 * oneMinute));
 		let resultsDate = new Date(resultsDay.getTime() + (23 * oneHour) + (5 * oneMinute));
 
-		let nextEventName = "Ludum Dare 57";
-		let nextEventStartDate = new Date(Date.UTC(2025, 3, 10, 24+1, 0, 0));
+		let nextEventName = "Ludum Dare 59";
+		let nextEventStartDate = new Date(Date.UTC(2026, 3, 17, 24+1, 0, 0));
 		/**/
 
 		let ItemsToShow = 2;
