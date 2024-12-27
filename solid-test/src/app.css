@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html {
+  height: 100%;
+}
+
+#app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cut-br {
+  clip-path: polygon(100% 0, calc(100% - 200rem) 300rem, 0 100%, 0 0);
+}
+
+.cut-tr {
+  clip-path: polygon(
+    100% 100%,
+    calc(100% - 200rem) calc(100% - 300rem),
+    0 100%,
+    0 100%
+  );
+}
