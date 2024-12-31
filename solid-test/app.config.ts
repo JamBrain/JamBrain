@@ -4,6 +4,8 @@ export default defineConfig({
   ssr: false,
   server: {
     preset: "static",
+    // fix build error: Top-level await is not available in the configured target environment ("es2019")
+    esbuild: { options: { target: "esnext" } },
   },
   routeDir: "navigation",
   vite: {
