@@ -1,4 +1,3 @@
-import classes from "./split-flap.module.css";
 import { createSecondsSignal } from "~/lib/time";
 import SplitFlap from "./SplitFlap";
 import { Index, Show } from "solid-js";
@@ -15,13 +14,11 @@ export default function Countdown(props: { title: string; dateTime: string }) {
   const seconds = () => diff() % 60;
 
   return (
-    <div
-      class={`flex flex-col items-center gap-2 uppercase ${classes["transform-3d"]} ${classes["perspective-normal"]} ${classes["perspective-origin-left"]}`}
-    >
+    <div class="flex flex-col items-center gap-2 uppercase perspective-midrange perspective-origin-left transform-3d">
       <h1 class="font-header text-2xl text-white">
         {props.title} <strong>Starts</strong>
       </h1>
-      <div class={`flex gap-2 ${classes["transform-3d"]}`}>
+      <div class="flex gap-2 transform-3d">
         <Show when={days() > 0}>
           <Part unit="days" value={days()} />
         </Show>
@@ -37,10 +34,8 @@ function Part(props: { unit: string; value: number; minLength?: number }) {
   const pad = Math.max(props.minLength ?? 0, props.value.toString().length);
 
   return (
-    <div
-      class={`flex flex-col-reverse items-center gap-1 ${classes["transform-3d"]}`}
-    >
-      <div class={`flex gap-0.5 text-gray ${classes["transform-3d"]}`}>
+    <div class="flex flex-col-reverse items-center gap-1 transform-3d">
+      <div class="text-gray flex gap-0.5 transform-3d">
         <Index each={props.value.toString().padStart(pad).split("")}>
           {(item) => <SplitFlap value={+item()} />}
         </Index>

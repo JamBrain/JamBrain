@@ -1,14 +1,3 @@
-/* TODO these classes will be supported in tailwind v4 */
-.perspective-normal {
-  perspective: 800px;
-}
-.perspective-origin-left {
-  perspective-origin: left;
-}
-.transform-3d {
-  transform-style: preserve-3d;
-}
-
 @keyframes rotate {
   50% {
     filter: brightness(80%);

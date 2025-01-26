@@ -1,8 +1,30 @@
-@import url("https://fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic&display=swap")
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-*: initial;
+  --color-current: currentColor;
+  --color-primary: #ee5533;
+  --color-secondary: #f79122;
+  --color-highlight: #ffcc00;
+  --color-gray-dark: #1f2429;
+  --color-gray: #3d4752;
+  --color-TODO: #596572;
+  --color-gray-light: #6f7984;
+  --color-TODO2: #d3dce5;
+  --color-white: #eef2f7;
+  --color-green: #66cc22;
+
+  --font-*: initial;
+  --font-header: Raleway, "Helvetica Neue", Roboto, "Arial Nova", "Segoe UI",
+    "Ubuntu Light", sans-serif;
+  --font-sans: Roboto, "Helvetica Neue", "Arial Nova", "Segoe UI",
+    "Ubuntu Light", sans-serif;
+}
 
 body,
 html {

@@ -40,7 +40,7 @@ export default function Markdown(props: { content: string; class: string }) {
     <div
       class={`prose prose-lg max-w-none
         prose-p:my-3
-        prose-a:text-primary prose-a:no-underline hover:prose-a:bg-primary hover:prose-a:text-white
+        prose-a:text-primary prose-a:no-underline prose-a:hover:bg-primary prose-a:hover:text-white
         prose-img:mx-auto prose-img:my-3
         ${props.class}`}
       innerHTML={html()}

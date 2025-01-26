@@ -29,10 +29,10 @@ export default function GameTile(props: {
           : "bg-TODO";
 
   return (
-    <Suspense fallback={<div class="aspect-[5/4] bg-gray" />}>
+    <Suspense fallback={<div class="aspect-5/4 bg-gray" />}>
       <Link
         href={game.data?.path}
-        class="group relative aspect-[5/4] overflow-hidden bg-gray"
+        class="group relative aspect-5/4 overflow-hidden bg-gray"
       >
         <img
           src={`${toStatic(game.data?.meta.cover ?? "///content/internal/tvfail.png")}.480x384.fit.jpg`}
