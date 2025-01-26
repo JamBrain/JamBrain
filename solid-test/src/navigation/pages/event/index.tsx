@@ -11,7 +11,7 @@ export default function Event() {
     <Content
       header={
         <>
-          <h1 class="grow font-header text-3xl font-bold">{node.data?.name}</h1>
+          <h1 class="font-header grow text-3xl font-bold">{node.data?.name}</h1>
         </>
       }
     >

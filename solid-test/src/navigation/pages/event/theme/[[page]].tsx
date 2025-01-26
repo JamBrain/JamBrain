@@ -37,7 +37,7 @@ export default function EventTheme(props: RouteSectionProps) {
       </Nav>
       <Content
         header={
-          <h1 class="grow font-header text-3xl font-bold">{currentName()}</h1>
+          <h1 class="font-header grow text-3xl font-bold">{currentName()}</h1>
         }
       >
         <ul>

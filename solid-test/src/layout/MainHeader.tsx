@@ -7,18 +7,18 @@ export default function MainHeader() {
   return (
     <div class="flex h-full items-stretch justify-between">
       <a
-        class="group flex gap-3 p-3 hover:bg-primary"
+        class="group hover:bg-primary flex gap-3 p-3"
         title="Ludum Dare"
         href="/"
       >
-        <svg class="w-[11.19rem] fill-primary group-hover:fill-white">
+        <svg class="fill-primary w-[11.19rem] group-hover:fill-white">
           <use href="#icon-ludum" />
         </svg>
-        <svg class="w-[7.56rem] fill-secondary group-hover:fill-highlight">
+        <svg class="fill-secondary group-hover:fill-highlight w-[7.56rem]">
           <use href="#icon-dare" />
         </svg>
       </a>
-      <nav class="m-2 flex items-stretch gap-2 text-primary">
+      <nav class="text-primary m-2 flex items-stretch gap-2">
         <Suspense>
           <UserMenu />
         </Suspense>

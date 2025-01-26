@@ -13,16 +13,16 @@ export default function Content(props: {
   };
 }) {
   return (
-    <article class="bg-white text-gray">
+    <article class="text-gray bg-white">
       <Show when={props.author != null}>
-        <Avatar user={props.author!} class="float-right ml-1 mr-2 mt-2" />
+        <Avatar user={props.author!} class="float-right mt-2 mr-2 ml-1" />
       </Show>
       <header
         class={`flex items-baseline justify-stretch ${props.author == null ? "pr-4" : ""}`}
       >
         <Show when={props.flag != null}>
           <h2
-            class={`\ -mr-2 mb-3 flex items-center gap-2 py-3 pl-4 pr-9 text-2xl font-bold uppercase italic text-white
+            class={`\ -mr-2 mb-3 flex items-center gap-2 py-3 pr-9 pl-4 text-2xl font-bold text-white uppercase italic
               ${props.flag?.color} cut-br`}
           >
             {/* TODO revert order without messing up baseline */}

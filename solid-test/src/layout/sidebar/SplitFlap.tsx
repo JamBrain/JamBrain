@@ -30,9 +30,9 @@ export default function SplitFlap(props: { value: number }) {
   return (
     <span
       ref={myElement!}
-      class={`h-[41px] w-[37px] rounded
-        bg-linear-to-b from-white from-50% to-TODO2 to-50%
-        text-center text-2xl font-bold leading-[41px]
+      class={`to-TODO2 h-[41px] w-[37px]
+        rounded bg-linear-to-b from-white from-50% to-50%
+        text-center text-2xl leading-[41px] font-bold
         ${classes["split-flap"]}`}
       onanimationend={removeAnimationClasses}
     >

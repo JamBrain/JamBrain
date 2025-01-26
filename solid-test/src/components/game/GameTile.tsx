@@ -29,10 +29,10 @@ export default function GameTile(props: {
           : "bg-TODO";
 
   return (
-    <Suspense fallback={<div class="aspect-5/4 bg-gray" />}>
+    <Suspense fallback={<div class="bg-gray aspect-5/4" />}>
       <Link
         href={game.data?.path}
-        class="group relative aspect-5/4 overflow-hidden bg-gray"
+        class="group bg-gray relative aspect-5/4 overflow-hidden"
       >
         <img
           src={`${toStatic(game.data?.meta.cover ?? "///content/internal/tvfail.png")}.480x384.fit.jpg`}
@@ -41,8 +41,8 @@ export default function GameTile(props: {
         <div class="absolute flex w-full place-content-end items-stretch text-white">
           <Show when={props.showEvent}>
             <h2
-              class="grow overflow-hidden text-ellipsis whitespace-nowrap
-                bg-gray bg-opacity-85 px-2 py-1
+              class="bg-gray bg-opacity-85 grow overflow-hidden
+                px-2 py-1 text-ellipsis whitespace-nowrap
                 transition-opacity duration-300 group-hover:opacity-0"
             >
               <Suspense>{event.data?.name}</Suspense>
@@ -55,10 +55,10 @@ export default function GameTile(props: {
           </aside>
         </div>
         <div
-          class="absolute bottom-0 flex w-full bg-gray bg-opacity-85 text-white
+          class="bg-gray bg-opacity-85 absolute bottom-0 flex w-full text-white
             transition-opacity duration-300 group-hover:opacity-0"
         >
-          <h1 class="shrink overflow-hidden text-ellipsis text-nowrap px-2 py-1">
+          <h1 class="shrink overflow-hidden px-2 py-1 text-nowrap text-ellipsis">
             {game.data?.name}
           </h1>
         </div>

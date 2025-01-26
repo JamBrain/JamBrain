@@ -16,7 +16,7 @@ export default function PostCard(props: { post: NodeId<PostNode> }) {
       author={node.data?.author}
       header={
         <>
-          <h1 class="grow font-header text-3xl font-semibold">
+          <h1 class="font-header grow text-3xl font-semibold">
             <Link href={node.data?.path}>{node.data?.name}</Link>
           </h1>
           <NodeDetails>

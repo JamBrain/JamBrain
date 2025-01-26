@@ -12,7 +12,7 @@ export default function Page() {
     <Content
       header={
         <>
-          <h1 class="grow font-header text-3xl font-semibold">
+          <h1 class="font-header grow text-3xl font-semibold">
             {node.data?.name}
           </h1>
           <NodeDetails>

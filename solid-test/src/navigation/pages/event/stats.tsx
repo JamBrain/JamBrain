@@ -20,7 +20,7 @@ export default function EventStats() {
 
   return (
     <Content
-      header={<h1 class="grow font-header text-3xl font-bold">Statistics</h1>}
+      header={<h1 class="font-header grow text-3xl font-bold">Statistics</h1>}
     >
       <pre>{JSON.stringify(stats.data, null, 2)}</pre>
     </Content>

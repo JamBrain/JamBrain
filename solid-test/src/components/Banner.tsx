@@ -9,7 +9,7 @@ export default function Banner() {
     <Show when={!hidden()}>
       <article class="bg-gray px-4 py-3 text-white">
         <div class="mb-3 flex items-start justify-between">
-          <h1 class="font-header text-3xl font-bold text-highlight">
+          <h1 class="font-header text-highlight text-3xl font-bold">
             What is Ludum Dare?
           </h1>
           <button onclick={() => setHidden(true)} class="hover:text-primary">

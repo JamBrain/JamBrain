@@ -22,12 +22,12 @@ export default function () {
       }}
       header={
         <>
-          <h1 class="grow font-header text-3xl font-bold">
+          <h1 class="font-header grow text-3xl font-bold">
             {user.data?.name}
-            <svg class="border-black mx-2 inline-block size-5 fill-gray-light align-baseline hover:bg-primary hover:fill-white">
+            <svg class="fill-gray-light hover:bg-primary mx-2 inline-block size-5 border-black align-baseline hover:fill-white">
               <use href="#icon-link" />
             </svg>
-            <span class="text-2xl font-semibold text-gray-light">
+            <span class="text-gray-light text-2xl font-semibold">
               (@{user.data?.slug})
             </span>
           </h1>

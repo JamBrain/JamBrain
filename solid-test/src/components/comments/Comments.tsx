@@ -11,13 +11,13 @@ export default function Comments(props: { node: NodeId<Node> }) {
 
   return (
     <div>
-      <h2 class="h-7 overflow-hidden bg-gray pl-4 text-3xl font-bold uppercase italic text-TODO2">
+      <h2 class="bg-gray text-TODO2 h-7 overflow-hidden pl-4 text-3xl font-bold uppercase italic">
         Comments
       </h2>
       <Suspense fallback="TODO">
         <For each={node.data}>
           {(comment) => (
-            <article class="flex items-start bg-TODO2 odd:bg-white">
+            <article class="bg-TODO2 flex items-start odd:bg-white">
               <Avatar user={comment.author} small class="m-2 flex-none" />
               <div>
                 <NodeDetails>
