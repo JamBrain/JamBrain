@@ -5,22 +5,51 @@ import {
   useNavigate,
   useParams,
 } from "@solidjs/router";
-// import { createBranches, getRouteMatches } from "@solidjs/router/dist/routing";
+// TODO this is too hacky!
+import {
+  createBranches,
+  getRouteMatches,
+} from "../../../node_modules/@solidjs/router/dist/routing";
 import { FileRoutes } from "@solidjs/start/router";
 import { QueryClient, useQueryClient } from "@tanstack/solid-query";
-import { createEffect, createResource, Show } from "solid-js";
+import { createEffect, createResource, Resource, Show } from "solid-js";
+import { type Node } from "~/api/types";
 import { fetchPath } from "~/api/getPath";
 import { PageContext } from "~/context/PageContext";
 
+const Pages = () =>
+  (FileRoutes() as RouteDefinition[])
+    .filter((route) => route.path.startsWith("/pages"))
+    .map((route) => ({
+      ...route,
+      path: route.path.slice("/pages".length),
+    }));
+
+const branches = () => createBranches(Pages());
+
 export const route = {
-  async preload({ params }) {
+  async preload({ params, location, intent }) {
     const url = `/${params.path}`;
     const rootNode = await getRootNodeAtPath(url);
 
-    // TODO an API to preload a child page here doesn't seem to be available
-    // const pageUrl = url.replace(rootNode.path, rootNode.type);
-    // const preload = usePreloadRoute();
-    // preload(pageUrl);
+    // TODO is replace ok?
+    const pageUrl = url.replace(rootNode.path, rootNode.type);
+    const matches = getRouteMatches(branches(), pageUrl);
+
+    await Promise.all(
+      matches.flatMap((match) => [
+        // fetch component
+        match.route.component?.preload(),
+        // run preload function
+        match.route.preload?.({
+          params: match.params,
+          location: Object.assign(location, {
+            pathname: location.pathname.slice("/routes".length),
+          }),
+          intent,
+        }),
+      ]),
+    );
   },
 } satisfies RouteDefinition;
 
@@ -37,69 +66,20 @@ export default function Path() {
   );
 }
 
-const Pages = () =>
-  (FileRoutes() as RouteDefinition[])
-    .filter((route) => route.path.startsWith("/pages"))
-    .map((route) => ({
-      ...route,
-      path: route.path.slice("/pages".length),
-    }));
-
-// WIP
-function checkPageExists(path: string[], routes: RouteDefinition[]): boolean {
-  return routes.some((route) => {
-    if (route.path == "/") {
-      return path.length === 1 && path[0] === "";
-    }
-    const routePath: string[] = route.path!.split("/");
-    // does route match?
-    for (let i = 0; i < routePath.length; i++) {
-      const seg = routePath[i];
-      if (seg.startsWith("*")) {
-        // TODO not implemented yet
-        return false;
-      }
-      if (seg == path[i]) {
-        continue;
-      }
-      if (seg.startsWith(":") && path[i] != null) {
-        continue;
-      }
-      if (seg.endsWith("?") && path[i] == null) {
-        // TODO not checked if solid routers implementation is greedy
-        continue;
-      }
-      // routes sometimes end with /
-      if (seg === "" && i === routePath.length - 1) {
-        continue;
-      }
-      return false;
-    }
-    // does a matching child exist?
-    if (!route.children) {
-      return true; // TODO ok?
-    }
-    const restPath = ["", ...path.slice(routePath.length)];
-    if (!Array.isArray(route.children)) {
-      return checkPageExists(restPath, [route.children]);
-    }
-    return checkPageExists(restPath, route.children);
-  });
-}
-
 function walkCacheUp(path: string, queryClient: QueryClient) {
   // walk up cache to see if node is cached
   const segments = path.split("/");
   while (segments.length > 1) {
-    const data = queryClient.getQueryData(["path", segments.join("/")]);
-    // TODO ignore 404 page
+    const data: Node | undefined = queryClient.getQueryData([
+      "path",
+      segments.join("/"),
+    ]);
     if (data) {
-      if (
-        checkPageExists(
-          path.replace(data.path, `/${data.type}`).split("/"),
-          Pages(),
-        )
-      ) {
+      const matches = getRouteMatches(
+        branches(),
+        path.replace(data.path, `/${data.type}`),
+      );
+      if (matches[0].route.pattern !== "/*404") {
         return data;
       }
     }
@@ -129,7 +109,7 @@ async function getRootNodeAtPath(path: string) {
   });
 }
 
-function PageRouter(props: { path: string; node: any }) {
+function PageRouter(props: { path: string; node: Resource<Node> }) {
   const path = () => `/${props.path}`;
   const node = () => props.node();
 
@@ -160,6 +140,8 @@ function PageRouter(props: { path: string; node: any }) {
     <MemoryRouter
       history={history}
       transformUrl={(url) => url.replace(node()!.path, node()!.type)}
+      // would preload 404 path
+      preload={false}
       // explicitLinks // TODO?
       root={(props) => {
         return (

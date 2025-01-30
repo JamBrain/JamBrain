@@ -10,7 +10,7 @@ import { SolidQueryDevtools } from "@tanstack/solid-query-devtools";
 export default function App() {
   return (
     <Router
-      transformUrl={(url) => `/routes/${url}`}
+      transformUrl={(url) => `/routes${url}`}
       root={(props) => (
         <QueryClientProvider client={queryClient}>
           {/* TODO this does not prevent solid-query-devtools to be bundled in prod! */}
