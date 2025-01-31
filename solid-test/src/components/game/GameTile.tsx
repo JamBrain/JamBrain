@@ -36,7 +36,7 @@ export default function GameTile(props: {
       >
         <img
           src={`${toStatic(game.data?.meta.cover ?? "///content/internal/tvfail.png")}.480x384.fit.jpg`}
-          class="absolute object-cover transition-transform duration-500 ease-in-out hover:scale-105"
+          class="absolute object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
         />
         <div class="absolute flex w-full place-content-end items-stretch text-white">
           <Show when={props.showEvent}>
