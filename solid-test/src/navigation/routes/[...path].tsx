@@ -2,6 +2,7 @@ import {
   createMemoryHistory,
   MemoryRouter,
   RouteDefinition,
+  RoutePreloadFuncArgs,
   useNavigate,
   useParams,
 } from "@solidjs/router";
@@ -12,10 +13,19 @@ import {
 } from "../../../node_modules/@solidjs/router/dist/routing";
 import { FileRoutes } from "@solidjs/start/router";
 import { QueryClient, useQueryClient } from "@tanstack/solid-query";
-import { createEffect, createResource, Resource, Show } from "solid-js";
+import {
+  createEffect,
+  Resource,
+  createResource,
+  Show,
+  getOwner,
+  runWithOwner,
+  useContext,
+} from "solid-js";
 import { type Node } from "~/api/types";
 import { fetchPath } from "~/api/getPath";
 import { PageContext } from "~/context/PageContext";
+import { useViewTransition } from "~/lib/viewTransition";
 
 const Pages = () =>
   (FileRoutes() as RouteDefinition[])
@@ -27,42 +37,64 @@ const Pages = () =>
 
 const branches = () => createBranches(Pages());
 
-export const route = {
-  async preload({ params, location, intent }) {
-    const url = `/${params.path}`;
-    const rootNode = await getRootNodeAtPath(url);
+async function preload({ params, location, intent }: RoutePreloadFuncArgs) {
+  const owner = getOwner();
 
-    // TODO is replace ok?
-    const pageUrl = url.replace(rootNode.path, rootNode.type);
-    const matches = getRouteMatches(branches(), pageUrl);
+  const url = `/${params.path}`;
+  const rootNode = await getRootNodeAtPath(url);
 
-    await Promise.all(
-      matches.flatMap((match) => [
-        // fetch component
-        match.route.component?.preload(),
-        // run preload function
-        match.route.preload?.({
+  // TODO is replace ok?
+  const pageUrl = url.replace(rootNode.path, rootNode.type);
+  const matches = getRouteMatches(branches(), pageUrl);
+
+  await Promise.all(
+    matches.flatMap((match) => [
+      // fetch component
+      match.route.component?.preload(),
+      // run preload function
+      runWithOwner(owner, () => {
+        const pageContext = useContext(PageContext);
+        // set pageContext for preload call
+        pageContext[1]({
+          path: rootNode.path,
+          id: rootNode.id,
+        });
+        const promise = match.route.preload?.({
           params: match.params,
-          location: Object.assign(location, {
-            pathname: location.pathname.slice("/routes".length),
-          }),
+          location: Object.assign(
+            {
+              pathname: location.pathname.slice("/routes".length),
+            },
+            location,
+          ),
           intent,
-        }),
-      ]),
-    );
-  },
+        });
+        // clear pageContext
+        pageContext[1](null);
+        return promise;
+      }),
+    ]),
+  );
+}
+
+export const route = {
+  preload,
 } satisfies RouteDefinition;
 
 export default function Path() {
-  const params = useParams();
+  const [renderBlocker] = useViewTransition(preload);
 
+  const params = useParams();
   const [node] = createResource(() => `/${params.path}`, getRootNodeAtPath);
 
   return (
-    // keep page state if node does not change
-    <Show when={node()?.id} keyed>
-      <PageRouter node={node} path={params.path} />
-    </Show>
+    <>
+      {renderBlocker()}
+      {/* keep page state if node does not change */}
+      <Show when={node()?.id} keyed>
+        <PageRouter node={node} path={params.path} />
+      </Show>
+    </>
   );
 }
 
@@ -145,7 +177,9 @@ function PageRouter(props: { path: string; node: Resource<Node> }) {
       // explicitLinks // TODO?
       root={(props) => {
         return (
-          <PageContext.Provider value={node()?.path}>
+          <PageContext.Provider
+            value={[() => ({ path: node()?.path, id: node()?.id })]}
+          >
             {props.children}
           </PageContext.Provider>
         );

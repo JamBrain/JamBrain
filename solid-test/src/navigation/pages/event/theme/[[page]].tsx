@@ -1,10 +1,24 @@
-import { RouteSectionProps } from "@solidjs/router";
-import { createQuery } from "@tanstack/solid-query";
+import { RouteDefinition, RouteSectionProps } from "@solidjs/router";
+import { createQuery, useQueryClient } from "@tanstack/solid-query";
 import { GET } from "~/api/methods";
 import { EventNode } from "~/api/types";
 import Content from "~/components/Content";
 import Nav from "~/components/Nav";
-import { useRootNode } from "~/context/PageContext";
+import { useRootNode, useRootNodeId } from "~/context/PageContext";
+
+export const route = {
+  async preload() {
+    const queryClient = useQueryClient();
+    const nodeId = useRootNodeId();
+
+    await queryClient.ensureQueryData({
+      queryKey: ["theme", nodeId],
+      async queryFn() {
+        return GET(`/vx/theme/list/get/${nodeId}`);
+      },
+    });
+  },
+} satisfies RouteDefinition;
 
 export default function EventTheme(props: RouteSectionProps) {
   const node = useRootNode<EventNode>(() => ({

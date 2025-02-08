@@ -1,6 +1,7 @@
 import { Show, createSignal } from "solid-js";
 import Icon from "./base/Icon";
 import Link from "./base/Link";
+import { startViewTransition } from "~/lib/viewTransition";
 
 export default function Banner() {
   const [hidden, setHidden] = createSignal(false);
@@ -12,7 +13,10 @@ export default function Banner() {
           <h1 class="font-header text-highlight text-3xl font-bold">
             What is Ludum Dare?
           </h1>
-          <button onclick={() => setHidden(true)} class="hover:text-primary">
+          <button
+            onclick={() => startViewTransition(() => setHidden(true))}
+            class="hover:text-primary"
+          >
             <Icon name="icon-cross" />
           </button>
         </div>

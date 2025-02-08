@@ -4,6 +4,29 @@ import { useRootNode } from "~/context/PageContext";
 import getNode from "~/api/getNode";
 import Nav from "~/components/Nav";
 import { PostNode } from "~/api/types";
+import { RouteDefinition } from "@solidjs/router";
+import { getOwner, runWithOwner, Suspense } from "solid-js";
+
+export const route = {
+  async preload() {
+    const owner = getOwner();
+
+    const node = await useRootNode<PostNode>(() => ({
+      refetchOnMount: false,
+    })).promise;
+
+    await runWithOwner(owner, () =>
+      Promise.all([
+        getNode(() => ({
+          id: node.parent,
+        })).promise,
+        getNode(() => ({
+          id: node._superparent,
+        })).promise,
+      ]),
+    );
+  },
+} satisfies RouteDefinition;
 
 export default function Post() {
   const post = useRootNode<PostNode>(() => ({}));
@@ -18,27 +41,30 @@ export default function Post() {
 
   return (
     <>
-      <Nav>
-        {[
-          { href: "/", title: "Go Back", icon: "icon-previous" },
-          {
-            href: event.data?.path,
-            label: event.data?.name,
-            icon: "icon-trophy",
-          },
-          {
-            href: `${event.data?.path}/games`,
-            label: "Games",
-            icon: "icon-gamepad",
-            class: "border-2 border-white",
-          },
-          {
-            href: game.data?.path,
-            label: game.data?.name,
-            icon: "icon-gamepad",
-          },
-        ]}
-      </Nav>
+      {/* TODO move Suspense down to link level */}
+      <Suspense>
+        <Nav>
+          {[
+            { href: "/", title: "Go Back", icon: "icon-previous" },
+            {
+              href: event.data?.path,
+              label: event.data?.name,
+              icon: "icon-trophy",
+            },
+            {
+              href: `${event.data?.path}/games`,
+              label: "Games",
+              icon: "icon-gamepad",
+              class: "border-2 border-white",
+            },
+            {
+              href: game.data?.path,
+              label: game.data?.name,
+              icon: "icon-gamepad",
+            },
+          ]}
+        </Nav>
+      </Suspense>
       <PostCard post={post.data?.id!} />
       <Comments node={post.data?.id} />
     </>

@@ -6,6 +6,7 @@ export const queryClient = new QueryClient({
       enabled: !isServer,
       staleTime: 3000,
       refetchOnWindowFocus: false,
+      experimental_prefetchInRender: true,
     },
   },
 });

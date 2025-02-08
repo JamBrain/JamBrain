@@ -1,5 +1,7 @@
 import { Suspense } from "solid-js";
 import { EventNode } from "~/api/types";
+import Link from "~/components/base/Link";
+import Content from "~/components/Content";
 import Nav from "~/components/Nav";
 import { useRootNode } from "~/context/PageContext";
 
@@ -10,6 +12,18 @@ export default function EventLayout(props: { children: any }) {
 
   return (
     <>
+      <Content
+        header={
+          <h1 class="font-header text-3xl font-bold">
+            <Link href={node.data?.path}>{node.data?.name}</Link>
+          </h1>
+        }
+        flag={{
+          text: "Event",
+          icon: "icon-trophy",
+          color: "bg-secondary",
+        }}
+      />
       <Nav>
         {[
           { href: "/", title: "Go Back", icon: "icon-previous" },
@@ -41,7 +55,7 @@ export default function EventLayout(props: { children: any }) {
           },
         ]}
       </Nav>
-      <Suspense fallback={<h1>Loading...</h1>}>{props.children}</Suspense>
+      <Suspense>{props.children}</Suspense>
     </>
   );
 }

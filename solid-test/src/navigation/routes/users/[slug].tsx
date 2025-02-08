@@ -1,5 +1,4 @@
 import { RouteSectionProps, useParams } from "@solidjs/router";
-import { Suspense } from "solid-js";
 import Nav from "~/components/Nav";
 
 export default function Users(props: RouteSectionProps) {
@@ -28,7 +27,8 @@ export default function Users(props: RouteSectionProps) {
           },
         ]}
       </Nav>
-      <Suspense fallback={<h1>Loading...</h1>}>{props.children}</Suspense>
+      {/* TODO add suspense back when this is moved to pages */}
+      {props.children}
     </div>
   );
 }

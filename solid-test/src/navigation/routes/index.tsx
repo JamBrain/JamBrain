@@ -9,8 +9,29 @@ import Link from "~/components/base/Link";
 import { GET } from "~/api/methods";
 import EventDetails from "~/components/event/EventDetails";
 import Markdown from "~/components/Markdown";
+import { RouteDefinition } from "@solidjs/router";
+import { useViewTransition } from "~/lib/viewTransition";
+
+async function preload() {
+  const queryClient = useQueryClient();
+  await queryClient.ensureQueryData({
+    queryKey: ["featured"],
+    async queryFn() {
+      const featured = (await GET("/vx/node2/what/1")).featured;
+      queryClient.setQueryData(["node", featured.id], featured);
+      queryClient.setQueryData(["path", featured.path], featured);
+      return featured;
+    },
+  });
+}
+
+export const route = {
+  preload,
+} satisfies RouteDefinition;
 
 export default function Home() {
+  const [renderBlocker] = useViewTransition(preload);
+
   const queryClient = useQueryClient();
   const featured = createQuery(() => ({
     queryKey: ["featured"],
@@ -24,6 +45,7 @@ export default function Home() {
 
   return (
     <>
+      {renderBlocker()}
       <Banner />
       {/* TODO move to suspenselist */}
       <Suspense fallback={<h1>Loading...</h1>}>
