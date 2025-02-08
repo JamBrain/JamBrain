@@ -146,7 +146,6 @@ export default function Games() {
         </Switch>
       </div>
       <div class="grid grid-cols-4 gap-2">
-        {/* TODO suspends on fetchmore */}
         <Suspense>
           <For each={games.data?.pages}>
             {(page) => (

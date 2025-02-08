@@ -14,7 +14,8 @@ export default function GameTile(props: {
     },
   }));
   const event = getNode(() => ({
-    id: game.data?.parent,
+    // TODO suspending id here leads to the whole component being suspended!
+    id: game.isLoading ? -1 : game.data?.parent,
     enabled: !!props.showEvent,
     refetchOnMount: false,
   }));
