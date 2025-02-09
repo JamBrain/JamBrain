@@ -11,9 +11,15 @@ export default function Content(props: {
     icon?: string;
     color: string;
   };
+  viewTransitionName?: string;
 }) {
   return (
-    <article class="text-gray bg-white">
+    <article
+      class="text-gray bg-white"
+      style={{
+        "view-transition-name": props.viewTransitionName,
+      }}
+    >
       <Show when={props.author != null}>
         <Avatar user={props.author!} class="float-right mt-2 mr-2 ml-1" />
       </Show>

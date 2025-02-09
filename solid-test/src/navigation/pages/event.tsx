@@ -23,8 +23,9 @@ export default function EventLayout(props: { children: any }) {
           icon: "icon-trophy",
           color: "bg-secondary",
         }}
+        viewTransitionName="event"
       />
-      <Nav>
+      <Nav viewTransitionName="main-nav">
         {[
           { href: "/", title: "Go Back", icon: "icon-previous" },
           {

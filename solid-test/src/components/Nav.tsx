@@ -4,13 +4,21 @@ import Button, { ButtonProps } from "./Button";
 
 interface NavItem extends ButtonProps {}
 
-export default function Nav(props: { children: NavItem[] }) {
+export default function Nav(props: {
+  children: NavItem[];
+  viewTransitionName?: string;
+}) {
   const location = useLocation();
   const active = (path: string) =>
     path == location.pathname ? "bg-white text-primary" : "";
 
   return (
-    <nav class="flex gap-2">
+    <nav
+      class="flex gap-2"
+      style={{
+        "view-transition-name": props.viewTransitionName,
+      }}
+    >
       <For each={props.children}>
         {(item) => (
           <Button

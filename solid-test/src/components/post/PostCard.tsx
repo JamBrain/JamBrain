@@ -6,7 +6,10 @@ import Markdown from "../Markdown";
 import getNode from "~/api/getNode";
 import { NodeId, PostNode } from "~/api/types";
 
-export default function PostCard(props: { post: NodeId<PostNode> }) {
+export default function PostCard(props: {
+  post: NodeId<PostNode>;
+  viewTransitionName?: string;
+}) {
   const node = getNode(() => ({
     id: props.post,
   }));
@@ -24,6 +27,7 @@ export default function PostCard(props: { post: NodeId<PostNode> }) {
           </NodeDetails>
         </>
       }
+      viewTransitionName={props.viewTransitionName}
     >
       <Markdown content={node.data?.body} />
     </Content>

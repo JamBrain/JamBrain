@@ -7,7 +7,7 @@ export default function MainHeader() {
   return (
     <div class="flex h-full items-stretch justify-between">
       <a
-        class="group hover:bg-primary flex gap-3 p-3"
+        class="group hover:bg-primary flex gap-3 p-3 [view-transition-name:main-header-logo]"
         title="Ludum Dare"
         href="/"
       >
@@ -18,7 +18,7 @@ export default function MainHeader() {
           <use href="#icon-dare" />
         </svg>
       </a>
-      <nav class="text-primary m-2 flex items-stretch gap-2">
+      <nav class="text-primary m-2 flex items-stretch gap-2 [view-transition-name:user-menu]">
         <Suspense>
           <UserMenu />
         </Suspense>

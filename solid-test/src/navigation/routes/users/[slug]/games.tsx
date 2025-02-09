@@ -59,7 +59,13 @@ export default function () {
     <div class="grid grid-cols-4 gap-2">
       {renderBlocker()}
       <For each={gamesQuery.data?.feed}>
-        {(game) => <GameTile game={game.id} showEvent />}
+        {(game) => (
+          <GameTile
+            game={game.id}
+            showEvent
+            viewTransitionName={`game-${game.id}`}
+          />
+        )}
       </For>
     </div>
   );

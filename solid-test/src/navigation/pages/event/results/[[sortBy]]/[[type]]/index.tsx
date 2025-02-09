@@ -150,7 +150,12 @@ export default function Games() {
           <For each={games.data?.pages}>
             {(page) => (
               <For each={page.edges}>
-                {(game) => <GameTile game={game.id} />}
+                {(game) => (
+                  <GameTile
+                    game={game.id}
+                    viewTransitionName={`game-${game.id}`}
+                  />
+                )}
               </For>
             )}
           </For>

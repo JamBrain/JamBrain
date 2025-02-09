@@ -60,12 +60,13 @@ export default function Home() {
             icon: "icon-trophy",
             color: "bg-secondary",
           }}
+          viewTransitionName="event"
         >
           <EventDetails event={featured.data?.id} />
           <Markdown content={featured.data?.body ?? ""} />
         </Content>
       </Suspense>
-      <Nav>
+      <Nav viewTransitionName="main-nav">
         {[
           { href: "/", title: "Home", icon: "icon-home" },
           {
@@ -107,7 +108,7 @@ export default function Home() {
         >
           {(post) => (
             <Suspense fallback={<h1>Loading...</h1>}>
-              <Post post={post.id} />
+              <Post post={post.id} viewTransitionName={`post-${post.id}`} />
             </Suspense>
           )}
         </Feed>

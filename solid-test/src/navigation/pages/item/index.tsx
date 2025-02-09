@@ -14,7 +14,7 @@ export default function Game() {
 
   return (
     <>
-      <Nav>
+      <Nav viewTransitionName="main-nav">
         {[
           { href: "/", title: "Go Back", icon: "icon-previous" },
           {
@@ -36,7 +36,10 @@ export default function Game() {
           },
         ]}
       </Nav>
-      <GameCard game={node.data?.id} />
+      <GameCard
+        game={node.data?.id}
+        viewTransitionName={`game-${node.data?.id}`}
+      />
       <Comments node={node.data?.id} />
     </>
   );

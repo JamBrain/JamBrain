@@ -6,7 +6,7 @@ export default function Users(props: RouteSectionProps) {
 
   return (
     <div class="flex flex-col gap-2">
-      <Nav>
+      <Nav viewTransitionName="main-nav">
         {[
           { href: "/", title: "Go Back", icon: "icon-previous" },
           {

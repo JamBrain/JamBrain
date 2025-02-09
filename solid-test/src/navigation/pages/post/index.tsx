@@ -43,7 +43,7 @@ export default function Post() {
     <>
       {/* TODO move Suspense down to link level */}
       <Suspense>
-        <Nav>
+        <Nav viewTransitionName="main-nav">
           {[
             { href: "/", title: "Go Back", icon: "icon-previous" },
             {
@@ -65,7 +65,10 @@ export default function Post() {
           ]}
         </Nav>
       </Suspense>
-      <PostCard post={post.data?.id!} />
+      <PostCard
+        post={post.data?.id!}
+        viewTransitionName={`post-${post.data?.id!}`}
+      />
       <Comments node={post.data?.id} />
     </>
   );

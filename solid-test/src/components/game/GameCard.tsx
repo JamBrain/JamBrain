@@ -4,7 +4,10 @@ import Markdown from "../../components/Markdown";
 import AuthorInfo from "../content/AuthorInfo";
 import getNode, { GameNode, NodeId } from "~/api/getNode";
 
-export default function GameCard(props: { game: NodeId<GameNode> }) {
+export default function GameCard(props: {
+  game: NodeId<GameNode>;
+  viewTransitionName?: string;
+}) {
   const node = getNode(() => ({
     id: props.game,
   }));
@@ -33,6 +36,7 @@ export default function GameCard(props: { game: NodeId<GameNode> }) {
           </NodeDetails>
         </>
       }
+      viewTransitionName={props.viewTransitionName}
     >
       <Markdown content={node.data?.body ?? ""} />
     </Content>

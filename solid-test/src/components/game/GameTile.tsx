@@ -6,6 +6,7 @@ import Link from "../base/Link";
 export default function GameTile(props: {
   game: NodeId<GameNode>;
   showEvent?: boolean;
+  viewTransitionName?: string;
 }) {
   const game = getNode(() => ({
     id: props.game,
@@ -34,6 +35,9 @@ export default function GameTile(props: {
       <Link
         href={game.data?.path}
         class="group bg-gray relative aspect-5/4 overflow-hidden"
+        style={{
+          "view-transition-name": props.viewTransitionName,
+        }}
       >
         <img
           src={`${toStatic(game.data?.meta.cover ?? "///content/internal/tvfail.png")}.480x384.fit.jpg`}
