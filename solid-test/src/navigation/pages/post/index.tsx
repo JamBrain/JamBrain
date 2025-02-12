@@ -55,7 +55,7 @@ export default function Post() {
               href: `${event.data?.path}/games`,
               label: "Games",
               icon: "icon-gamepad",
-              class: "border-2 border-white",
+              class: "border-2 border-neutral-50",
             },
             {
               href: game.data?.path,

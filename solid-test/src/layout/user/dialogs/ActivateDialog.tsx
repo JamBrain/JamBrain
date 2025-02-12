@@ -53,7 +53,7 @@ export default function ActivateDialog(props: {
 
   return (
     <>
-      <header class="bg-gray px-4 py-2 text-white">
+      <header class="bg-neutral-800 px-4 py-2 text-neutral-50">
         <h1 class="font-header">Register</h1>
       </header>
       <form
@@ -63,7 +63,7 @@ export default function ActivateDialog(props: {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        class="bg-gray-light"
+        class="bg-neutral-500"
       >
         <div>
           <form.Field
@@ -110,7 +110,7 @@ export default function ActivateDialog(props: {
                 <button
                   type="submit"
                   disabled={state().isSubmitting}
-                  class="border border-white text-white"
+                  class="border border-neutral-50 text-neutral-50"
                 >
                   Register
                 </button>
@@ -118,7 +118,7 @@ export default function ActivateDialog(props: {
                   type="button"
                   onClick={props.close}
                   disabled={state().isSubmitting}
-                  class="text-white"
+                  class="text-neutral-50"
                 >
                   Cancel
                 </button>

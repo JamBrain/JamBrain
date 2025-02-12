@@ -22,7 +22,7 @@ export default function Page() {
       }
       flag={{
         icon: "icon-info",
-        color: "bg-gray",
+        color: "bg-neutral-800",
       }}
     >
       <Markdown content={node.data?.body} />

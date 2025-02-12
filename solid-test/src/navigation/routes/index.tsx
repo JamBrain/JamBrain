@@ -73,25 +73,25 @@ export default function Home() {
             href: `/feed`,
             label: "Feed",
             icon: "icon-feed",
-            class: "border-2 border-white text-white",
+            class: "border-2 border-neutral-50 text-neutral-50",
           },
           {
             href: `/feed/news`,
             label: "News",
             icon: "icon-news",
-            class: "border-2 border-white text-white",
+            class: "border-2 border-neutral-50 text-neutral-50",
           },
           {
             href: `/explore`,
             label: "Explore",
             icon: "icon-browse",
-            class: "border-2 border-white text-white",
+            class: "border-2 border-neutral-50 text-neutral-50",
           },
           {
             href: `/games`,
             label: "Games",
             icon: "icon-gamepad",
-            class: "border-2 border-white text-white",
+            class: "border-2 border-neutral-50 text-neutral-50",
           },
         ]}
       </Nav>

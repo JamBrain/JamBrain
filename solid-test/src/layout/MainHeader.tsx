@@ -11,7 +11,7 @@ export default function MainHeader() {
         title="Ludum Dare"
         href="/"
       >
-        <svg class="fill-primary w-[11.19rem] group-hover:fill-white">
+        <svg class="fill-primary w-[11.19rem] group-hover:fill-neutral-50">
           <use href="#icon-ludum" />
         </svg>
         <svg class="fill-secondary group-hover:fill-highlight w-[7.56rem]">

@@ -21,13 +21,13 @@ export default function Game() {
             href: event.data?.path,
             label: event.data?.name,
             icon: "icon-trophy",
-            class: "border-2 border-white",
+            class: "border-2 border-neutral-50",
           },
           {
             href: `${event.data?.path}/games`,
             label: "Games",
             icon: "icon-gamepad",
-            class: "border-2 border-white",
+            class: "border-2 border-neutral-50",
           },
           {
             href: node.data?.path,

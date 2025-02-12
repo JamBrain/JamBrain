@@ -28,13 +28,13 @@ export default function GameTile(props: {
         ? "bg-primary"
         : game.data?.subsubtype === "extra"
           ? "bg-green"
-          : "bg-TODO";
+          : "bg-neutral-600";
 
   return (
-    <Suspense fallback={<div class="bg-gray aspect-5/4" />}>
+    <Suspense fallback={<div class="aspect-5/4 bg-neutral-800" />}>
       <Link
         href={game.data?.path}
-        class="group bg-gray relative aspect-5/4 overflow-hidden"
+        class="group relative aspect-5/4 overflow-hidden bg-neutral-800"
         style={{
           "view-transition-name": props.viewTransitionName,
         }}
@@ -43,10 +43,10 @@ export default function GameTile(props: {
           src={`${toStatic(game.data?.meta.cover ?? "///content/internal/tvfail.png")}.480x384.fit.jpg`}
           class="absolute object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
         />
-        <div class="absolute flex w-full place-content-end items-stretch text-white">
+        <div class="absolute flex w-full place-content-end items-stretch text-neutral-50">
           <Show when={props.showEvent}>
             <h2
-              class="bg-gray bg-opacity-85 grow overflow-hidden
+              class="bg-opacity-85 grow overflow-hidden bg-neutral-800
                 px-2 py-1 text-ellipsis whitespace-nowrap
                 transition-opacity duration-300 group-hover:opacity-0"
             >
@@ -60,7 +60,7 @@ export default function GameTile(props: {
           </aside>
         </div>
         <div
-          class="bg-gray bg-opacity-85 absolute bottom-0 flex w-full text-white
+          class="bg-opacity-85 absolute bottom-0 flex w-full bg-neutral-800 text-neutral-50
             transition-opacity duration-300 group-hover:opacity-0"
         >
           <h1 class="shrink overflow-hidden px-2 py-1 text-nowrap text-ellipsis">

@@ -46,7 +46,7 @@ export default function RegisterDialog(props: { close: () => void }) {
 
   return (
     <>
-      <header class="bg-gray px-4 py-2 text-white">
+      <header class="bg-neutral-800 px-4 py-2 text-neutral-50">
         <h1 class="font-header">Create Account</h1>
       </header>
       <form
@@ -56,7 +56,7 @@ export default function RegisterDialog(props: { close: () => void }) {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        class="bg-gray-light"
+        class="bg-neutral-500"
       >
         <div class="flex flex-col gap-2 p-2">
           <form.Field
@@ -105,7 +105,7 @@ export default function RegisterDialog(props: { close: () => void }) {
                 <button
                   type="submit"
                   disabled={state().isSubmitting}
-                  class="border border-white text-white"
+                  class="border border-neutral-50 text-neutral-50"
                 >
                   Send Activation E-mail
                 </button>
@@ -113,7 +113,7 @@ export default function RegisterDialog(props: { close: () => void }) {
                   type="button"
                   onClick={props.close}
                   disabled={state().isSubmitting}
-                  class="text-white"
+                  class="text-neutral-50"
                 >
                   Cancel
                 </button>

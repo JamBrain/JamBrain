@@ -73,21 +73,27 @@ export default function UserBar() {
         <DialogButton
           label="Create Account"
           dialog={RegisterDialog}
-          class="hover:bg-primary hover:text-white"
+          class="hover:bg-primary hover:text-neutral-50"
         />
         <DialogButton
           label="Login"
           dialog={LoginDialog}
-          class="hover:bg-primary hover:text-white"
+          class="hover:bg-primary hover:text-neutral-50"
         />
       </Show>
       <Show when={userData.data != null}>
-        <Button label="My Game" class="hover:bg-primary hover:text-white" />
-        <Button label="New Post" class="hover:bg-primary hover:text-white" />
+        <Button
+          label="My Game"
+          class="hover:bg-primary hover:text-neutral-50"
+        />
+        <Button
+          label="New Post"
+          class="hover:bg-primary hover:text-neutral-50"
+        />
         <Button
           label="Logout"
           onClick={logout.mutate}
-          class="hover:bg-primary hover:text-white"
+          class="hover:bg-primary hover:text-neutral-50"
         />
       </Show>
     </>

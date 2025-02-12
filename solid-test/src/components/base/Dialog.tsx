@@ -27,7 +27,7 @@ export default function Dialog(props: {
     <dialog
       ref={ref!}
       onCancel={onCancel}
-      class="backdrop:bg-gray-dark backdrop:opacity-75"
+      class="backdrop:bg-neutral-950 backdrop:opacity-75"
     >
       {props.children}
     </dialog>

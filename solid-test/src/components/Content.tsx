@@ -15,7 +15,7 @@ export default function Content(props: {
 }) {
   return (
     <article
-      class="text-gray bg-white"
+      class="bg-neutral-50 text-neutral-800"
       style={{
         "view-transition-name": props.viewTransitionName,
       }}
@@ -28,7 +28,7 @@ export default function Content(props: {
       >
         <Show when={props.flag != null}>
           <h2
-            class={`\ -mr-2 mb-3 flex items-center gap-2 py-3 pr-9 pl-4 text-2xl font-bold text-white uppercase italic
+            class={`\ -mr-2 mb-3 flex items-center gap-2 py-3 pr-9 pl-4 text-2xl font-bold text-neutral-50 uppercase italic
               ${props.flag?.color} cut-br`}
           >
             {/* TODO revert order without messing up baseline */}

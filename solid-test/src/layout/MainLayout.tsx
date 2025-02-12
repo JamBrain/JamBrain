@@ -6,13 +6,13 @@ import Countdown from "./sidebar/Countdown";
 export default function MainLayout(props: { children: JSX.Element }) {
   return (
     <>
-      <header class="bg-gray-dark sticky top-0 z-10 px-4 [view-transition-name:main-header] select-none">
+      <header class="sticky top-0 z-10 bg-neutral-950 px-4 [view-transition-name:main-header] select-none">
         <div class="mx-auto h-16 max-w-7xl">
           <MainHeader />
         </div>
       </header>
 
-      <div class="bg-gray-light grow">
+      <div class="grow bg-neutral-500">
         <div class="mx-auto flex max-w-7xl gap-4 py-2">
           <main class="flex basis-3/4 flex-col gap-2 [view-transition-name:main-content]">
             {props.children}
@@ -24,7 +24,7 @@ export default function MainLayout(props: { children: JSX.Element }) {
         </div>
       </div>
 
-      <footer class="bg-gray-dark">
+      <footer class="bg-neutral-950">
         <div class="max-w-7xl">TODO Footer</div>
       </footer>
     </>

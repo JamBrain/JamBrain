@@ -22,7 +22,7 @@ export default function GameCard(props: {
         <>
           <h1 class="font-header grow text-3xl font-bold">
             {node.data?.name}
-            <svg class="fill-gray-light hover:bg-primary mx-2 inline-block size-5 border-black align-baseline hover:fill-white">
+            <svg class="hover:bg-primary mx-2 inline-block size-5 border-black fill-neutral-500 align-baseline hover:fill-neutral-50">
               <use href="#icon-link" />
             </svg>
           </h1>

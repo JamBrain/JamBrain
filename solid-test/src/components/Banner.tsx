@@ -8,7 +8,7 @@ export default function Banner() {
 
   return (
     <Show when={!hidden()}>
-      <article class="bg-gray px-4 py-3 text-white">
+      <article class="bg-neutral-800 px-4 py-3 text-neutral-50">
         <div class="mb-3 flex items-start justify-between">
           <h1 class="font-header text-highlight text-3xl font-bold">
             What is Ludum Dare?

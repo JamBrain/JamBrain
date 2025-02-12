@@ -13,7 +13,7 @@ export default function Users(props: RouteSectionProps) {
             href: `/users/${params.slug}`,
             label: params.slug,
             icon: "icon-user",
-            class: "border-2 border-white",
+            class: "border-2 border-neutral-50",
           },
           {
             href: `/users/${params.slug}/games`,

@@ -10,7 +10,7 @@ export default function Nav(props: {
 }) {
   const location = useLocation();
   const active = (path: string) =>
-    path == location.pathname ? "bg-white text-primary" : "";
+    path == location.pathname ? "bg-neutral-50 text-primary" : "";
 
   return (
     <nav
@@ -23,7 +23,7 @@ export default function Nav(props: {
         {(item) => (
           <Button
             {...item}
-            class={`px-[1em] py-[0.125em] ${item.class} ${active(item.href)} hover:bg-primary hover:text-white`}
+            class={`px-[1em] py-[0.125em] ${item.class} ${active(item.href)} hover:bg-primary hover:text-neutral-50`}
           />
         )}
       </For>

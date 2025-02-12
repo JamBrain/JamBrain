@@ -106,7 +106,7 @@ export default function Games() {
 
   return (
     <>
-      <div class="bg-gray flex gap-2 p-2">
+      <div class="flex gap-2 bg-neutral-800 p-2">
         <select value={type()} onChange={(e) => setType(e.target.value)}>
           <option value="all">All</option>
           <option value="jam">Jam</option>

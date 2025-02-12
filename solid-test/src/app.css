@@ -11,12 +11,19 @@ layer(base);
   --color-primary: #ee5533;
   --color-secondary: #f79122;
   --color-highlight: #ffcc00;
-  --color-gray-dark: #1f2429;
-  --color-gray: #3d4752;
-  --color-TODO: #596572;
-  --color-gray-light: #6f7984;
-  --color-TODO2: #d3dce5;
-  --color-white: #eef2f7;
+
+  --color-neutral-950: #1f2429;
+  --color-neutral-900: #2f373f;
+  --color-neutral-800: #3d4752;
+  --color-neutral-700: #485562;
+  --color-neutral-600: #596572;
+  --color-neutral-500: #6f7984;
+  --color-neutral-400: #8793a0;
+  --color-neutral-300: #a0acb9;
+  --color-neutral-200: #b9c4d0;
+  --color-neutral-100: #d3dce5;
+  --color-neutral-50: #eef2f7;
+
   --color-green: #66cc22;
 
   --font-*: initial;

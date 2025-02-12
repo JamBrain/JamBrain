@@ -42,10 +42,10 @@ export default function () {
           <>
             <h1 class="font-header grow text-3xl font-bold">
               {user.data?.name}
-              <svg class="fill-gray-light hover:bg-primary mx-2 inline-block size-5 border-black align-baseline hover:fill-white">
+              <svg class="hover:bg-primary mx-2 inline-block size-5 border-black fill-neutral-500 align-baseline hover:fill-neutral-50">
                 <use href="#icon-link" />
               </svg>
-              <span class="text-gray-light text-2xl font-semibold">
+              <span class="text-2xl font-semibold text-neutral-500">
                 (@{user.data?.slug})
               </span>
             </h1>

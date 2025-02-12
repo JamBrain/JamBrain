@@ -15,7 +15,7 @@ export default function Countdown(props: { title: string; dateTime: string }) {
 
   return (
     <div class="flex flex-col items-center gap-2 uppercase perspective-midrange perspective-origin-left transform-3d">
-      <h1 class="font-header text-2xl text-white">
+      <h1 class="font-header text-2xl text-neutral-50">
         {props.title} <strong>Starts</strong>
       </h1>
       <div class="flex gap-2 transform-3d">
@@ -35,7 +35,7 @@ function Part(props: { unit: string; value: number; minLength?: number }) {
 
   return (
     <div class="flex flex-col-reverse items-center gap-1 transform-3d">
-      <div class="text-gray flex gap-0.5 transform-3d">
+      <div class="flex gap-0.5 text-neutral-800 transform-3d">
         <Index each={props.value.toString().padStart(pad).split("")}>
           {(item) => <SplitFlap value={+item()} />}
         </Index>
