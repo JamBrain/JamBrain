@@ -1,4 +1,5 @@
 import { defineConfig } from "@solidjs/start/config";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   ssr: false,
@@ -9,6 +10,7 @@ export default defineConfig({
   },
   routeDir: "navigation",
   vite: {
+    plugins: [tailwindcss()],
     define: {
       API_ENDPOINT: JSON.stringify("https://api.ldjam.com"),
       STATIC_ENDPOINT: JSON.stringify("//static.jam.host"),
