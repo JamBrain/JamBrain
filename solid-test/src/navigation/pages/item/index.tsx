@@ -2,7 +2,7 @@ import GameCard from "~/components/game/GameCard";
 import Comments from "~/components/comments/Comments";
 import { useRootNode } from "~/context/PageContext";
 import getNode from "~/api/getNode";
-import Nav from "~/components/Nav";
+import Nav, { NavItem } from "~/components/Nav";
 import { GameNode } from "~/api/types";
 
 export default function Game() {
@@ -15,26 +15,26 @@ export default function Game() {
   return (
     <>
       <Nav viewTransitionName="main-nav">
-        {[
-          { href: "/", title: "Go Back", icon: "icon-previous" },
-          {
-            href: event.data?.path,
-            label: event.data?.name,
-            icon: "icon-trophy",
-            class: "border-2 border-neutral-50",
-          },
-          {
-            href: `${event.data?.path}/games`,
-            label: "Games",
-            icon: "icon-gamepad",
-            class: "border-2 border-neutral-50",
-          },
-          {
-            href: node.data?.path,
-            label: node.data?.name,
-            icon: "icon-gamepad",
-          },
-        ]}
+        <NavItem href="/" end title="Go Back" icon="icon-previous" />
+        <NavItem
+          href={event.data!.path}
+          end
+          label={event.data!.name}
+          icon="icon-trophy"
+          variant="outline"
+        />
+        <NavItem
+          href={`${event.data!.path}/games`}
+          end
+          label="Games"
+          icon="icon-gamepad"
+          variant="outline"
+        />
+        <NavItem
+          href={node.data!.path}
+          label={node.data!.name}
+          icon="icon-gamepad"
+        />
       </Nav>
       <GameCard
         game={node.data?.id}

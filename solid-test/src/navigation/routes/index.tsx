@@ -2,7 +2,7 @@ import { createQuery, useQueryClient } from "@tanstack/solid-query";
 import { Suspense, SuspenseList } from "solid-js";
 import Content from "~/components/Content";
 import Feed from "~/components/Feed";
-import Nav from "~/components/Nav";
+import Nav, { NavItem } from "~/components/Nav";
 import Post from "~/components/post/PostCard";
 import Banner from "~/components/Banner";
 import Link from "~/components/base/Link";
@@ -67,33 +67,11 @@ export default function Home() {
         </Content>
       </Suspense>
       <Nav viewTransitionName="main-nav">
-        {[
-          { href: "/", title: "Home", icon: "icon-home" },
-          {
-            href: `/feed`,
-            label: "Feed",
-            icon: "icon-feed",
-            class: "border-2 border-neutral-50 text-neutral-50",
-          },
-          {
-            href: `/feed/news`,
-            label: "News",
-            icon: "icon-news",
-            class: "border-2 border-neutral-50 text-neutral-50",
-          },
-          {
-            href: `/explore`,
-            label: "Explore",
-            icon: "icon-browse",
-            class: "border-2 border-neutral-50 text-neutral-50",
-          },
-          {
-            href: `/games`,
-            label: "Games",
-            icon: "icon-gamepad",
-            class: "border-2 border-neutral-50 text-neutral-50",
-          },
-        ]}
+        <NavItem href="/" end title="Home" icon="icon-home" />
+        <NavItem href="/feed" end label="Feed" icon="icon-feed" />
+        <NavItem href="/feed/news" end label="News" icon="icon-news" />
+        <NavItem href="/explore" end label="Explore" icon="icon-browse" />
+        <NavItem href="/games" end label="Games" icon="icon-gamepad" />
       </Nav>
       <SuspenseList revealOrder="forwards" tail="collapsed">
         <Feed

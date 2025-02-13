@@ -1,17 +1,10 @@
-import { useLocation } from "@solidjs/router";
-import { For } from "solid-js";
-import Button, { ButtonProps } from "./Button";
-
-interface NavItem extends ButtonProps {}
+import { createDeferred, JSX, splitProps } from "solid-js";
+import Button, { LinkButtonProps } from "./Button";
 
 export default function Nav(props: {
-  children: NavItem[];
+  children: JSX.Element[];
   viewTransitionName?: string;
 }) {
-  const location = useLocation();
-  const active = (path: string) =>
-    path == location.pathname ? "bg-neutral-50 text-primary" : "";
-
   return (
     <nav
       class="flex gap-2"
@@ -19,14 +12,35 @@ export default function Nav(props: {
         "view-transition-name": props.viewTransitionName,
       }}
     >
-      <For each={props.children}>
-        {(item) => (
-          <Button
-            {...item}
-            class={`px-[1em] py-[0.125em] ${item.class} ${active(item.href)} hover:bg-primary hover:text-neutral-50`}
-          />
-        )}
-      </For>
+      {props.children}
     </nav>
+  );
+}
+
+export function NavItem(
+  props: LinkButtonProps & {
+    variant?: "outline" | "active" | "default";
+  },
+) {
+  const [local, others] = splitProps(props, ["variant"]);
+
+  const className = createDeferred(() => {
+    switch (local.variant) {
+      case "active":
+        return "bg-neutral-50 text-neutral-900";
+      case "outline":
+        return "border-1 text-neutral-50 border-neutral-50 hover:border-primary";
+      default:
+        return "bg-neutral-400 text-neutral-700";
+    }
+  });
+
+  return (
+    <Button
+      {...others}
+      class={`px-[1em] py-[0.5em] font-bold ${others.class ?? ""} hover:bg-primary hover:text-neutral-50`}
+      inactiveClass={className()}
+      activeClass="bg-neutral-50 text-neutral-900"
+    />
   );
 }

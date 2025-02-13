@@ -2,7 +2,7 @@ import PostCard from "~/components/post/PostCard";
 import Comments from "~/components/comments/Comments";
 import { useRootNode } from "~/context/PageContext";
 import getNode from "~/api/getNode";
-import Nav from "~/components/Nav";
+import Nav, { NavItem } from "~/components/Nav";
 import { PostNode } from "~/api/types";
 import { RouteDefinition } from "@solidjs/router";
 import { getOwner, runWithOwner, Suspense } from "solid-js";
@@ -44,25 +44,27 @@ export default function Post() {
       {/* TODO move Suspense down to link level */}
       <Suspense>
         <Nav viewTransitionName="main-nav">
-          {[
-            { href: "/", title: "Go Back", icon: "icon-previous" },
-            {
-              href: event.data?.path,
-              label: event.data?.name,
-              icon: "icon-trophy",
-            },
-            {
-              href: `${event.data?.path}/games`,
-              label: "Games",
-              icon: "icon-gamepad",
-              class: "border-2 border-neutral-50",
-            },
-            {
-              href: game.data?.path,
-              label: game.data?.name,
-              icon: "icon-gamepad",
-            },
-          ]}
+          <NavItem href="/" end title="Go Back" icon="icon-previous" />
+          <NavItem
+            href={event.data!.path}
+            end
+            label={event.data!.name}
+            icon="icon-trophy"
+            variant="outline"
+          />
+          <NavItem
+            href={`${event.data!.path}/games`}
+            end
+            label="Games"
+            icon="icon-gamepad"
+            variant="outline"
+          />
+          <NavItem
+            href={game.data!.path}
+            end
+            label={game.data!.name}
+            icon="icon-gamepad"
+          />
         </Nav>
       </Suspense>
       <PostCard

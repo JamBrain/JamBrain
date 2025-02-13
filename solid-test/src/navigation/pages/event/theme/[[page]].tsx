@@ -1,9 +1,10 @@
 import { RouteDefinition, RouteSectionProps } from "@solidjs/router";
 import { createQuery, useQueryClient } from "@tanstack/solid-query";
+import { For } from "solid-js";
 import { GET } from "~/api/methods";
 import { EventNode } from "~/api/types";
 import Content from "~/components/Content";
-import Nav from "~/components/Nav";
+import Nav, { NavItem } from "~/components/Nav";
 import { useRootNode, useRootNodeId } from "~/context/PageContext";
 
 export const route = {
@@ -41,13 +42,18 @@ export default function EventTheme(props: RouteSectionProps) {
   return (
     <>
       <Nav>
-        {theme.data?.names &&
-          Object.entries(theme.data?.names).map(([i, name]) => ({
-            href: `${node.data?.path}/theme/${i}`,
-            label: name,
-            icon: "icon-ticket",
-            disabled: !theme.data?.allowed.includes(i), // TODO
-          }))}
+        {theme.data?.names && (
+          <For each={Object.entries(theme.data!.names)}>
+            {([i, name]) => (
+              <NavItem
+                href={`${node.data!.path}/theme/${i}`}
+                label={name}
+                icon="icon-ticket"
+                disabled={!theme.data!.allowed.includes(i)} // TODO
+              />
+            )}
+          </For>
+        )}
       </Nav>
       <Content
         header={
