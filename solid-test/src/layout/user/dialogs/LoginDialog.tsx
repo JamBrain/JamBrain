@@ -1,6 +1,5 @@
 import { createForm } from "@tanstack/solid-form";
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
-import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
 import { encodeBody } from "~/lib/fetch";
 
@@ -41,7 +40,6 @@ export default function LoginDialog(props: { close: () => void }) {
       pw: "Password",
     },
     onSubmit: ({ value }) => login.mutate(value),
-    validatorAdapter: zodValidator,
     validators: {
       onChange: loginVariables,
     },

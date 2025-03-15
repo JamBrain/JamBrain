@@ -10,14 +10,13 @@
   "dependencies": {
     "@solidjs/router": "^0.15.2",
     "@solidjs/start": "^1.1.0",
-    "@tanstack/solid-form": "^0.20.0",
+    "@tanstack/solid-form": "^1.0.5",
     "@tanstack/solid-query": "^5.62.8",
-    "@tanstack/zod-form-adapter": "^0.20.2",
     "isomorphic-dompurify": "^2.9.0",
     "marked": "^12.0.2",
     "solid-js": "^1.9.3",
     "vinxi": "^0.5.3",
-    "zod": "^3.23.8"
+    "zod": "^3.24.2"
   },
   "engines": {
     "node": ">=18"
