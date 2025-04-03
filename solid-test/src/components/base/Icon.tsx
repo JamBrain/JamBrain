@@ -1,7 +1,15 @@
-export default function Icon(props: { name: string; class?: string }) {
+import { JSX, splitProps } from "solid-js";
+
+export default function Icon(
+  props: JSX.IntrinsicElements["svg"] & { name: string },
+) {
+  const [name, className, rest] = splitProps(props, ["name"], ["class"]);
   return (
-    <svg class={`inline-block size-[1em] fill-current ${props.class ?? ""}`}>
-      <use href={`#${props.name}`} />
+    <svg
+      {...rest}
+      class={`inline-block size-[1em] fill-current ${className.class ?? ""}`}
+    >
+      <use href={`#${name.name}`} />
     </svg>
   );
 }

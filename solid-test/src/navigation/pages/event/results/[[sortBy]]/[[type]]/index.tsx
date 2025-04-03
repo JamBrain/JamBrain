@@ -11,6 +11,7 @@ import {
 } from "solid-js";
 import { GET } from "~/api/methods";
 import { EventNode } from "~/api/types";
+import Select, { Option } from "~/components/base/Select";
 import GameTile from "~/components/game/GameTile";
 import { useRootNode } from "~/context/PageContext";
 import { useSetParams } from "~/lib/navigation";
@@ -107,41 +108,65 @@ export default function Games() {
   return (
     <>
       <div class="flex gap-2 bg-neutral-800 p-2">
-        <select value={type()} onChange={(e) => setType(e.target.value)}>
-          <option value="all">All</option>
-          <option value="jam">Jam</option>
-          <option value="compo">Compo</option>
-          <option value="extra">Extra</option>
-          <option value="unfinished">Unfinished</option>
-        </select>
+        <Select
+          value={type()}
+          onChange={(e) => setType(e.target.value)}
+          class="w-36"
+        >
+          <Option value="all" icon="icon-gamepad">
+            All
+          </Option>
+          <Option value="jam" icon="icon-trophy">
+            Jam
+          </Option>
+          <Option value="compo" icon="icon-trophy">
+            Compo
+          </Option>
+          <Option value="extra" icon="icon-trophy">
+            Extra
+          </Option>
+          <Option value="unfinished" icon="icon-trash">
+            Unfinished
+          </Option>
+        </Select>
         <Switch>
           {/* TODO can grades suspend? */}
           <Match when={rated() && grades() != null}>
-            <select
+            <Select
               value={sortBy()}
               onChange={(e) => setSortBy(e.target.value)}
+              class="w-36"
             >
               <For each={grades()}>
-                {(grade) => (
-                  <option key={grade.key} value={grade.value}>
-                    {grade.label}
-                  </option>
-                )}
+                {(grade) => <Option value={grade.value}>{grade.label}</Option>}
               </For>
-            </select>
+            </Select>
           </Match>
           <Match when={!rated()}>
-            <select
+            <Select
               value={sortBy()}
               onChange={(e) => setSortBy(e.target.value)}
+              class="w-36"
             >
-              <option value="smart">Smart</option>
-              <option value="classic">Classic</option>
-              <option value="danger">Danger</option>
-              <option value="zero">Zero</option>
-              <option value="feedback">Feedback</option>
-              <option value="grade">Grade</option>
-            </select>
+              <Option value="smart" icon="icon-ticket">
+                Smart
+              </Option>
+              <Option value="classic" icon="icon-ticket">
+                Classic
+              </Option>
+              <Option value="danger" icon="icon-help">
+                Danger
+              </Option>
+              <Option value="zero" icon="icon-gift">
+                Zero
+              </Option>
+              <Option value="feedback" icon="icon-bubbles">
+                Feedback
+              </Option>
+              <Option value="grade" icon="icon-todo">
+                Grade
+              </Option>
+            </Select>
           </Match>
         </Switch>
       </div>

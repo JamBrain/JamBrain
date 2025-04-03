@@ -56,3 +56,7 @@ html {
     0 100%
   );
 }
+
+::picker(select) {
+  @apply mt-1 [appearance:base-select] rounded-sm border-0 shadow-xl shadow-[#000];
+}

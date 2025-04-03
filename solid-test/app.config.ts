@@ -8,6 +8,12 @@ export default defineConfig({
     // fix build error: Top-level await is not available in the configured target environment ("es2019")
     esbuild: { options: { target: "esnext" } },
   },
+  solid: {
+    solid: {
+      // https://github.com/MananTank/validate-html-nesting/issues/11
+      validate: false,
+    },
+  },
   routeDir: "navigation",
   vite: {
     plugins: [tailwindcss()],
