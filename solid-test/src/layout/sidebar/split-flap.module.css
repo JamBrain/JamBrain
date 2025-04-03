@@ -1,0 +1,119 @@
+@keyframes rotate {
+  50% {
+    filter: brightness(80%);
+  }
+  100% {
+    transform: rotateX(-180deg);
+  }
+}
+
+@keyframes flip {
+  0% {
+    clip-path: xywh(0 0 100% 50%);
+  }
+  /* value 66% has to be adjusted based in ease function */
+  66% {
+    transform: rotateX(180deg);
+    clip-path: xywh(0 50% 100% 50%);
+  }
+}
+
+@keyframes set-to {
+  100% {
+    content: var(--to);
+  }
+}
+@keyframes disappear {
+  100% {
+    display: none;
+  }
+}
+
+.split-flap {
+  --flap-duration: 0.8s;
+  transform-style: preserve-3d;
+}
+
+.split-flap::before,
+.split-flap::after {
+  content: var(--from);
+  width: inherit;
+  background: inherit;
+  border-radius: inherit;
+  position: absolute;
+  left: 0;
+}
+.split-flap::before {
+  /* replace for disappear animation */
+  animation-composition: add, add, add, replace;
+  animation:
+    var(--flap-duration) ease-in none rotate,
+    var(--flap-duration) steps(1) none flip,
+    var(--flap-duration) ease-in none set-to,
+    var(--flap-duration) step-end 0s normal forwards running disappear;
+}
+.split-flap::after {
+  clip-path: xywh(0 50% 100% 50%);
+  animation: var(--flap-duration) step-end 0s normal forwards running disappear;
+}
+
+.from-0 {
+  --from: "0";
+}
+.to-0 {
+  --to: "0";
+}
+.from-1 {
+  --from: "1";
+}
+.to-1 {
+  --to: "1";
+}
+.from-2 {
+  --from: "2";
+}
+.to-2 {
+  --to: "2";
+}
+.from-3 {
+  --from: "3";
+}
+.to-3 {
+  --to: "3";
+}
+.from-4 {
+  --from: "4";
+}
+.to-4 {
+  --to: "4";
+}
+.from-5 {
+  --from: "5";
+}
+.to-5 {
+  --to: "5";
+}
+.from-6 {
+  --from: "6";
+}
+.to-6 {
+  --to: "6";
+}
+.from-7 {
+  --from: "7";
+}
+.to-7 {
+  --to: "7";
+}
+.from-8 {
+  --from: "8";
+}
+.to-8 {
+  --to: "8";
+}
+.from-9 {
+  --from: "9";
+}
+.to-9 {
+  --to: "9";
+}

@@ -20,7 +20,7 @@ node_modules/
 *.bak
 /src/shrub/docs
 /sandbox/ld_event.*
-package-lock.json
+# package-lock.json
 *.code-workspace
 .vscode
 vendor/
