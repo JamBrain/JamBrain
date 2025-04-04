@@ -150,13 +150,13 @@ export default class ViewSidebar extends Component {
 		return (
 			<div id="sidebar">
 				{ShowCountdown}
-				<SidebarTV />
 				<SidebarUpcoming />
 				<SidebarSponsor />
 			</div>
 		);
 
 		/*<SidebarJobs />*/
+		/*<SidebarTV />*/
 
 		/*<SidebarGuides />*/
 		/*<SidebarSupport />*/
