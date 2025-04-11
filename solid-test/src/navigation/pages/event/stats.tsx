@@ -1,5 +1,5 @@
 import Content from "~/components/Content";
-import { createQuery, useQueryClient } from "@tanstack/solid-query";
+import { useQuery, useQueryClient } from "@tanstack/solid-query";
 import { useRootNode, useRootNodeId } from "~/context/PageContext";
 import { GET } from "~/api/methods";
 import { EventNode } from "~/api/types";
@@ -25,7 +25,7 @@ export default function EventStats() {
     refetchOnMount: false,
   }));
 
-  const stats = createQuery(() => ({
+  const stats = useQuery(() => ({
     queryKey: ["stats", node.data?.id],
     enabled: node.data?.id != null,
     async queryFn() {

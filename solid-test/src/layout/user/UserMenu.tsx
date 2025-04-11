@@ -1,7 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import {
-  createMutation,
-  createQuery,
+  useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/solid-query";
 import { Show, lazy } from "solid-js";
@@ -16,7 +16,7 @@ const ActivateDialog = lazy(() => import("./dialogs/ActivateDialog"));
 export default function UserBar() {
   const queryClient = useQueryClient();
 
-  const userData = createQuery(() => ({
+  const userData = useQuery(() => ({
     queryKey: ["myData"],
     skip: true,
     async queryFn() {
@@ -37,7 +37,7 @@ export default function UserBar() {
     },
   }));
 
-  const logout = createMutation(() => ({
+  const logout = useMutation(() => ({
     async mutationFn() {
       const response = await fetch("http://localhost/vx/user/logout", {
         credentials: "include",

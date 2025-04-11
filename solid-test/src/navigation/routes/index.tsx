@@ -1,4 +1,4 @@
-import { createQuery, useQueryClient } from "@tanstack/solid-query";
+import { useQuery, useQueryClient } from "@tanstack/solid-query";
 import { Suspense, SuspenseList } from "solid-js";
 import Content from "~/components/Content";
 import Feed from "~/components/Feed";
@@ -33,7 +33,7 @@ export default function Home() {
   const [renderBlocker] = useViewTransition(preload);
 
   const queryClient = useQueryClient();
-  const featured = createQuery(() => ({
+  const featured = useQuery(() => ({
     queryKey: ["featured"],
     async queryFn() {
       const featured = (await GET("/vx/node2/what/1")).featured;

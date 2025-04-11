@@ -1,5 +1,5 @@
 import { createForm } from "@tanstack/solid-form";
-import { createMutation } from "@tanstack/solid-query";
+import { useMutation } from "@tanstack/solid-query";
 import { z } from "zod";
 import { encodeBody } from "~/lib/fetch";
 
@@ -9,7 +9,7 @@ const registerVariables = z.object({
 });
 
 export default function RegisterDialog(props: { close: () => void }) {
-  const register = createMutation(() => ({
+  const register = useMutation(() => ({
     async mutationFn(variables: z.infer<typeof registerVariables>) {
       const response = await fetch("http://localhost/vx/user/create", {
         headers: {

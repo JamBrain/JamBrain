@@ -1,5 +1,5 @@
 import { For, JSXElement, Match, Suspense, Switch } from "solid-js";
-import { createInfiniteQuery } from "@tanstack/solid-query";
+import { useInfiniteQuery } from "@tanstack/solid-query";
 
 interface FeedProps<T> {
   fetch(offset: number, limit: number): Promise<T[]>;
@@ -10,7 +10,7 @@ interface FeedProps<T> {
 export default function Feed<T>(props: FeedProps<T>) {
   const pageSize = 5;
 
-  const query = createInfiniteQuery(() => {
+  const query = useInfiniteQuery(() => {
     return {
       queryKey: props.key,
       queryFn(context) {

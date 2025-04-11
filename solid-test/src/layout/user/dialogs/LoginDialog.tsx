@@ -1,5 +1,5 @@
 import { createForm } from "@tanstack/solid-form";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
+import { useMutation, useQueryClient } from "@tanstack/solid-query";
 import { z } from "zod";
 import { encodeBody } from "~/lib/fetch";
 
@@ -11,7 +11,7 @@ const loginVariables = z.object({
 export default function LoginDialog(props: { close: () => void }) {
   const queryClient = useQueryClient();
 
-  const login = createMutation(() => ({
+  const login = useMutation(() => ({
     async mutationFn(variables: z.infer<typeof loginVariables>) {
       const response = await fetch("http://localhost/vx/user/login", {
         headers: {

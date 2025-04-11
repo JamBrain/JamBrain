@@ -1,4 +1,4 @@
-import { createQuery, SolidQueryOptions } from "@tanstack/solid-query";
+import { useQuery, SolidQueryOptions } from "@tanstack/solid-query";
 import { Accessor, splitProps } from "solid-js";
 import { GET } from "./methods";
 import { IncludeOptions, Node, NodeId } from "./types";
@@ -117,7 +117,7 @@ export default function getNode<ID extends number, T extends IncludeOptions>(
   // TODO does this work? No, using opts.id for queryKey leads to bugs!
   const [opts, rest] = splitProps(options(), ["id", "include"]);
 
-  return createQuery(() => ({
+  return useQuery(() => ({
     ...rest,
     queryKey: ["node", options().id] as const,
     // TODO does order matter for suspense here? And does this work if options().enabled is function?

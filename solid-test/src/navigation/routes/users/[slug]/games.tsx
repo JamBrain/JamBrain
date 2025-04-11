@@ -4,7 +4,7 @@ import {
   RoutePreloadFuncArgs,
   useParams,
 } from "@solidjs/router";
-import { createQuery, useQueryClient } from "@tanstack/solid-query";
+import { useQuery, useQueryClient } from "@tanstack/solid-query";
 import GameTile from "~/components/game/GameTile";
 import getPath from "~/api/getPath";
 import { UserNode } from "~/api/types";
@@ -43,7 +43,7 @@ export default function () {
     refetchOnMount: false,
   }));
 
-  const gamesQuery = createQuery(() => ({
+  const gamesQuery = useQuery(() => ({
     queryKey: ["user", "games", user.data?.id],
     enabled: user.data?.id != null,
     async queryFn() {

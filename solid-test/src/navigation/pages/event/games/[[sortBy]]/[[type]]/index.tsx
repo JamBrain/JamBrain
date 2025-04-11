@@ -1,5 +1,5 @@
 import { useParams } from "@solidjs/router";
-import { createInfiniteQuery } from "@tanstack/solid-query";
+import { useInfiniteQuery } from "@tanstack/solid-query";
 import {
   createEffect,
   createSignal,
@@ -86,7 +86,7 @@ export default function Games() {
   const queryType = () => (type() === "all" ? "compo+jam+extra" : type());
   const querySortBy = () =>
     rated() ? grades()?.find((g) => g.value == sortBy())?.key : sortBy();
-  const games = createInfiniteQuery(() => ({
+  const games = useInfiniteQuery(() => ({
     queryKey: ["games", pageSize, event.data?.id, querySortBy(), queryType()],
     enabled:
       event.data?.id != null && querySortBy() != null && queryType() != null,

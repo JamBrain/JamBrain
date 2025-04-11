@@ -1,4 +1,4 @@
-import { createQuery, SolidQueryOptions } from "@tanstack/solid-query";
+import { useQuery, SolidQueryOptions } from "@tanstack/solid-query";
 import { Accessor } from "solid-js";
 import { GET } from "./methods";
 import { IncludeOptions, Node } from "./types";
@@ -78,7 +78,7 @@ export default function getPath<T extends Node>(
     >
   >,
 ) {
-  return createQuery(() => ({
+  return useQuery(() => ({
     ...options(),
     queryKey: ["path", options().path] as const,
     enabled: options().path != null,

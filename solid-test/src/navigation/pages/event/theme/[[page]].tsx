@@ -1,5 +1,5 @@
 import { RouteDefinition, RouteSectionProps } from "@solidjs/router";
-import { createQuery, useQueryClient } from "@tanstack/solid-query";
+import { useQuery, useQueryClient } from "@tanstack/solid-query";
 import { For } from "solid-js";
 import { GET } from "~/api/methods";
 import { EventNode } from "~/api/types";
@@ -26,7 +26,7 @@ export default function EventTheme(props: RouteSectionProps) {
     refetchOnMount: false,
   }));
 
-  const theme = createQuery(() => ({
+  const theme = useQuery(() => ({
     queryKey: ["theme", node.data?.id],
     enabled: node.data?.id != null,
     async queryFn() {
