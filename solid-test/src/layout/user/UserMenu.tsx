@@ -1,9 +1,5 @@
 import { useSearchParams } from "@solidjs/router";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/solid-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/solid-query";
 import { Show, lazy } from "solid-js";
 import Button from "~/components/Button";
 import Dialog from "~/components/base/Dialog";
