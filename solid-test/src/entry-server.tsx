@@ -18,6 +18,7 @@ export default createHandler(() => (
           {assets}
         </head>
         <body>
+          {/* eslint-disable-next-line solid/no-innerhtml -- sanitized by DOMPurify*/}
           <div aria-hidden class="hidden" innerHTML={svgBundle} />
           <div id="app">{children}</div>
           {scripts}

@@ -1,11 +1,11 @@
-import { Suspense } from "solid-js";
+import { JSX, Suspense } from "solid-js";
 import { EventNode } from "~/api/types";
 import Link from "~/components/base/Link";
 import Content from "~/components/Content";
 import Nav, { NavItem } from "~/components/Nav";
 import { useRootNode } from "~/context/PageContext";
 
-export default function EventLayout(props: { children: any }) {
+export default function EventLayout(props: { children: JSX.Element }) {
   const node = useRootNode<EventNode>(() => ({
     refetchOnMount: false,
   }));

@@ -43,7 +43,8 @@ export default function Markdown(props: { content: string; class: string }) {
         prose-a:no-underline prose-a:hover:bg-primary prose-a:hover:text-neutral-50 prose-img:mx-auto
         prose-img:my-3 max-w-none
         ${props.class}`}
+      // eslint-disable-next-line solid/no-innerhtml -- sanitized by DOMPurify
       innerHTML={html()}
-    ></div>
+    />
   );
 }

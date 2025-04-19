@@ -34,7 +34,7 @@ export default function SplitFlap(props: { value: number }) {
         from-neutral-50 from-50% to-neutral-100 to-50%
         text-center text-2xl leading-[41px] font-bold
         ${classes["split-flap"]}`}
-      onanimationend={removeAnimationClasses}
+      onAnimationEnd={removeAnimationClasses}
     >
       {props.value}
     </span>

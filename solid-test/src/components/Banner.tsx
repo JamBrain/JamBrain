@@ -14,7 +14,7 @@ export default function Banner() {
             What is Ludum Dare?
           </h1>
           <button
-            onclick={() => startViewTransition(() => setHidden(true))}
+            onClick={() => startViewTransition(() => setHidden(true))}
             class="hover:text-primary"
           >
             <Icon name="icon-cross" />

@@ -61,9 +61,9 @@ export default function EventTheme(props: RouteSectionProps) {
         }
       >
         <ul>
-          {currentList()?.map((idea) => (
-            <li key={idea.ideaId}>{idea.theme}</li>
-          ))}
+          <For each={currentList()}>{(idea) => (
+            <li>{idea.theme}</li>
+          )}</For>
         </ul>
       </Content>
     </>
