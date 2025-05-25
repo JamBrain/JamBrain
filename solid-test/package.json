@@ -6,7 +6,8 @@
     "build": "vinxi build",
     "start": "vinxi start",
     "format": "prettier . --write",
-    "lint": "eslint"
+    "lint": "eslint",
+    "cy:open": "cypress open"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.2",
@@ -28,11 +29,13 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/solid-query-devtools": "^5.62.8",
+    "cypress": "^14.3.1",
     "eslint": "^9.24.0",
     "eslint-plugin-solid": "^0.14.5",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.6",
+    "tinyglobby": "^0.2.13",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.29.1"
   }
