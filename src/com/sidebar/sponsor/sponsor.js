@@ -15,7 +15,6 @@ export default class ViewSidebar extends Component {
 			return (
 				<div class="sidebar-base sidebar-shortlist sidebar-spoonsor">
 					<div class="-title _font2"><SVGIcon baseline>trophy</SVGIcon> <span class="-text">Sponsors</span></div>
-					<div><a href="https://ldjam.com/events/ludum-dare/57/$408422/getting-started-with-gamemaker-2025"><UIImage src="///content/b/z/695c0.png.w200.png" /></a></div>
 					<div><a href="https://ludumdare.com/news/akamai-sponsors-ld-2022/"><UIImage src="///content/b/z/4ee45.png.w200.png" /></a></div>
 				</div>
 			);
