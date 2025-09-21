@@ -34,6 +34,7 @@ export default class ViewSidebar extends Component {
 };
 
 /*
+<div><a href="https://ldjam.com/events/ludum-dare/57/$408422/getting-started-with-gamemaker-2025"><UIImage src="///content/b/z/695c0.png.w200.png" /></a></div>
 <div><a href="https://ldjam.com/events/ludum-dare/55/$386730/getting-started-with-gamemaker-2024"><UIImage src="///content/b/z/60c3a.png.w200.png" /></a></div>
 <div><a href="/events/ludum-dare/49/$258334/ann-intel-sponsors-ludum-dare-49"><UIImage src="///content/b/z/42d0f.png.w200.png" /></a></div>
 <div><a href="/events/ludum-dare/49/$258334/ann-gamemaker-studio-2-sponsors-ludum-dare-49"><UIImage src="///content/b/z/42d42.png.w200.png" /></a></div>
