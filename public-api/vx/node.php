@@ -474,17 +474,18 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 1;
 				if ( $RESPONSE['limit'] > 250 )
 					$RESPONSE['limit'] = 250;
-			}
+            }
 
 			$which_feed = $rawfeed ? 'rawfeed' : 'feed';
+			$stable = $_GET['stable'] == 'true';
 
-			$CACHE_KEY = "!node/$which_feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$value_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
+			$CACHE_KEY = "!node/$which_feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$score_op."|".$RESPONSE['limit']."|".$RESPONSE['offset']."|".$stable;
 
 			$RESPONSE['feed'] = cache_Fetch($CACHE_KEY);
 
 			if ( $RESPONSE['feed'] == null ) {
 				// HACK: only fetch nodes with a positive trust score (rather than 0+)
-				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset'], $rawfeed ? '>= 0' : '> 0');
+				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset'], $rawfeed ? '>= 0' : '> 0', $stable);
 //				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
 
 				cache_Store($CACHE_KEY, $RESPONSE['feed'], 10);
