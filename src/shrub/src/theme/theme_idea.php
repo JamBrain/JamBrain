@@ -176,6 +176,17 @@ function themeIdea_Count( $event_id, $user_id = 0, $threshold = null, $query_suf
 	}
 }
 
+function themeIdea_CheckExisting( $event_id = 0, $user_id = 0, $theme = "" ) {
+	return db_QueryFetchValue(
+		"SELECT count(id)
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA."
+		WHERE node=? AND user=? AND theme=?
+		LIMIT 1",
+		$event_id,
+		$user_id,
+		$theme
+	) > 0;
+}
 
 function themeIdea_CountOriginal( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
@@ -376,22 +387,7 @@ function _themeIdea_GetRandom( $event_id, $threshold = null, $query_suffix = ";"
 	}
 }
 
-// *** //
-
-/// @cond INTERNAL
-function _themeIdea_Add( $idea, $event_id, $user_id ) {
-	return db_QueryInsert(
-		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." (
-			theme, node, user, timestamp
-		)
-		VALUES ( 
-			?, ?, ?, NOW()
-		)",
-		$idea, $event_id, $user_id
-	);
-}
-
-function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
+function themeIdea_Add( $idea, $event_id, $user_id, $limit = null ) {
 	global $db;
 
 	_db_Connect();	// Only because we're doing native DB ops, call connect //
@@ -401,11 +397,18 @@ function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
 	$count = 0;
 	
 	try {
-		$count = themeIdea_Count($event_id, $user_id, " FOR UPDATE;");
-		if ( $count === false ) 
+		if ( isset($limit) ) {
+			$count = themeIdea_Count($event_id, $user_id, " FOR UPDATE;");
+			if ( $count === false ) 
+				throw new Exception();
+			if ( $count >= $limit ) 
+				throw new Exception();
+		}
+
+		// Check for a possible duplicate
+		if ( themeIdea_CheckExisting($event_id, $user_id, $idea) ) {
 			throw new Exception();
-		if ( $count >= $limit ) 
-			throw new Exception();
+		}
 		
 		$result = db_QueryInsert(
 			"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." (
@@ -421,11 +424,13 @@ function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
 		if ( empty($result) ) 
 			throw new Exception();
 
-		$count = themeIdea_Count($event_id, $user_id);
-		if ( $count === false ) 
-			throw new Exception();
-		if ( $count > $limit ) 
-			throw new Exception();
+		if ( isset($limit) ) {
+			$count = themeIdea_Count($event_id, $user_id);
+			if ( $count === false ) 
+				throw new Exception();
+			if ( $count > $limit ) 
+				throw new Exception();
+		}
 		
 		// We're good! Commit! We're finished //
 		$db->commit();
@@ -443,17 +448,6 @@ function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
 		];
 	}
 }
-/// @endcond
-
-
-function themeIdea_Add( $idea, $event_id, $user_id, $limit = null ) {
-	if ( isset($limit) )
-		return _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit );
-	else
-		return _themeIdea_Add( $idea, $event_id, $user_id );
-}
-
-
 
 function themeIdea_Remove( $id, $user_id = 0 ) {
 	if ( $user_id === 0 ) {
