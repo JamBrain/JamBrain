@@ -145,10 +145,10 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		// Build query fragment for published content
 		if ( $published ) {
 			$QUERY[] = "published > CONVERT(0, DATETIME)";
-			$orderby_query = "ORDER BY published DESC";
+			$orderby_query = "ORDER BY published, id DESC";
 		}
 		else {
-			$orderby_query = "ORDER BY modified DESC";
+			$orderby_query = "ORDER BY modified, id DESC";
 		}
 	}
 
@@ -239,7 +239,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 //				"SELECT id, ".DB_FIELD_DATE('modified')."
 //				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 //				WHERE parent IN ($ids_string) AND type IN ($types_string) AND published > CONVERT(0,DATETIME)
-//				ORDER BY published DESC
+//				ORDER BY published, id DESC
 //				LIMIT ? OFFSET ?
 //				;",
 //				$limit, $offset
@@ -250,7 +250,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 //				"SELECT id, ".DB_FIELD_DATE('modified')."
 //				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 //				WHERE parent IN ($ids_string) AND published > CONVERT(0,DATETIME)
-//				ORDER BY published DESC
+//				ORDER BY published, id DESC
 //				LIMIT ? OFFSET ?
 //				;",
 //				$limit, $offset
@@ -456,9 +456,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	// LINK queries match something from the metadata table
 	else if ( $link ) {
 		if ( $published )
-			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
+			$ORDER_BY = "ORDER BY n.published, n.id $SORT_ORDER";
 		else
-			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
+			$ORDER_BY = "ORDER BY n.modified, n.id $SORT_ORDER";
 
 		$QUERY = array_merge($NODE_QUERY, $LINK_QUERY);
 		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS, $LIMIT_ARGS);
@@ -511,9 +511,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	// Neither a LINK or MAGIC query
 	else {
 		if ( $published )
-			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
+			$ORDER_BY = "ORDER BY n.published, n.id $SORT_ORDER";
 		else
-			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
+			$ORDER_BY = "ORDER BY n.modified, n.id $SORT_ORDER";
 
 		$QUERY = $NODE_QUERY;
 		$ARGS = array_merge($NODE_ARGS, $LIMIT_ARGS);
