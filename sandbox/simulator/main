@@ -46,13 +46,12 @@ if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
 	exit(1);
 }
 
-
-# Decide what model to use for this run
+// Decide what model to use for this run
 $model = "model_default";
 
 
 
-# Load model
+// Load model
 include __DIR__."/".$model;
 
 
@@ -86,8 +85,8 @@ $usercount = 40; // Something like 40-50 is good for reasonable size tests.
 $userchurn = 5; // Get some new users every event.
 $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
-$verbose = true; // Display all of the details about what's going on?
-$verboselog = true; // Keep all details about what's going on in a log.
+$verbose = false; // Display all of the details about what's going on?
+$verboselog = false; // Keep all details about what's going on in a log.
 $usewikitext = true;
 $useyoutubevideos = true;
 $youtubevideochance = 10; // if 10 then every tenth video will have a YT video
@@ -105,12 +104,22 @@ $eventsId = db_QueryFetchValue(
 			n.id
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
-		WHERE n.type = 'events'
+		WHERE n.type = 'group' AND n.subtype = 'events' AND n.slug = 'ludum-dare'
 		LIMIT 1
 		;"
 	);
 
-if ($eventsId == null) {
+$tagsId = db_QueryFetchValue(
+		"SELECT
+			n.id
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+		WHERE n.type = 'group' AND n.subtype = 'tags'
+		LIMIT 1
+		;"
+	);
+
+if ($eventsId == null or $tagsId == null) {
 	ReportError("Your databases are not correctly setup");
 	print "\n";
 	print "  In the home directory of your scotch box, run db-create.sh\n";
