@@ -38,7 +38,7 @@ export default class SidebarUpcoming extends Component {
 //			<div class="-item"><strong>April 2026</strong> - Ludum Dare 59 <UIIcon baseline small>trophy</UIIcon></div>,
 			<div class="-item"><strong>April 17th, 2026</strong> - Ludum Dare 59 <UIIcon baseline small>trophy</UIIcon></div>,
 			<div class="-item"><strong>October 2026</strong> - Ludum Dare 60 <UIIcon baseline small>trophy</UIIcon></div>,
-//			<div class="-item"><strong>October 2nd, 2026</strong> - Ludum Dare 60 <UIIcon baseline small>trophy</UIIcon></div>,
+//			<div class="-item"><strong>October 16th, 2026</strong> - Ludum Dare 60 <UIIcon baseline small>trophy</UIIcon></div>,
 		];
 
 		return (

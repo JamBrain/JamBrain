@@ -66,14 +66,14 @@ export default class ViewSidebar extends Component {
 
     let nextEventName = "Ludum Dare 60";
     let nextEventStartDate = new Date(
-      Date.UTC(2026, 9, 2, (24 + 1 - 3) * 1, 0, 0), // Conflicts with Jewish holidays, so please verify
-      //Date.UTC(2026, 9, 23, (24 + 1 - 3) * 1, 0, 0), // Open AFAIK
+      //Date.UTC(2026, 9, 2, (24 + 1 - 3) * 1, 0, 0), // Conflicts with Jewish holidays, so please verify
+      Date.UTC(2026, 9, 16, (24 + 1 - 3) * 1, 0, 0), // Open AFAIK
     );
 
     /*/
 		// October Event//
 		let ldName = "Ludum Dare 60";
-		let ldStartDay = new Date(Date.UTC(2025, 9, 2, 0, 0, 0));			// NOTE: The day, not the date
+		let ldStartDay = new Date(Date.UTC(2026, 9, 16, 0, 0, 0));			// NOTE: The day, not the date
 		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1-3) * oneHour));	// 6 PM EST
 
 		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
