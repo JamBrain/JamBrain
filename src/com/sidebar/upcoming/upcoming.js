@@ -34,10 +34,11 @@ export default class SidebarUpcoming extends Component {
 //			<div class="-item"><strong>April 12th 2024</strong> - Ludum Dare 55 <UIIcon baseline small>trophy</UIIcon></div>,
 //			<div class="-item"><strong>October 4th, 2024</strong> - Ludum Dare 56 <UIIcon baseline small>trophy</UIIcon></div>,
 //			<div class="-item"><strong>April 4th, 2025</strong> - Ludum Dare 57 <UIIcon baseline small>trophy</UIIcon></div>,
-			<div class="-item"><strong>October 3rd, 2025</strong> - Ludum Dare 58 <UIIcon baseline small>trophy</UIIcon></div>,
-			<div class="-item"><strong>April 2026</strong> - Ludum Dare 59 <UIIcon baseline small>trophy</UIIcon></div>,
-//			<div class="-item"><strong>April 17th, 2026</strong> - Ludum Dare 59 <UIIcon baseline small>trophy</UIIcon></div>,
-//			<div class="-item"><strong>October 2nd, 2025</strong> - Ludum Dare 60 <UIIcon baseline small>trophy</UIIcon></div>,
+//			<div class="-item"><strong>October 3rd, 2025</strong> - Ludum Dare 58 <UIIcon baseline small>trophy</UIIcon></div>,
+//			<div class="-item"><strong>April 2026</strong> - Ludum Dare 59 <UIIcon baseline small>trophy</UIIcon></div>,
+			<div class="-item"><strong>April 17th, 2026</strong> - Ludum Dare 59 <UIIcon baseline small>trophy</UIIcon></div>,
+			<div class="-item"><strong>October 2026</strong> - Ludum Dare 60 <UIIcon baseline small>trophy</UIIcon></div>,
+//			<div class="-item"><strong>October 2nd, 2026</strong> - Ludum Dare 60 <UIIcon baseline small>trophy</UIIcon></div>,
 		];
 
 		return (
