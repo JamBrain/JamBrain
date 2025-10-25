@@ -932,7 +932,7 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowDontRateMe = null;
-		if ( true ) {
+		if ( false ) {
 			ShowDontRateMe = (
 				<ContentCommonBody class="-show-comments -body">
 					<div class="-label">Casual</div>
