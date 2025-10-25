@@ -57,17 +57,13 @@ export default class ViewSidebar extends Component {
     let gradeEndDate = new Date(ldStartDate.getTime() + 3 * oneWeek);
 
     let resultsDay = new Date(ldStartDay.getTime() + 3 * oneWeek + oneDay); // NOTE: again "day", not date
-    let liveShowDate = new Date(
-      resultsDay.getTime() + 20 * oneHour + 30 * oneMinute,
-    );
-    let resultsDate = new Date(
-      resultsDay.getTime() + 23 * oneHour + 5 * oneMinute,
-    );
+    let liveShowDate = new Date(resultsDay.getTime() + 20 * oneHour + 30 * oneMinute);
+    let resultsDate = new Date(resultsDay.getTime() + 23 * oneHour + 5 * oneMinute);
 
     let nextEventName = "Ludum Dare 60";
     let nextEventStartDate = new Date(
-      //Date.UTC(2026, 9, 2, (24 + 1 - 3) * 1, 0, 0), // Conflicts with Jewish holidays, so please verify
-      Date.UTC(2026, 9, 16, (24 + 1 - 3) * 1, 0, 0), // Open AFAIK
+      //Date.UTC(2026, 9, 2, (24 + 1 - 3) * 1, 0, 0) // Conflicts with Jewish holidays, so please verify
+      Date.UTC(2026, 9, 16, (24 + 1 - 3) * 1, 0, 0) // Open AFAIK
     );
 
     /*/
@@ -103,7 +99,7 @@ export default class ViewSidebar extends Component {
     // If before the start
     else if (now < ldStartDate) {
       ShowCountdown.push(
-        <SidebarCountdown date={ldStartDate} nc="ld" to={ldName} tt="Starts" />,
+        <SidebarCountdown date={ldStartDate} nc="ld" to={ldName} tt="Starts" />
       );
     }
     // If after the start
@@ -115,7 +111,7 @@ export default class ViewSidebar extends Component {
             nc="compo"
             to="Compo"
             tt="Ends"
-          />,
+          />
         );
       } else if (now < compoEndDate2 && ShowCountdown.length < ItemsToShow) {
         ShowCountdown.push(
@@ -130,7 +126,7 @@ export default class ViewSidebar extends Component {
 
       if (now < jamEndDate && ShowCountdown.length < ItemsToShow) {
         ShowCountdown.push(
-          <SidebarCountdown date={jamEndDate} nc="jam" to="Jam" tt="Ends" />,
+          <SidebarCountdown date={jamEndDate} nc="jam" to="Jam" tt="Ends" />
         );
       } else if (now < jamEndDate2 && ShowCountdown.length < ItemsToShow) {
         //ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
@@ -140,7 +136,7 @@ export default class ViewSidebar extends Component {
             nc="jam"
             to="Submission Hour"
             tt="Ends"
-          />,
+          />
         );
       }
 
@@ -158,7 +154,7 @@ export default class ViewSidebar extends Component {
             nc="jam"
             to="Rating games"
             tt="Ends"
-          />,
+          />
         );
       }
 
@@ -177,7 +173,7 @@ export default class ViewSidebar extends Component {
                 nc="jam"
                 to="Top 15 Results:"
                 tt="LIVE"
-              />,
+              />
             );
           }
           if (now < resultsDate && ShowCountdown.length < ItemsToShow) {
@@ -187,7 +183,7 @@ export default class ViewSidebar extends Component {
                 nc="jam"
                 to="All Results"
                 tt=""
-              />,
+              />
             );
           }
         } else {
@@ -198,7 +194,7 @@ export default class ViewSidebar extends Component {
                 nc="jam"
                 to="Results"
                 tt=""
-              />,
+              />
             );
           }
         }
@@ -217,7 +213,7 @@ export default class ViewSidebar extends Component {
             nc="ld"
             to={nextEventName}
             tt="Starts"
-          />,
+          />
         );
       }
     }
