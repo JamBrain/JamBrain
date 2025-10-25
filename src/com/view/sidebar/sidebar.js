@@ -1,30 +1,30 @@
-import {h, Component}					from 'preact/preact';
+import { h, Component } from "preact/preact";
 
-import SidebarCountdown					from 'com/sidebar/countdown/countdown';
-import SidebarCalendar					from 'com/sidebar/calendar/calendar';
-import SidebarUpcoming					from 'com/sidebar/upcoming/upcoming';
-import SidebarTV						from 'com/sidebar/tv/tv';
-import SidebarJobs						from 'com/sidebar/jobs/jobs';
-import SidebarTrending					from 'com/sidebar/trending/trending';
-import SidebarSponsor					from 'com/sidebar/sponsor/sponsor';
-import SidebarSupport					from 'com/sidebar/support/support';
-import SidebarGuides					from 'com/sidebar/guides/guides';
+import SidebarCountdown from "com/sidebar/countdown/countdown";
+import SidebarCalendar from "com/sidebar/calendar/calendar";
+import SidebarUpcoming from "com/sidebar/upcoming/upcoming";
+import SidebarTV from "com/sidebar/tv/tv";
+import SidebarJobs from "com/sidebar/jobs/jobs";
+import SidebarTrending from "com/sidebar/trending/trending";
+import SidebarSponsor from "com/sidebar/sponsor/sponsor";
+import SidebarSupport from "com/sidebar/support/support";
+import SidebarGuides from "com/sidebar/guides/guides";
 
 export default class ViewSidebar extends Component {
-	constructor( props ) {
-		super(props);
-	}
+  constructor(props) {
+    super(props);
+  }
 
-	render( props ) {
-		// TODO: cleanup
+  render(props) {
+    // TODO: cleanup
 
-		const oneSecond = 1000;
-		const oneMinute = 60*oneSecond;
-		const oneHour = 60*oneMinute;
-		const oneDay = 24*oneHour;
-		const oneWeek = 7*oneDay;
+    const oneSecond = 1000;
+    const oneMinute = 60 * oneSecond;
+    const oneHour = 60 * oneMinute;
+    const oneDay = 24 * oneHour;
+    const oneWeek = 7 * oneDay;
 
-		/*/
+    /*/
 		// January Event //
 		let ldName = "Ludum Dare 52";
 		let ldStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
@@ -42,31 +42,38 @@ export default class ViewSidebar extends Component {
 
 		let nextEventName = "Ludum Dare 53";
 		let nextEventStartDate = new Date(Date.UTC(2023, 3, 29, 1, 0, 0));
+*/
+    // April Event //
+    let ldName = "Ludum Dare 59";
+    let ldStartDay = new Date(Date.UTC(2026, 3, 17, 0, 0, 0)); // NOTE: The day, not the date
+    let ldStartDate = new Date(ldStartDay.getTime() + (24 + 1) * oneHour); // 9 PM EST
 
-		// April Event //
-		let ldName = "Ludum Dare 57";
-		let ldStartDay = new Date(Date.UTC(2025, 3, 4, 0, 0, 0));					// NOTE: The day, not the date
-		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1) * oneHour));		// 9 PM EST
+    let compoEndDate = new Date(ldStartDate.getTime() + 2 * oneDay);
+    let compoEndDate2 = new Date(compoEndDate.getTime() + oneHour);
 
-		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
-		let compoEndDate2 = new Date(compoEndDate.getTime() + oneHour);
+    let jamEndDate = new Date(ldStartDate.getTime() + 3 * oneDay);
+    let jamEndDate2 = new Date(jamEndDate.getTime() + oneHour);
 
-		let jamEndDate = new Date(ldStartDate.getTime() + (3 * oneDay));
-		let jamEndDate2 = new Date(jamEndDate.getTime() + oneHour);
+    let gradeEndDate = new Date(ldStartDate.getTime() + 3 * oneWeek);
 
-		let gradeEndDate = new Date(ldStartDate.getTime() + (3 * oneWeek));
+    let resultsDay = new Date(ldStartDay.getTime() + 3 * oneWeek + oneDay); // NOTE: again "day", not date
+    let liveShowDate = new Date(
+      resultsDay.getTime() + 20 * oneHour + 30 * oneMinute,
+    );
+    let resultsDate = new Date(
+      resultsDay.getTime() + 23 * oneHour + 5 * oneMinute,
+    );
 
-		let resultsDay = new Date(ldStartDay.getTime() + (3*oneWeek) + oneDay);		// NOTE: again "day", not date
-		let liveShowDate = new Date(resultsDay.getTime() + (20 * oneHour) + (30 * oneMinute));
-		let resultsDate = new Date(resultsDay.getTime() + (23 * oneHour) + (5 * oneMinute));
+    let nextEventName = "Ludum Dare 60";
+    let nextEventStartDate = new Date(
+      //Date.UTC(2026, 9, 2, (24 + 1 - 3) * 1, 0, 0), // Conflicts with Jewish holidays, so please verify
+      Date.UTC(2026, 9, 16, (24 + 1 - 3) * 1, 0, 0), // Open AFAIK
+    );
 
-		let nextEventName = "Ludum Dare 58";
-		let nextEventStartDate = new Date(Date.UTC(2025, 9, 3, 22, 0, 0));
-
-		/*/
+    /*/
 		// October Event//
-		let ldName = "Ludum Dare 58";
-		let ldStartDay = new Date(Date.UTC(2025, 9, 3, 0 /*zero*/, 0, 0));			// NOTE: The day, not the date
+		let ldName = "Ludum Dare 60";
+		let ldStartDay = new Date(Date.UTC(2026, 9, 16, 0, 0, 0));			// NOTE: The day, not the date
 		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1-3) * oneHour));	// 6 PM EST
 
 		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
@@ -81,85 +88,154 @@ export default class ViewSidebar extends Component {
 		let liveShowDate = null;//new Date(resultsDay.getTime() + (20 * oneHour) + (30 * oneMinute));
 		let resultsDate = new Date(resultsDay.getTime() + (23 * oneHour) + (5 * oneMinute));
 
-		let nextEventName = "Ludum Dare 59";
-		let nextEventStartDate = new Date(Date.UTC(2026, 3, 17, 24+1, 0, 0));
+		let nextEventName = "Ludum Dare 61";
+		let nextEventStartDate = new Date(Date.UTC(2026, 3, 17, (24+1), 0, 0));
 		/**/
 
-		let ItemsToShow = 2;
+    let ItemsToShow = 2;
 
-		let now = new Date();
+    let now = new Date();
 
-		let ShowCountdown = [];
-		if ( !props.featured ) {
-			// Featured event hasn't loaded yet
-		}
-		// If before the start
-		else if ( now < ldStartDate ) {
-			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" to={ldName} tt="Starts" />);
-		}
-		// If after the start
-		else {
-			if ( (now < compoEndDate) && (ShowCountdown.length < ItemsToShow) ) {
-				ShowCountdown.push(<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />);
-			}
-			else if ( (now < compoEndDate2) && (ShowCountdown.length < ItemsToShow) ) {
-				ShowCountdown.push(<SidebarCountdown date={ compoEndDate2 } nc="compo" to="Submission Hour" tt="Ends" />);
-			}
+    let ShowCountdown = [];
+    if (!props.featured) {
+      // Featured event hasn't loaded yet
+    }
+    // If before the start
+    else if (now < ldStartDate) {
+      ShowCountdown.push(
+        <SidebarCountdown date={ldStartDate} nc="ld" to={ldName} tt="Starts" />,
+      );
+    }
+    // If after the start
+    else {
+      if (now < compoEndDate && ShowCountdown.length < ItemsToShow) {
+        ShowCountdown.push(
+          <SidebarCountdown
+            date={compoEndDate}
+            nc="compo"
+            to="Compo"
+            tt="Ends"
+          />,
+        );
+      } else if (now < compoEndDate2 && ShowCountdown.length < ItemsToShow) {
+        ShowCountdown.push(
+          <SidebarCountdown
+            date={compoEndDate2}
+            nc="compo"
+            to="Submission Hour"
+            tt="Ends"
+          />,
+        );
+      }
 
-			if ( (now < jamEndDate) && (ShowCountdown.length < ItemsToShow) ) {
-				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
-			}
-			else if ( (now < jamEndDate2) && (ShowCountdown.length < ItemsToShow) ) {
-				//ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
-				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour" tt="Ends" />);
-			}
+      if (now < jamEndDate && ShowCountdown.length < ItemsToShow) {
+        ShowCountdown.push(
+          <SidebarCountdown date={jamEndDate} nc="jam" to="Jam" tt="Ends" />,
+        );
+      } else if (now < jamEndDate2 && ShowCountdown.length < ItemsToShow) {
+        //ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
+        ShowCountdown.push(
+          <SidebarCountdown
+            date={jamEndDate2}
+            nc="jam"
+            to="Submission Hour"
+            tt="Ends"
+          />,
+        );
+      }
 
-			if ( (now < gradeEndDate) && props.featured && props.featured.meta && props.featured.meta['can-grade'] && (ShowCountdown.length < ItemsToShow) ) { //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
-				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Rating games" tt="Ends" />);
-			}
+      if (
+        now < gradeEndDate &&
+        props.featured &&
+        props.featured.meta &&
+        props.featured.meta["can-grade"] &&
+        ShowCountdown.length < ItemsToShow
+      ) {
+        //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
+        ShowCountdown.push(
+          <SidebarCountdown
+            date={gradeEndDate}
+            nc="jam"
+            to="Rating games"
+            tt="Ends"
+          />,
+        );
+      }
 
-			// Figure out the date a few days before grading ends
-			let finaleStart = new Date(gradeEndDate);
-			finaleStart.setUTCHours(finaleStart.getUTCHours()-(24*3));
+      // Figure out the date a few days before grading ends
+      let finaleStart = new Date(gradeEndDate);
+      finaleStart.setUTCHours(finaleStart.getUTCHours() - 24 * 3);
 
-			// Only show a few days before grading ends
-			if ( (now > finaleStart) && (now < resultsDate) ) {
-				// If we have a live show, include a countdown for that
-				if ( liveShowDate ) {
-					if ( (now < liveShowDate) && (ShowCountdown.length < ItemsToShow) ) {
-						ShowCountdown.push(<SidebarCountdown date={ liveShowDate } nc="jam" to="Top 15 Results:" tt="LIVE" />);
-					}
-					if ( (now < resultsDate) && (ShowCountdown.length < ItemsToShow) ) {
-						ShowCountdown.push(<SidebarCountdown date={ resultsDate } nc="jam" to="All Results" tt="" />);
-					}
-				}
-				else {
-					if ( (now < resultsDate) && (ShowCountdown.length < ItemsToShow) ) {
-						ShowCountdown.push(<SidebarCountdown date={ resultsDate } nc="jam" to="Results" tt="" />);
-					}
-				}
-			}
+      // Only show a few days before grading ends
+      if (now > finaleStart && now < resultsDate) {
+        // If we have a live show, include a countdown for that
+        if (liveShowDate) {
+          if (now < liveShowDate && ShowCountdown.length < ItemsToShow) {
+            ShowCountdown.push(
+              <SidebarCountdown
+                date={liveShowDate}
+                nc="jam"
+                to="Top 15 Results:"
+                tt="LIVE"
+              />,
+            );
+          }
+          if (now < resultsDate && ShowCountdown.length < ItemsToShow) {
+            ShowCountdown.push(
+              <SidebarCountdown
+                date={resultsDate}
+                nc="jam"
+                to="All Results"
+                tt=""
+              />,
+            );
+          }
+        } else {
+          if (now < resultsDate && ShowCountdown.length < ItemsToShow) {
+            ShowCountdown.push(
+              <SidebarCountdown
+                date={resultsDate}
+                nc="jam"
+                to="Results"
+                tt=""
+              />,
+            );
+          }
+        }
+      }
 
-			// If no items left, add a countdown to the next event
-			if ( nextEventName && nextEventStartDate && (now < nextEventStartDate) && (ShowCountdown.length == 0) ) {
-				ShowCountdown.push(<SidebarCountdown date={ nextEventStartDate } nc="ld" to={nextEventName} tt="Starts" />);
-			}
-		}
+      // If no items left, add a countdown to the next event
+      if (
+        nextEventName &&
+        nextEventStartDate &&
+        now < nextEventStartDate &&
+        ShowCountdown.length == 0
+      ) {
+        ShowCountdown.push(
+          <SidebarCountdown
+            date={nextEventStartDate}
+            nc="ld"
+            to={nextEventName}
+            tt="Starts"
+          />,
+        );
+      }
+    }
 
-		return (
-			<div id="sidebar">
-				{ShowCountdown}
-				<SidebarUpcoming />
-				<SidebarSponsor />
-			</div>
-		);
+    return (
+      <div id="sidebar">
+        {ShowCountdown}
+        <SidebarUpcoming />
+        <SidebarSponsor />
+      </div>
+    );
 
-		/*<SidebarJobs />*/
-		/*<SidebarTV />*/
+    /*<SidebarJobs />*/
+    /*<SidebarTV />*/
 
-		/*<SidebarGuides />*/
-		/*<SidebarSupport />*/
+    /*<SidebarGuides />*/
+    /*<SidebarSupport />*/
 
-		/*<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />*/
-	}
+    /*<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />*/
+  }
 }
