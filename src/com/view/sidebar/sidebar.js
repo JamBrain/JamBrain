@@ -120,7 +120,7 @@ export default class ViewSidebar extends Component {
             nc="compo"
             to="Submission Hour"
             tt="Ends"
-          />,
+          />
         );
       }
 
