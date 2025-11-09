@@ -1,0 +1,202 @@
+import { useParams } from "@solidjs/router";
+import { useInfiniteQuery } from "@tanstack/solid-query";
+import {
+  createEffect,
+  createSignal,
+  For,
+  Match,
+  Show,
+  Suspense,
+  Switch,
+} from "solid-js";
+import { GET } from "~/api/methods";
+import { EventNode } from "~/api/types";
+import Select, { Option } from "~/components/base/Select";
+import GameTile from "~/components/game/GameTile";
+import { useRootNode } from "~/context/PageContext";
+import { useSetParams } from "~/lib/navigation";
+
+function isRatedCategory(type: string) {
+  return !["unfinished", "extra"].includes(type);
+}
+
+// TODO duplicate of results page
+export default function Games() {
+  const event = useRootNode<EventNode>(() => ({
+    refetchOnMount: false,
+  }));
+
+  const grades = () =>
+    event.data?.meta &&
+    Object.keys(event.data.meta)
+      .filter((key) => /^grade-\d{2}$/.test(key))
+      .map((key) => ({
+        key: `${key}-result`,
+        value: event.data.meta[key].toLowerCase(),
+        label: event.data.meta[key],
+        optional: event.data.meta[`${key}-optional`] === "1",
+        required: event.data.meta[`${key}-required`] === "1",
+      }));
+
+  const params = useParams();
+
+  const [type, setType] = createSignal(params.type ?? "all");
+  const [sortBy, setSortBy] = createSignal(params.sortBy);
+
+  // TODO use resultsPublished
+  const rated = () => isRatedCategory(type());
+
+  // set sortBy to first grade if value is invalid
+  createEffect(() => {
+    if (
+      rated() &&
+      grades()?.length &&
+      !grades().some((g) => g.value === sortBy())
+    ) {
+      setSortBy(grades()[0]?.value);
+    }
+  });
+
+  // update sortBy when options change
+  createEffect((prevRated) => {
+    if (prevRated !== rated()) {
+      setSortBy(rated() ? grades()?.[0]?.value : "smart");
+    }
+    return rated();
+  }, rated());
+
+  // update url based on filter
+  const setParams = useSetParams();
+  createEffect((initializing) => {
+    if (sortBy() == null || type() == null) {
+      return initializing;
+    }
+    // mimic behavior of current site
+    if (!initializing) {
+      setParams({
+        sortBy: sortBy(),
+        type: type(),
+      });
+    }
+    return false;
+  }, true);
+
+  // TODO remove duplicates when using smart etc.
+  const pageSize = 24;
+  const queryType = () => (type() === "all" ? "compo+jam+extra" : type());
+  const querySortBy = () =>
+    rated() ? grades()?.find((g) => g.value == sortBy())?.key : sortBy();
+  const games = useInfiniteQuery(() => ({
+    queryKey: ["games", pageSize, event.data?.id, querySortBy(), queryType()],
+    enabled:
+      event.data?.id != null && querySortBy() != null && queryType() != null,
+    async queryFn(args) {
+      const offset = args.pageParam;
+      const json = await GET(
+        `/vx/node/feed/${event.data?.id}/${querySortBy()}+reverse+parent/item/game/${queryType()}?offset=${offset}&limit=${pageSize + 1}`,
+      );
+
+      return {
+        edges: json.feed.slice(0, pageSize),
+        nextCursor: json.feed.length > pageSize ? offset + pageSize : null,
+      };
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  }));
+
+  return (
+    <>
+      <div class="flex gap-2 bg-neutral-800 p-2">
+        <Select
+          value={type()}
+          onChange={(e) => setType(e.target.value)}
+          class="w-36"
+        >
+          <Option value="all" icon="icon-gamepad">
+            All
+          </Option>
+          <Option value="jam" icon="icon-trophy">
+            Jam
+          </Option>
+          <Option value="compo" icon="icon-trophy">
+            Compo
+          </Option>
+          <Option value="extra" icon="icon-trophy">
+            Extra
+          </Option>
+          <Option value="unfinished" icon="icon-trash">
+            Unfinished
+          </Option>
+        </Select>
+        <Switch>
+          {/* TODO can grades suspend? */}
+          <Match when={rated() && grades() != null}>
+            <Select
+              value={sortBy()}
+              onChange={(e) => setSortBy(e.target.value)}
+              class="w-36"
+            >
+              <For each={grades()}>
+                {(grade) => <Option value={grade.value}>{grade.label}</Option>}
+              </For>
+            </Select>
+          </Match>
+          <Match when={!rated()}>
+            <Select
+              value={sortBy()}
+              onChange={(e) => setSortBy(e.target.value)}
+              class="w-36"
+            >
+              <Option value="smart" icon="icon-ticket">
+                Smart
+              </Option>
+              <Option value="classic" icon="icon-ticket">
+                Classic
+              </Option>
+              <Option value="danger" icon="icon-help">
+                Danger
+              </Option>
+              <Option value="zero" icon="icon-gift">
+                Zero
+              </Option>
+              <Option value="feedback" icon="icon-bubbles">
+                Feedback
+              </Option>
+              <Option value="grade" icon="icon-todo">
+                Grade
+              </Option>
+            </Select>
+          </Match>
+        </Switch>
+      </div>
+      <div class="grid grid-cols-4 gap-2">
+        <Suspense>
+          <For each={games.data?.pages}>
+            {(page) => (
+              <For each={page.edges}>
+                {(game) => (
+                  <GameTile
+                    game={game.id}
+                    viewTransitionName={`game-${game.id}`}
+                  />
+                )}
+              </For>
+            )}
+          </For>
+        </Suspense>
+      </div>
+      <Show when={games.hasNextPage}>
+        <button
+          onClick={() => {
+            games.fetchNextPage();
+          }}
+          disabled={games.isFetching}
+          class="justify-self-center"
+        >
+          {games.isFetchingNextPage ? "LOADING" : "MORE"}
+        </button>
+      </Show>
+    </>
+  );
+}

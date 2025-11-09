@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic&display=swap")
+layer(base);
+
+@import "tailwindcss";
+
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-*: initial;
+  --color-current: currentColor;
+  --color-primary: #ee5533;
+  --color-secondary: #f79122;
+  --color-highlight: #ffcc00;
+
+  --color-neutral-950: #1f2429;
+  --color-neutral-900: #2f373f;
+  --color-neutral-800: #3d4752;
+  --color-neutral-700: #485562;
+  --color-neutral-600: #596572;
+  --color-neutral-500: #6f7984;
+  --color-neutral-400: #8793a0;
+  --color-neutral-300: #a0acb9;
+  --color-neutral-200: #b9c4d0;
+  --color-neutral-100: #d3dce5;
+  --color-neutral-50: #eef2f7;
+
+  --color-green: #66cc22;
+
+  --font-*: initial;
+  --font-header: Raleway, "Helvetica Neue", Roboto, "Arial Nova", "Segoe UI",
+    "Ubuntu Light", sans-serif;
+  --font-sans: Roboto, "Helvetica Neue", "Arial Nova", "Segoe UI",
+    "Ubuntu Light", sans-serif;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+#app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cut-br {
+  clip-path: polygon(100% 0, calc(100% - 200rem) 300rem, 0 100%, 0 0);
+}
+
+.cut-tr {
+  clip-path: polygon(
+    100% 100%,
+    calc(100% - 200rem) calc(100% - 300rem),
+    0 100%,
+    0 100%
+  );
+}
+
+::picker(select) {
+  @apply mt-1 [appearance:base-select] rounded-sm border-0 shadow-xl shadow-[#000];
+}
