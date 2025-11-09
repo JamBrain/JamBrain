@@ -2,7 +2,6 @@
 /*
 	api		Functions that wrap calling the API directly
 			Also, code to make the HTTP calls
-
 */
 
 

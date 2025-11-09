@@ -89,9 +89,10 @@ function ModelExecute()
 				$minutes = $runminutes;
 				if($stage["MaxMinutes"])
 				{
-					$minutes = Math.min($minutes, $stage["MaxMinutes"]);
+					$minutes = min($minutes, $stage["MaxMinutes"]);
 				}
-				$end = (new DateTime()).Add(new DateInterval("PT".$minutes."M"));
+
+				$end = (new DateTime())->add(new DateInterval("PT".$minutes."M"));
 				Message("Running for ".$minutes." minute".($minutes == 1?"":"s"));
 				
 				while($end > new DateTime())
@@ -100,6 +101,7 @@ function ModelExecute()
 					{
 						// Still wait for the period to complete before continuing
 						usleep(10000); // Delay 10ms
+						break;
 					}
 				}
 			}
