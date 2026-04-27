@@ -238,7 +238,7 @@ export default class ContentCommentsComment extends Component {
 		let {user, comment, author, error, node, isNodeAuthor, isMyComment, isMention} = props;
 
 		// Allow authored comments, or non-authored (i.e. anonymous)
-		if ( comment && ((author && author._trust >= 0 && comment._trust >= 0) || (comment.author == 0 && comment._trust > 0)) ) {
+		if ( comment && ((author && author._trust >= 0 && comment._trust >= 0) || (comment.author == 0 && comment._trust >= 0)) ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
 
@@ -443,7 +443,7 @@ export default class ContentCommentsComment extends Component {
 				</div>
 			);
 		}
-		else if ( comment && ((author && author._trust < 0) || (comment && comment._trust <= 0)) ) {
+		else if ( comment && ((author && author._trust < 0) || (comment && comment._trust < 0)) ) {
 			return (
 				<div
 					id={"comment-"+comment.id}
