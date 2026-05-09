@@ -42,7 +42,7 @@ export default class ViewSidebar extends Component {
 
 		let nextEventName = "Ludum Dare 53";
 		let nextEventStartDate = new Date(Date.UTC(2023, 3, 29, 1, 0, 0));
-*/
+/
     // April Event //
     let ldName = "Ludum Dare 59";
     let ldStartDay = new Date(Date.UTC(2026, 3, 17, 0, 0, 0)); // NOTE: The day, not the date
@@ -85,7 +85,7 @@ export default class ViewSidebar extends Component {
 		let resultsDate = new Date(resultsDay.getTime() + (23 * oneHour) + (5 * oneMinute));
 
 		let nextEventName = "Ludum Dare 61";
-		let nextEventStartDate = new Date(Date.UTC(2026, 3, 17, (24+1), 0, 0));
+		let nextEventStartDate = new Date(Date.UTC(2027, 3, 17, (24+1), 0, 0));
 		/**/
 
     let ItemsToShow = 2;
