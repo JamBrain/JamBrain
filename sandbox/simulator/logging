@@ -26,7 +26,7 @@ function ReportError($text)
 {
 	global $errorcount;
 	$errorcount++;	
-	$text = "[" . TimeString() . "] Error: " . $text . "\n";
+	$text = "[" . TimeString() . "]\tError: " . $text . "\n";
 	
 	LdApi::PrintLastRequestResponse();
 	
@@ -36,25 +36,31 @@ function ReportError($text)
 }
 function Verbose($text)
 {
-	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	global $verbose;
+	if (!$verbose) return;
+	$text = "[" . TimeString() . "] Verbose:\t" . $text . "\n";
 	print($text);
 	LogFull($text);
 }
 function VerboseHidden($text)
 {
-	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	global $verbose;
+	if (!$verbose) return;
+	$text = "[" . TimeString() . "] Verbose:\t" . $text . "\n";
 	LogFull($text);
 }
 
 function VerboseAction($text)
 {
-	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	global $verbose;
+	if (!$verbose) return;
+	$text = "[" . TimeString() . "] Verbose:\t" . $text . "\n";
 	print( "\x1b[1;34m" . $text . "\x1b[m"); // Draw in blue with intensity
 	LogFull($text);
 }
 function Message($text)
 {
-	$text = "[" . TimeString() . "] " . $text . "\n";
+	$text = "[" . TimeString() . "]\t" . $text . "\n";
 	print( "\x1b[1m" . $text . "\x1b[m"); // Draw with greater intensity.
 	LogFull($text);
 	LogErr($text);

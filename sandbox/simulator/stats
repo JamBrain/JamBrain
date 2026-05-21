@@ -178,7 +178,7 @@ function time_color($t, $basevalue)
 		$rgb[0] = 1;
 	}
 	
-	# Setup color
+	// Setup color
 	for($i=0;$i<3;$i++)
 	{
 		$rgb[$i] = intval(round($rgb[$i] * 80 + 128));
