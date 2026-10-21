@@ -98,7 +98,7 @@ switch ( $action ) {
 
 		$user_hash = strrev(dechex($user_id));	// hex it, then reverse the order of the characters
 		$user_path = str_split($user_hash, 3);	// Break every 3 characters
-		$user_path = implode($user_path,'/');	// Recombine with '/' slashes
+		$user_path = implode('/', $user_path);	// Recombine with '/' slashes
 		$user_path .= "/z";						// Append '/z' meaning this is my home
 
 		// Confirm an asset was included
