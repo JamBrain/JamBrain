@@ -108,6 +108,14 @@ if ( in_array($table, $TABLE_LIST) ) {
 					AFTER modified;"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 5:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX stable_published (published, id);
+			ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX stable_modified (modified, id);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 
 	// NOTE: Store "extra" in body for symlinks
